@@ -1,3 +1,10 @@
+---@class PlayerStatus
+---@field value number @0-100
+
+---@class ServerCache
+---@field statuses table<PlayerId, table<StatusName, PlayerStatus>>
+---@field existingStatuses table<StatusName, true>
+
 ---@alias PlayerId integer
 ---@alias Character table
 ---@alias CharacterIdentifier string
@@ -9,8 +16,7 @@
 ---@alias Distance number
 ---@alias ScaleformHandle integer
 ---@alias NetId integer
----@alias Vin string
 ---@alias Plate string
----@alias FakePlate string
 ---@alias FailReason string
 ---@alias Success boolean
+---@alias StatusName string
