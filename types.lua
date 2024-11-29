@@ -1,8 +1,12 @@
 ---@class PlayerStatus
 ---@field value number @0-100
 
+---@class StatusType
+---@field multi? boolean @Supports multiple instances of the same status type, ex. addiction to multiple substances
+---@field values table<StatusName, PlayerStatus>
+
 ---@class ServerCache
----@field statuses table<PlayerId, table<StatusName, PlayerStatus>>
+---@field statuses table<PlayerId, table<StatusName, StatusType>>
 ---@field existingStatuses table<StatusName, true>
 
 ---@alias PlayerId integer

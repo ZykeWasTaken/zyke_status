@@ -1,0 +1,1 @@
+RegisterStatusType("addiction", true)
