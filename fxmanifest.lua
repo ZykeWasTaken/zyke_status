@@ -6,6 +6,7 @@ author "discord.gg/zykeresources"
 shared_scripts {
     "@zyke_lib/imports.lua",
     "shared/unlocked/config.lua",
+    "shared/unlocked/functions.lua",
     "statuses/**/config.lua",
 }
 

@@ -41,6 +41,6 @@ function CreateBasePlayerStatus(status)
 end
 
 ---@param plyId PlayerId
-function GetRawStatuses(plyId)
+function GetAllRawStatuses(plyId)
     return Cache.statuses[plyId]
 end
