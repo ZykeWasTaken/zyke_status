@@ -1,2 +1,3 @@
 Config.Status.stress = {
+    ["base"] = {}
 }

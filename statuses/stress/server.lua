@@ -1,16 +1,30 @@
-RegisterStatusType("stress")
+RegisterStatusType("stress", false, {value = 0.0}, function()
+    -- print("pluh")
+end, function(plyId, name, amount) -- On add
+    local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+    if (not isValid or not data) then return end
 
--- CreateThread(function()
---     while (1) do
---         for plyId, statuses in pairs(Cache.statuses) do
---             if (statuses["stress"] and statuses["stress"].values["stress"]) then
---                 print("Handling", "stress", "for", plyId)
+    -- Add onto the stress value
+    data.values[secondary].value = Z.numbers.round(data.values[secondary].value + amount, Config.Settings.decimalAccuracy)
+    if (data.values[secondary].value > 100.0) then
+        data.values[secondary].value = 100.0
+    end
 
---                 -- AddToStatus(plyId, "stress", 0.01)
---                 RemoveFromStatus(plyId, "stress", 0.05)
---             end
---         end
+    return true
+end, function(plyId, name, amount) -- On remove
+    local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+    print(plyId, name, amount)
+    if (not isValid or not data) then return end
 
---         Wait(1000)
---     end
--- end)
+    -- Remopve from the stress value
+    data.values[secondary].value = Z.numbers.round(data.values[secondary].value - amount, Config.Settings.decimalAccuracy)
+    if (data.values[secondary].value < 0.0) then
+        data.values[secondary].value = 0.0
+    end
+
+    return true
+end)
+
+RegisterCommand("stress_add", function(source, args)
+    exports["zyke_status"]:AddToStatus(source, "stress", 5.0)
+end, false)

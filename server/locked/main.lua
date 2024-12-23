@@ -15,6 +15,6 @@ CreateThread(function()
             end
         end
 
-        print(json.encode(Cache.statuses, {indent = true}))
+        -- print(json.encode(Cache.statuses, {indent = true}))
     end
 end)

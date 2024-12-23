@@ -39,7 +39,7 @@ RegisterStatusType("addiction", true, {
     for plyId, statuses in pairs(Cache.statuses) do
         if (statuses["addiction"]) then
             for subName, values in pairs(statuses["addiction"].values) do
-                print("Handling", "addiction" .. "." .. subName, "for", plyId)
+                -- print("Handling", "addiction" .. "." .. subName, "for", plyId)
 
                 -- print(json.encode(Config.Status))
                 local statusSettings = Config.Status.addiction[subName] or Config.Status.addiction.base
@@ -47,7 +47,7 @@ RegisterStatusType("addiction", true, {
                 -- If below the addiction threshold
                 if (values.addiction < statusSettings.addiction.threshold) then
                     -- Not addicted, remove from the addicted status
-                    print("Not addicted", "addiction." .. subName)
+                    -- print("Not addicted", "addiction." .. subName)
                     RemoveFromStatus(plyId, "addiction." .. subName, statusSettings.addiction.drain)
                 else
                     -- Addicted, slowly remove satisfaction
@@ -63,8 +63,12 @@ end, function(plyId, name, amount) -- On add
     local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
     if (not isValid or not data) then return end
 
+    -- TODO: Ensure value is above minimum decimal accuracy
+
     -- Add onto the addiction value (smaller value, static change for now, TODO: update it exponentially or something)
-    data.values[secondary].addiction = Z.numbers.round(data.values[secondary].addiction + amount * 10, Config.Settings.decimalAccuracy)
+
+    local addToAddiction = data.values[secondary].addiction + amount
+    data.values[secondary].addiction = Z.numbers.round(addToAddiction, Config.Settings.decimalAccuracy)
     if (data.values[secondary].addiction > 100.0) then
         data.values[secondary].addiction = 100.0
     end
@@ -90,3 +94,7 @@ end, function(plyId, name, amount) -- On remove
 
     return true
 end)
+
+RegisterCommand("addiction_add", function(source, args)
+    exports["zyke_status"]:AddToStatus(source, args[1] and "addiction." .. args[1] or "addiction.nicotine", tonumber(args[2]) or 1.0)
+end, false)
