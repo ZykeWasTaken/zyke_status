@@ -1,0 +1,1 @@
+Z.callback.register("zyke_status:GetPlayerStatus", function(plyId) return GetRawStatuses(plyId) end)

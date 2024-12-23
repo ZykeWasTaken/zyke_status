@@ -2,7 +2,9 @@
 ---@param name StatusName
 ---@param multi? boolean
 function RegisterStatusType(name, multi)
+    Z.debug("Registering", name, multi)
+
     Cache.existingStatuses[name] = {
-        type = multi and true or false
+        multi = multi and true or false,
     }
 end

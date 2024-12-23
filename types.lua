@@ -1,13 +1,20 @@
 ---@class PlayerStatus
 ---@field value number @0-100
 
----@class StatusType
----@field multi? boolean @Supports multiple instances of the same status type, ex. addiction to multiple substances
+-- For the ease of structuring, fetching and modifying values, the non-multi statuses will be added in values: [status].values[status]
+-- For multi values, only the subvalues will exist in values
+---@class PlayerStatuses
 ---@field values table<StatusName, PlayerStatus>
 
+---@class ExistingStatus
+---@field multi? boolean @Supports multiple instances of the same status type, ex. addiction to multiple substances
+
 ---@class ServerCache
----@field statuses table<PlayerId, table<StatusName, StatusType>>
----@field existingStatuses table<StatusName, true>
+---@field statuses table<PlayerId, table<StatusName, PlayerStatuses>>
+---@field existingStatuses table<StatusName, ExistingStatus>
+
+---@class ClientCache
+---@field statuses table<StatusName, PlayerStatuses>
 
 ---@alias PlayerId integer
 ---@alias Character table
@@ -24,3 +31,4 @@
 ---@alias FailReason string
 ---@alias Success boolean
 ---@alias StatusName string
+---@alias SubStatusName string
