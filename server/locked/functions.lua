@@ -12,7 +12,7 @@ end
 ---@param name StatusName
 local function separateName(name)
     local primary, secondary = name:match("([^%.]+)%.([^%.]+)")
-    if (not secondary) then secondary = primary end
+    if (not primary) then return name, name end -- If no primary can be found, there is no dot separator
 
     return primary, secondary
 end
