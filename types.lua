@@ -4,10 +4,18 @@
 -- For the ease of structuring, fetching and modifying values, the non-multi statuses will be added in values: [status].values[status]
 -- For multi values, only the subvalues will exist in values
 ---@class PlayerStatuses
----@field values table<StatusName, PlayerStatus>
+---@field values table<StatusName, PlayerStatus | AddictionStatus>
+
+---@class AddictionStatus
+---@field value number @100-0, satisfaction
+---@field addiction number @0-100
 
 ---@class ExistingStatus
 ---@field multi? boolean @Supports multiple instances of the same status type, ex. addiction to multiple substances
+---@field baseValues table
+---@field tickFn? function
+---@field onAdd function
+---@field onRemove function
 
 ---@class ServerCache
 ---@field statuses table<PlayerId, table<StatusName, PlayerStatuses>>

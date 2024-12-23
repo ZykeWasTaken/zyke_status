@@ -6,6 +6,7 @@ author "discord.gg/zykeresources"
 shared_scripts {
     "@zyke_lib/imports.lua",
     "shared/unlocked/config.lua",
+    "statuses/**/config.lua",
 }
 
 server_scripts {
@@ -17,10 +18,13 @@ server_scripts {
     "server/unlocked/functions.lua",
     "statuses/**/server.lua",
 
+    "server/unlocked/eventhandler.lua",
     "server/locked/initialize.lua",
 }
 
 client_scripts {
     "client/locked/main.lua",
+    "client/unlocked/functions.lua",
+    "client/unlocked/eventhandler.lua",
     "statuses/**/client.lua",
 }

@@ -1,4 +1,3 @@
-
 function CreateStatus()
 
 end
@@ -10,11 +9,17 @@ end
 ]]
 
 ---@param name StatusName
-local function separateName(name)
+function SeparateStatusName(name)
     local primary, secondary = name:match("([^%.]+)%.([^%.]+)")
     if (not primary) then return name, name end -- If no primary can be found, there is no dot separator
 
     return primary, secondary
+end
+
+---@param plyId PlayerId
+---@param primary StatusName
+function SyncPlayerStatus(plyId, primary)
+    TriggerClientEvent("zyke_status:SyncStatus", plyId, primary, Cache.statuses[plyId][primary])
 end
 
 -- Returns the entire table to modify
@@ -25,7 +30,7 @@ end
 ---@param name StatusName
 ---@return PlayerStatuses | nil
 function GetPlayerBaseStatusTable(plyId, name)
-    local primary = separateName(name)
+    local primary = SeparateStatusName(name)
 
     return Cache.statuses[plyId] and Cache.statuses[plyId][primary] or nil
 end
@@ -34,7 +39,7 @@ end
 ---@param name StatusName
 ---@return number
 function GetStatus(plyId, name)
-    local primary, secondary = separateName(name)
+    local primary, secondary = SeparateStatusName(name)
 
     if (not Cache.statuses[plyId]) then return 0.0 end
     if (not Cache.statuses[plyId][primary]) then return 0.0 end
@@ -48,18 +53,12 @@ exports("GetStatus", GetStatus)
 ---@param plyId PlayerId
 ---@param name StatusName
 function RemoveFromStatus(plyId, name, amount)
-    local primary, secondary = separateName(name)
-
-    -- If the value doesn't exist, just return
-    -- If you are removing something, we don't need to handle the value
-    local value = GetPlayerBaseStatusTable(plyId, name)
-    if (not value) then return end
-
+    local primary, secondary = SeparateStatusName(name)
     EnsurePlayerSubStatus(plyId, primary, secondary)
+    local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, name, amount)
 
-    value.values[secondary].value -= amount
-    if (value.values[secondary].value < 0) then
-        value.values[secondary].value = 0
+    if (hasRemoved) then
+        SyncPlayerStatus(plyId, primary)
     end
 end
 
@@ -70,16 +69,12 @@ exports("RemoveFromStatus", RemoveFromStatus)
 ---@param name StatusName
 ---@param amount number
 function AddToStatus(plyId, name, amount)
-    local primary, secondary = separateName(name)
-
-    local value = GetPlayerBaseStatusTable(plyId, name)
-    if (not value) then return end
-
+    local primary, secondary = SeparateStatusName(name)
     EnsurePlayerSubStatus(plyId, primary, secondary)
+    local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, name, amount)
 
-    value.values[secondary].value += amount
-    if (value.values[secondary].value > 100.0) then
-        value.values[secondary].value = 100.0
+    if (hasAdded) then
+        SyncPlayerStatus(plyId, primary)
     end
 end
 
@@ -97,3 +92,16 @@ RegisterCommand("add_to_status", function(source, args)
 
     AddToStatus(source, status, amount or 1.0)
 end, false)
+
+---@param plyId PlayerId
+---@param name StatusName
+function ValidateStatusModification(plyId, name)
+    local primary, secondary = SeparateStatusName(name)
+
+    local value = GetPlayerBaseStatusTable(plyId, name)
+    if (not value) then return false, nil end
+
+    EnsurePlayerSubStatus(plyId, primary, secondary)
+
+    return true, value, primary, secondary
+end

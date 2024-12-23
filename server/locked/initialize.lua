@@ -17,6 +17,7 @@ local function initializeStatusesForPlayer(plyId)
         local values = {}
         if (statusSettings.multi ~= true) then
             values = {
+                -- TODO: Fix values
                 [status] = {value = 0.0}
             }
         end
@@ -29,6 +30,7 @@ local function initializeStatusesForPlayer(plyId)
         if (decoded) then
             for _status, statusData in pairs(decoded[status].values) do
                 Cache.statuses[plyId][status].values[_status] = {
+                    -- TODO: Fix vlaues
                     value = statusData.value or 0.0
                 }
             end
@@ -41,13 +43,16 @@ end
 ---@param secondary SubStatusName
 function EnsurePlayerSubStatus(plyId, primary, secondary)
     if (not Cache.statuses[plyId][primary].values[secondary]) then
-        Cache.statuses[plyId][primary].values[secondary] = {value = 0.0}
+        -- Cache.statuses[plyId][primary].values[secondary] = {value = 0.0}
+        Cache.statuses[plyId][primary].values[secondary] = {}
+
+        for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do
+            Cache.statuses[plyId][primary].values[secondary][key] = baseValue
+        end
     end
 end
 
 local players = Z.getPlayers()
 for i = 1, #players do
     initializeStatusesForPlayer(players[i])
-
-    print(json.encode(Cache.statuses[players[i]], {indent = true}))
 end
