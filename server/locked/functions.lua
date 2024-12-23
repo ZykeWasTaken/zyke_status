@@ -63,6 +63,8 @@ function RemoveFromStatus(plyId, name, amount)
     end
 end
 
+exports("RemoveFromStatus", RemoveFromStatus)
+
 -- Add value to the status
 ---@param plyId PlayerId
 ---@param name StatusName
@@ -80,6 +82,8 @@ function AddToStatus(plyId, name, amount)
         value.values[secondary].value = 100.0
     end
 end
+
+exports("AddToStatus", AddToStatus)
 
 RegisterCommand("get_status", function(source, args, raw)
     local status = args[1]
