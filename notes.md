@@ -19,7 +19,7 @@
 -   Base addiction value, the more you use the drug, the more addicted you get, this value will gradually go downwards
 -   Perhaps some satisfaction value, as long as you are above a specific addiciton threshold, you have to keep the satisfaction at a managable level, otherwise you will start to feel effects
 
--   The `value` key is the satisfaction level, it will stay at 0.0 as long as you are not addicted
+-   The `value` key is the satisfaction level, it will stay at 100.0 as long as you are not addicted
 -   The `addiciton` key will keep track of how addicted to something you are, this is static, and once it hits a threshold it will allow the satisfaction to need to be relieved. The addiction is very hard to grow, but will slowly over time, perhaps exponentially harder? So it is easy to start getting addicted, but the severity of the effects are pretty mild and takes time to build
 
 <!-- Statuses -->
@@ -28,5 +28,5 @@
 -   Stress
 -   High
 -   Drunk
--   Food
+-   Hunger
 -   Thirst
