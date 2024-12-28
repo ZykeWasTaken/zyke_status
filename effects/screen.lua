@@ -38,7 +38,7 @@ function QueueScreenEffect(key, screenEffect)
     -- If the index can be found, insert your key into that list of keys
     if (idx ~= nil) then
         -- Append key
-        ScreenEffectQueue[idx].keys[#ScreenEffectQueue[idx].keys] = key
+        ScreenEffectQueue[idx].keys[#ScreenEffectQueue[idx].keys+1] = key
     else
         -- If the index could not be found, insert
         table.insert(ScreenEffectQueue, #ScreenEffectQueue+1, {
