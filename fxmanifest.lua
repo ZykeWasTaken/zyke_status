@@ -7,17 +7,23 @@ shared_scripts {
     "@zyke_lib/imports.lua",
     "shared/unlocked/config.lua",
     "shared/unlocked/functions.lua",
+
     "statuses/**/config.lua",
 }
 
 server_scripts {
     "@oxmysql/lib/MySQL.lua",
     "server/locked/main.lua",
+    "server/unlocked/main.lua",
+
     "server/unlocked/register_statuses.lua",
     "server/locked/functions.lua",
     "server/locked/eventhandler.lua",
     "server/unlocked/functions.lua",
-    "statuses/**/server.lua",
+
+
+    "statuses/**/core/server.lua",
+    "statuses/**/effects/server.lua",
 
     "server/unlocked/eventhandler.lua",
     "server/locked/initialize.lua",
@@ -25,7 +31,13 @@ server_scripts {
 
 client_scripts {
     "client/locked/main.lua",
+    "client/unlocked/main.lua",
+
     "client/unlocked/functions.lua",
     "client/unlocked/eventhandler.lua",
-    "statuses/**/client.lua",
+
+    "statuses/**/core/client.lua",
+    "statuses/**/effects/client.lua",
+
+    "effects/*.lua",
 }

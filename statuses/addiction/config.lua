@@ -7,7 +7,11 @@ Config.Status.addiction = {
         },
         value = {
             drain = 0.01
-        }
+        },
+        effect = {
+            threshold = 20.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
+            screenEffect = "BeastLaunch02",
+        },
     },
     ["thc"] = { -- Specifically for THC, harder to get addicted
         addiction = {
@@ -16,6 +20,23 @@ Config.Status.addiction = {
         },
         value = {
             drain = 0.01
-        }
+        },
+        effect = {
+            threshold = 20.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
+            screenEffect = "BeastLaunch02",
+        },
+    },
+    ["nicotine"] = {
+        addiction = {
+            drain = 0.01,
+            threshold = 10.0,
+        },
+        value = {
+            drain = 2.5
+        },
+        effect = {
+            threshold = 80.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
+            screenEffect = "BeastLaunch02",
+        },
     }
 }

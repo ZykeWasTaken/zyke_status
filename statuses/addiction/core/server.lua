@@ -42,7 +42,7 @@ RegisterStatusType("addiction", true, {
                 -- print("Handling", "addiction" .. "." .. subName, "for", plyId)
 
                 -- print(json.encode(Config.Status))
-                local statusSettings = Config.Status.addiction[subName] or Config.Status.addiction.base
+                local statusSettings = GetStatusSettings("addiction." .. subName)
 
                 -- If below the addiction threshold
                 if (values.addiction < statusSettings.addiction.threshold) then
