@@ -1,3 +1,5 @@
+-- TODO: Change keys from array to key-value for better performance, probably
+
 -- We utilize timecyclemods since it offers the best variety of screen effects
 
 -- We have a queue system in place, prioritizing the most requests and the place in the queue
