@@ -4,7 +4,11 @@
 -- Using this method, we can queue multiple different effects from different statuses without having weird flickering issues, and it prioritizes the most relevant one
 
 ---@type {screenEffect: string, keys: string[]}[]
-ScreenEffectQueue = {}
+ScreenEffectQueue = {
+    -- {screenEffect = "effect1", keys = {"key1"}},
+    -- {screenEffect = "effect2", keys = {"key1", "key2"}},
+    -- {screenEffect = "effect3", keys = {"key1", "key2"}}
+}
 
 -- Queue a screen effect to take place
 ---@param key string | StatusName @If status name, you can fetch the base screen effect if one is not provided
@@ -44,10 +48,6 @@ end
 
 exports("QueueScreenEffect", QueueScreenEffect)
 
--- TODO: May cause issues if we have similar custom names for different effects?
--- Some custom key that is the same, and they try to add it to two different screen effects
--- The function below will only find it in the first one, which requires us to provide the screen effect name too
-
 -- Removes a specific key from the queue
 ---@param key string
 ---@param screenEffect? string @You only need to provide this if you are using the same key for two different screen effects, otherwise it will pick the first one it finds
@@ -81,13 +81,34 @@ exports("ClearScreenEffectQueue", ClearScreenEffectQueue)
 
 exports("RemoveScreenEffectFromQueue", RemoveScreenEffectFromQueue)
 
+-- Gets the effect that should be played this tick
+-- Prioritizes order in queue, if effects have the same key count, it will use the earliest one
+-- The queue order does not matter if the effect has the most keys, it will be chosen as it is the most relevant one to use
+---@return integer | nil @idx
+local function getEffectToPlay()
+    if (#ScreenEffectQueue == 0) then return nil end
+    if (#ScreenEffectQueue == 1) then return 1 end
+
+    local idx, keyCount = 1, #ScreenEffectQueue[1].keys
+    for i = 2, #ScreenEffectQueue do
+        if (#ScreenEffectQueue[i].keys > keyCount) then
+            idx = i
+            keyCount = #ScreenEffectQueue[i].keys
+        end
+    end
+
+    return idx
+end
+
 CreateThread(function()
     while (1) do
-        -- print("Waiting for screen effect...")
-        -- if (#ScreenEffectQueue > 0) then
-        --     print("Playing screenEffect", ScreenEffectQueue[1])
-        -- end
-        print(json.encode(ScreenEffectQueue, {indent = true}))
+        local effectIdx = getEffectToPlay()
+        if (effectIdx) then
+            local queueTbl = ScreenEffectQueue[effectIdx]
+            local screenEffect = queueTbl.screenEffect
+
+            print("Screen effect", screenEffect)
+        end
 
         Wait(1000)
     end
