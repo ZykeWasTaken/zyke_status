@@ -8,7 +8,7 @@ Config.Status.high = {
     ["coke"] = {
         effect = {
             threshold = 5.0,
-            movementSpeed = 1.2,
+            movementSpeed = 1.49, -- Max
             screenEffect = "BikerFilter",
         }
     }
