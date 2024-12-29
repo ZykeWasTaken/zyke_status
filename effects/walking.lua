@@ -1,6 +1,5 @@
-WalkingEffectQueue = {}
-
----@param name StatusName
-function QueueWalkingEffect(name)
-    
-end
+RegisterQueueKey("walkingStyle", function() end, function()
+    -- if (currScreenEffect ~= nil) then
+    --     ClearTimecycleModifier()
+    -- end
+end)

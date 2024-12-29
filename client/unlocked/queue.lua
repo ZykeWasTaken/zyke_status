@@ -6,14 +6,18 @@
 ---@type table<string, QueueData>
 local queues = {}
 
----@type table<string, function>
-local onResourceStop = {}
+---@type table<string, {onResourceStop: function, onTick: function}>
+local funcs = {}
 
 ---@param key string
----@param _onResourceStop function
-function RegisterQueueKey(key, _onResourceStop)
+---@param onTick function
+---@param onResourceStop function
+function RegisterQueueKey(key, onTick, onResourceStop)
     queues[key] = {}
-    onResourceStop[key] = _onResourceStop
+    funcs[key] = {
+        onResourceStop = onResourceStop,
+        onTick = onTick,
+    }
 end
 
 ---@param key string
@@ -25,8 +29,8 @@ end
 AddEventHandler("onResourceStop", function(resName)
     if (GetCurrentResourceName() ~= resName) then return end
 
-    for _, fn in pairs(onResourceStop) do
-        fn()
+    for  _, func in pairs(funcs) do
+        if (func.onResourceStop) then func.onResourceStop() end
     end
 end)
 
@@ -141,6 +145,9 @@ local function getDominantValue(queueKey)
     return idx
 end
 
+-- TODO: Do some tracking to see if a value should reset or something
+-- Such as all effects stop playing if there is nothing in screenEffect, and all
+
 CreateThread(function()
     while (1) do
         local sleep = 5000
@@ -151,7 +158,12 @@ CreateThread(function()
             for queueKey, queueData in pairs(queues) do
                 local val = getDominantValue(queueKey)
 
-                print("Dominant: " .. tostring(val), json.encode(queueData))
+                if (val) then
+                    print("Dominant: " .. tostring(val), json.encode(queueData))
+                    if (funcs[queueKey].onTick) then
+                        funcs[queueKey].onTick(queueData[val].value)
+                    end
+                end
             end
         end
 

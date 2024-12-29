@@ -13,6 +13,10 @@ for subName, statusSettings in pairs(Config.Status.high) do
                 -- QueueScreenEffect(fullName)
                 AddToQueue("screenEffect", fullName)
             end
+
+            if (statusSettings.effect.movementSpeed) then
+                AddToQueue("movementSpeed", fullName)
+            end
         end,
         onTick = function(val)
             -- print(fullName, "onTick", val)
@@ -21,6 +25,10 @@ for subName, statusSettings in pairs(Config.Status.high) do
             print(fullName, "onStop", val)
             if (statusSettings.effect.screenEffect) then
                 RemoveFromQueue("screenEffect", fullName)
+            end
+
+            if (statusSettings.effect.movementSpeed) then
+                RemoveFromQueue("movementSpeed", fullName)
             end
         end
     }

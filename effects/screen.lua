@@ -144,8 +144,7 @@ CreateThread(function()
     end
 end)
 
-
-RegisterQueueKey("screenEffect", function()
+RegisterQueueKey("screenEffect", function() end, function()
     if (currScreenEffect ~= nil) then
         ClearTimecycleModifier()
     end
