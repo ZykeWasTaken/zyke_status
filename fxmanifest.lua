@@ -32,6 +32,7 @@ server_scripts {
 client_scripts {
     "client/locked/main.lua",
     "client/unlocked/main.lua",
+    "client/unlocked/queue.lua",
 
     "client/unlocked/functions.lua",
     "client/unlocked/eventhandler.lua",

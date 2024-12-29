@@ -10,7 +10,8 @@ for subName, statusSettings in pairs(Config.Status.high) do
         onStart = function(val)
             print(fullName, "onStart", val)
             if (statusSettings.effect.screenEffect) then
-                QueueScreenEffect(fullName)
+                -- QueueScreenEffect(fullName)
+                AddToQueue("screenEffect", fullName)
             end
         end,
         onTick = function(val)
@@ -19,7 +20,7 @@ for subName, statusSettings in pairs(Config.Status.high) do
         onStop = function(val)
             print(fullName, "onStop", val)
             if (statusSettings.effect.screenEffect) then
-                RemoveScreenEffectFromQueue(fullName)
+                RemoveFromQueue("screenEffect", fullName)
             end
         end
     }

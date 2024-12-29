@@ -5,13 +5,15 @@
 EffectFunctions["addiction.nicotine"] = {
     onStart = function(val)
         print("addiction.nicotine onStart", val)
-        QueueScreenEffect("addiction.nicotine")
+        -- QueueScreenEffect("addiction.nicotine")
+        AddToQueue("screenEffect", "addiction.nicotine")
     end,
     onTick = function(val)
         print("addiction.nicotine onTick", val)
     end,
     onStop = function(val)
         print("addiction.nicotine onStop", val)
-        RemoveScreenEffectFromQueue("addiction.nicotine")
+        -- RemoveScreenEffectFromQueue("addiction.nicotine")
+        RemoveFromQueue("screenEffect", "addiction.nicotine")
     end
 }
