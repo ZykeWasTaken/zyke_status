@@ -17,3 +17,19 @@ EffectFunctions["addiction.nicotine"] = {
         RemoveFromQueue("screenEffect", "addiction.nicotine")
     end
 }
+
+EffectFunctions["addiction.thc"] = {
+    onStart = function(val)
+        print("addiction.thc onStart", val)
+        -- QueueScreenEffect("addiction.thc")
+        AddToQueue("screenEffect", "addiction.thc")
+    end,
+    onTick = function(val)
+        print("addiction.thc onTick", val)
+    end,
+    onStop = function(val)
+        print("addiction.thc onStop", val)
+        -- RemoveScreenEffectFromQueue("addiction.thc")
+        RemoveFromQueue("screenEffect", "addiction.thc")
+    end
+}

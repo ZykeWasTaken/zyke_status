@@ -19,7 +19,7 @@ Config.Status.addiction = {
             threshold = 20.0,
         },
         value = {
-            drain = 0.01
+            drain = 5.01
         },
         effect = {
             threshold = 20.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
@@ -36,7 +36,7 @@ Config.Status.addiction = {
         },
         effect = {
             threshold = 80.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
-            screenEffect = "BikerFilter",
+            screenEffect = "BeastLaunch02",
         },
     }
 }

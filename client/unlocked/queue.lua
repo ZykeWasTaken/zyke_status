@@ -101,15 +101,44 @@ function RemoveFromQueue(queueKey, key, value)
     end
 end
 
+-- TODO: Cache the previous strength of the value, and don't override based on queuwe idx if it is the same
+-- This is to avoid back-and-forths where it is not really needed to switch because the strengths are the same
+
 -- Gets the effect that should be played this tick
 -- Prioritizes order in queue, if effects have the same key count, it will use the earliest one
 -- The queue order does not matter if the effect has the most keys, it will be chosen as it is the most relevant one to use
+---@return integer | nil @key
 local function getDominantValue(queueKey)
     local queue = GetQueue(queueKey)
     if (not queue) then return nil end
 
     local queueCount = Z.table.count(queue)
-    -- if (queueCount)
+    if (queueCount == 0) then return nil end
+    if (queueCount == 1) then return 1 end
+
+    ---@param keys table<string, integer>
+    ---@return integer
+    local function getTotalValueForKeys(keys)
+        local count = 0
+
+        for _, amount in pairs(keys) do
+            count += amount
+        end
+
+        return count
+    end
+
+    local idx, keyCount = 1, getTotalValueForKeys(queue[1].keys)
+    for i = 2, #queue do
+        local newCount = getTotalValueForKeys(queue[i].keys)
+
+        if (newCount > keyCount) then
+            idx = i
+            keyCount = newCount
+        end
+    end
+
+    return idx
 end
 
 CreateThread(function()
@@ -120,7 +149,9 @@ CreateThread(function()
             sleep = 1000
 
             for queueKey, queueData in pairs(queues) do
-                print(json.encode(queueData))
+                local val = getDominantValue(queueKey)
+
+                print("Dominant: " .. tostring(val), json.encode(queueData))
             end
         end
 
