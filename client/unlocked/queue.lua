@@ -6,17 +6,19 @@
 ---@type table<string, QueueData>
 local queues = {}
 
----@type table<string, {onResourceStop: function, onTick: function}>
+---@type table<string, {onResourceStop: function, onTick: function, reset: function?}>
 local funcs = {}
 
 ---@param key string
 ---@param onTick function
 ---@param onResourceStop function
-function RegisterQueueKey(key, onTick, onResourceStop)
+---@param reset? function
+function RegisterQueueKey(key, onTick, onResourceStop, reset)
     queues[key] = {}
     funcs[key] = {
         onResourceStop = onResourceStop,
         onTick = onTick,
+        reset = reset
     }
 end
 
@@ -149,8 +151,15 @@ end
 -- Such as all effects stop playing if there is nothing in screenEffect, and all
 
 CreateThread(function()
+    -- Cache the previously ran effects, so we know when to run the reset function
+    ---@type table<string, true>
+    local prevEffects = {}
+    local newEffects = {}
+
     while (1) do
         local sleep = 5000
+
+        newEffects = {}
 
         if (Z.table.doesTableHaveEntries(queues)) then
             sleep = 1000
@@ -159,6 +168,9 @@ CreateThread(function()
                 local val = getDominantValue(queueKey)
 
                 if (val) then
+                    -- prevEffects[queueKey] = true
+                    newEffects[queueKey] = true
+
                     print("Dominant: " .. tostring(val), json.encode(queueData))
                     if (funcs[queueKey].onTick) then
                         funcs[queueKey].onTick(queueData[val].value)
@@ -166,6 +178,15 @@ CreateThread(function()
                 end
             end
         end
+
+        for queueKey in pairs(prevEffects) do
+            if (not newEffects[queueKey]) then
+                print("Should run stop for", queueKey)
+                if (funcs[queueKey].reset) then funcs[queueKey].reset() end
+            end
+        end
+
+        prevEffects = newEffects
 
         Wait(sleep)
     end
