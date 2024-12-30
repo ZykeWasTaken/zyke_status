@@ -1,11 +1,17 @@
 Config.Status.high = {
     ["base"] = {
+        value = {
+            drain = 0.01
+        },
         effect = {
-            threshold = 30.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
+            threshold = 30.0,
             screenEffect = "BikerFilter",
         },
     },
     ["coke"] = {
+        value = {
+            drain = 0.01
+        },
         effect = {
             threshold = 5.0,
             movementSpeed = 1.49, -- Max

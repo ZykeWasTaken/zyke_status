@@ -32,7 +32,7 @@ Config.Status.addiction = {
             threshold = 10.0,
         },
         value = {
-            drain = 2.5
+            drain = 0.5
         },
         effect = {
             threshold = 80.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0

@@ -8,12 +8,42 @@ local function initializeStatusesForPlayer(plyId)
     local identifier = Z.getIdentifier(plyId)
     if (not identifier) then return end
 
-    local savedStatus = MySQL.single.await("SELECT data from zyke_status WHERE identifier = ?", {identifier})
+    local savedStatus = MySQL.scalar.await("SELECT data from zyke_status WHERE identifier = ?", {identifier})
     local decoded = savedStatus and json.decode(savedStatus)
 
-    for status, statusSettings in pairs(Cache.existingStatuses) do
-        -- Base values
+    print("Saved status", savedStatus)
 
+    -- for status, statusSettings in pairs(Cache.existingStatuses) do
+    --     -- Base values
+
+    --     local values = {}
+    --     if (statusSettings.multi ~= true) then
+    --         values = {
+    --             -- TODO: Fix values
+    --             [status] = {value = 0.0}
+    --         }
+    --     end
+
+    --     Cache.statuses[plyId][status] = {
+    --         values = values
+    --     }
+
+    --     -- If you have any saved values
+    --     if (decoded) then
+    --         for _status, statusData in pairs(decoded[status].values) do
+    --             Cache.statuses[plyId][status].values[_status] = statusData
+
+    --             print(_status, json.encode(statusData))
+    --         end
+    --     end
+    -- end
+end
+
+---@param plyId PlayerId
+local function ensureBaseStatusValues(plyId)
+    Cache.statuses[plyId] = {}
+
+    for status, statusSettings in pairs(Cache.existingStatuses) do
         local values = {}
         if (statusSettings.multi ~= true) then
             values = {
@@ -25,17 +55,43 @@ local function initializeStatusesForPlayer(plyId)
         Cache.statuses[plyId][status] = {
             values = values
         }
+    end
 
-        -- If you have any saved values
-        if (decoded) then
-            for _status, statusData in pairs(decoded[status].values) do
-                Cache.statuses[plyId][status].values[_status] = {
-                    -- TODO: Fix vlaues
-                    value = statusData.value or 0.0
-                }
+    -- print("here 1", json.encode(Cache.statuses))
+end
+
+---@param plyId PlayerId
+local function fetchStatusFromDatabase(plyId)
+    local identifier = Z.getIdentifier(plyId)
+    if (not identifier) then return end
+
+    local dbStatus = MySQL.scalar.await("SELECT data FROM zyke_status WHERE identifier = ?", {identifier})
+    local decoded = dbStatus and json.decode(dbStatus)
+
+    -- print(dbStatus)
+
+    -- print(json.encode(Cache.statuses))
+    if (decoded) then
+        for status in pairs(Cache.existingStatuses) do
+            if (not Cache.statuses[plyId][status]) then
+                Cache.statuses[plyId][status] = {}
+            end
+
+            if (decoded[status]) then
+                for _status, statusData in pairs(decoded[status].values) do
+                    Cache.statuses[plyId][status].values[_status] = statusData
+
+                    print(_status, json.encode(statusData))
+                end
             end
         end
     end
+end
+
+---@param plyId PlayerId
+local function initializePlayer(plyId)
+    ensureBaseStatusValues(plyId)
+    fetchStatusFromDatabase(plyId)
 end
 
 ---@param plyId PlayerId
@@ -52,7 +108,9 @@ function EnsurePlayerSubStatus(plyId, primary, secondary)
     end
 end
 
+Wait(100)
 local players = Z.getPlayers()
 for i = 1, #players do
-    initializeStatusesForPlayer(players[i])
+    -- initializeStatusesForPlayer(players[i])
+    initializePlayer(players[i])
 end

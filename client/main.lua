@@ -40,7 +40,14 @@ end
 function ExecuteStatusEffect(name, fnType, val)
     local _, _, full = SeparateStatusName(name)
 
-    if (EffectFunctions[full] and EffectFunctions[full][fnType]) then EffectFunctions[full][fnType](val) end
+    -- Temp to ensure the effects exist
+    if (not EffectFunctions[full] or not EffectFunctions[full][fnType]) then
+        RegisterEffectFunctions(name)
+    end
+
+    EffectFunctions[full][fnType](val)
+
+    -- if (EffectFunctions[full] and EffectFunctions[full][fnType]) then EffectFunctions[full][fnType](val) end
 end
 
 -- Tick to handle effects

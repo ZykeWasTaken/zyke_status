@@ -2,17 +2,15 @@
 ---@param name StatusName
 ---@param multi? boolean
 ---@param baseValues table @Values the state will be required to have
----@param tickFn? function
----@param onAdd function
----@param onRemove function
-function RegisterStatusType(name, multi, baseValues, tickFn, onAdd, onRemove)
+---@param functions {onTick: function?, onAdd: function, onRemove: function}
+function RegisterStatusType(name, multi, baseValues, functions)
     Z.debug("Registering", name, multi)
 
     Cache.existingStatuses[name] = {
         multi = multi and true or false,
         baseValues = baseValues,
-        tickFn = tickFn,
-        onAdd = onAdd,
-        onRemove = onRemove
+        onTick = functions.onTick,
+        onAdd = functions.onAdd,
+        onRemove = functions.onRemove
     }
 end

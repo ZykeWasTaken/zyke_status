@@ -42,7 +42,7 @@ end
 
 ---@param plyId PlayerId
 function GetAllRawStatuses(plyId)
-    return Cache.statuses[plyId]
+    return Cache.statuses[plyId] or {}
 end
 
 ---@param plyId PlayerId
@@ -134,4 +134,17 @@ function ValidateStatusModification(plyId, name)
     EnsurePlayerSubStatus(plyId, primary, secondary)
 
     return true, value, primary, secondary
+end
+
+---@param plyId PlayerId
+function SavePlayerToDatabase(plyId)
+    local statuses = Cache.statuses[plyId]
+    if (not statuses) then return end
+
+    local plyIdentifier = Z.getIdentifier(plyId)
+    if (not plyIdentifier) then return end
+
+    local data = json.encode(statuses)
+
+    MySQL.query.await("INSERT INTO zyke_status (identifier, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?", {plyIdentifier, data, data})
 end

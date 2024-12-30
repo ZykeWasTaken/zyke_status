@@ -19,8 +19,7 @@ server_scripts {
     "server/register_statuses.lua",
     "server/functions.lua",
 
-    "statuses/**/core/server.lua",
-    "statuses/**/effects/server.lua",
+    "statuses/**/server.lua",
 
     "server/eventhandler.lua",
 
@@ -34,8 +33,7 @@ client_scripts {
     "client/functions.lua",
     "client/eventhandler.lua",
 
-    "statuses/**/core/client.lua",
-    "statuses/**/effects/client.lua",
+    "statuses/**/client.lua",
 
     "effects/*.lua",
     "dev/client.lua",

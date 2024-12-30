@@ -20,6 +20,8 @@ function GetStatusSettings(name)
     return Config.Status[prim][sec] or Config.Status[prim].base
 end
 
+local reversed = Z.table.new({"addiction", "hunger", "thirst"})
+
 -- Checks the threshold and if you should run the effect
 -- Some effects may be reversed, so we define it in here
 ---@param name StatusName
@@ -30,7 +32,6 @@ function IsWithinEffectThreshold(name, statusData)
 
     if (not settings.effect) then return false end
 
-    local reversed = Z.table.new({"addiction"})
     if (reversed:contains(prim)) then
         return statusData.value <= settings.effect.threshold
     else

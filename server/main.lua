@@ -4,15 +4,34 @@ Cache = {
     existingStatuses = {},
 }
 
+---@param name string @primary
+local function getPlayersForStatus(name)
+    local players = {}
+
+    for plyId, statuses in pairs(Cache.statuses) do
+        if (statuses[name]) then
+            players[plyId] = statuses[name]
+        end
+    end
+
+    return players
+end
+
 -- Loop the existing statuses and perform an action every second, if one is specified
 CreateThread(function()
     while (1) do
         Wait(1000)
 
-        for _, values in pairs(Cache.existingStatuses) do
-            if (values.tickFn) then
-                values.tickFn()
+        for statusName, values in pairs(Cache.existingStatuses) do
+            local prim = SeparateStatusName(statusName)
+
+            if (values.onTick) then
+                values.onTick(getPlayersForStatus(prim))
             end
+        end
+
+        for plyId in pairs(Cache.statuses) do
+            SavePlayerToDatabase(plyId)
         end
 
         -- print(json.encode(Cache.statuses, {indent = true}))

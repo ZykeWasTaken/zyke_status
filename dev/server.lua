@@ -20,3 +20,9 @@ end, "Add/Remove from player status", {
     {"action", "add/remove"},
     {"amount", "0-100"},
 })
+
+Z.registerCommand({"status_clear", "sclear", "status_reset", "sreset"}, function(plyId, args)
+    -- Cache.status
+end, "Reset Player Status", {
+    {"Player Id", "Player Id, or empty to use yourself"}
+})
