@@ -23,6 +23,8 @@ server_scripts {
     "statuses/**/effects/server.lua",
 
     "server/eventhandler.lua",
+
+    "dev/server.lua",
 }
 
 client_scripts {
@@ -36,4 +38,5 @@ client_scripts {
     "statuses/**/effects/client.lua",
 
     "effects/*.lua",
+    "dev/client.lua",
 }

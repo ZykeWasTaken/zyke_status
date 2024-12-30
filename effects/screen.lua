@@ -19,18 +19,23 @@ local function ensureScreenEffect(name)
     end
 end
 
-RegisterQueueKey("screenEffect", function(val)
-    -- print("screenEffect", val)
-    ensureScreenEffect(val)
-end, function()
+local function clearScreenEffect()
     if (currScreenEffect ~= nil) then
         currScreenEffect = nil
         ClearTimecycleModifier()
     end
-end, function()
-    print("Resetting screenEffect")
-    if (currScreenEffect ~= nil) then
-        currScreenEffect = nil
-        ClearTimecycleModifier()
+end
+
+RegisterQueueKey("screenEffect", {
+    onTick = function(val)
+        ensureScreenEffect(val)
+    end,
+    onResourceStop = function()
+        print("onResourceStop screenEffect")
+        clearScreenEffect()
+    end,
+    reset = function()
+        print("reset screenEffect")
+        clearScreenEffect()
     end
-end)
+})

@@ -81,6 +81,7 @@ exports("GetStatus", GetStatus)
 
 ---@param plyId PlayerId
 ---@param name StatusName
+---@param amount number
 function RemoveFromStatus(plyId, name, amount)
     local primary, secondary = SeparateStatusName(name)
     EnsurePlayerSubStatus(plyId, primary, secondary)

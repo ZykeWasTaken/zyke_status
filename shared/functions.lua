@@ -50,3 +50,8 @@ function IsStatusNameValid(name)
 
     return Config.Status[prim] ~= nil
 end
+
+---@param tbl
+function EnsureValue()
+
+end

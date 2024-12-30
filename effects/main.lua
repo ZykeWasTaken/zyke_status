@@ -7,7 +7,6 @@ for statusType, statusSettings in pairs(Config.Status) do
             onStart = function(val)
                 print(fullName, "onStart", val)
                 if (subSettings.effect.screenEffect) then
-                    -- QueueScreenEffect(fullName)
                     AddToQueue("screenEffect", fullName)
                 end
 

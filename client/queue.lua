@@ -10,15 +10,13 @@ local queues = {}
 local funcs = {}
 
 ---@param key string
----@param onTick function
----@param onResourceStop function
----@param reset? function
-function RegisterQueueKey(key, onTick, onResourceStop, reset)
+---@param functions {onResourceStop: function, onTick: function, reset: function?}
+function RegisterQueueKey(key, functions)
     queues[key] = {}
     funcs[key] = {
-        onResourceStop = onResourceStop,
-        onTick = onTick,
-        reset = reset
+        onResourceStop = functions.onResourceStop,
+        onTick = functions.onTick,
+        reset = functions.reset
     }
 end
 
