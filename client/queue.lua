@@ -45,7 +45,6 @@ function AddToQueue(queueKey, key, value)
             local statusSettings = GetStatusSettings(key)
             value = statusSettings.effect[queueKey]
         else
-            print("No effect provided and no valid status name")
             Z.debug("No effect value provided and no valid status name.")
         end
     end
@@ -169,7 +168,7 @@ CreateThread(function()
                     -- prevEffects[queueKey] = true
                     newEffects[queueKey] = true
 
-                    print("Dominant: " .. tostring(val), json.encode(queueData))
+                    -- print("Dominant: " .. tostring(val), json.encode(queueData))
                     if (funcs[queueKey].onTick) then
                         funcs[queueKey].onTick(queueData[val].value)
                     end
@@ -179,7 +178,7 @@ CreateThread(function()
 
         for queueKey in pairs(prevEffects) do
             if (not newEffects[queueKey]) then
-                print("Should run stop for", queueKey)
+                -- print("Should run stop for", queueKey)
                 if (funcs[queueKey].reset) then funcs[queueKey].reset() end
             end
         end
