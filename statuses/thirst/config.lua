@@ -1,7 +1,7 @@
-Config.Status.hunger = {
+Config.Status.thirst = {
     ["base"] = {
         value = {
-            drain = 0.003,
+            drain = 0.005,
             -- drain = 0.1,
         },
         effect = {
