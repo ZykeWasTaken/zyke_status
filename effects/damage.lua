@@ -1,0 +1,7 @@
+-- RegisterQueueKey("damage", {
+--     onTick = function(val)
+--         -- SetRunSprintMultiplierForPlayer(PlayerId(), val)
+--         print("ok?")
+--         SetEntityHealth(PlayerPedId(), GetEntityHealth(PlayerPedId()) - val)
+--     end
+-- })

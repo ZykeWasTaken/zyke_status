@@ -8,8 +8,6 @@ RegisterStatusType(primary, true, {value = 0.0},
                 local statusSettings = GetStatusSettings(fullName)
 
                 RemoveFromStatus(plyId, fullName, statusSettings?.value?.drain or 0)
-
-                -- print(subName, json.encode(values))
             end
         end
     end,
@@ -17,7 +15,7 @@ RegisterStatusType(primary, true, {value = 0.0},
         local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
         if (not isValid or not data) then return end
 
-        -- Add onto the stress value
+        -- Add onto the high value
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value + amount, Config.Settings.decimalAccuracy)
         if (data.values[secondary].value > 100.0) then
             data.values[secondary].value = 100.0
@@ -27,10 +25,9 @@ RegisterStatusType(primary, true, {value = 0.0},
     end,
     onRemove = function(plyId, name, amount)
         local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        print(plyId, name, amount)
         if (not isValid or not data) then return end
 
-        -- Remopve from the stress value
+        -- Remove from the high value
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value - amount, Config.Settings.decimalAccuracy)
         if (data.values[secondary].value < 0.0) then
             data.values[secondary].value = 0.0

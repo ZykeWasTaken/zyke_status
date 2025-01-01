@@ -31,11 +31,9 @@ RegisterQueueKey("screenEffect", {
         ensureScreenEffect(val)
     end,
     onResourceStop = function()
-        print("onResourceStop screenEffect")
         clearScreenEffect()
     end,
     reset = function()
-        print("reset screenEffect")
         clearScreenEffect()
     end
 })

@@ -13,8 +13,6 @@ Z.registerCommand({"status", "stat"}, function(plyId, args)
     else
         print("Incorrect action input")
     end
-
-    print(name, action, amount)
 end, "Add/Remove from player status", {
     {"name", "Full status name (ex. high.coke)"},
     {"action", "add/remove"},

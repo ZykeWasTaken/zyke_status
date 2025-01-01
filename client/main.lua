@@ -80,8 +80,6 @@ CreateThread(function()
             end
         end
 
-        -- print(json.encode(availableEffects))
-
         prevEffects = availableEffects
 
         Wait(1000)

@@ -24,6 +24,7 @@ server_scripts {
     "server/eventhandler.lua",
 
     "dev/server.lua",
+    "shortcuts/server.lua",
 }
 
 client_scripts {
@@ -37,4 +38,5 @@ client_scripts {
 
     "effects/*.lua",
     "dev/client.lua",
+    "shortcuts/client.lua",
 }

@@ -2,44 +2,6 @@
 -- All caches, functions etc have to be defined before
 
 ---@param plyId PlayerId
-local function initializeStatusesForPlayer(plyId)
-    Cache.statuses[plyId] = {}
-
-    local identifier = Z.getIdentifier(plyId)
-    if (not identifier) then return end
-
-    local savedStatus = MySQL.scalar.await("SELECT data from zyke_status WHERE identifier = ?", {identifier})
-    local decoded = savedStatus and json.decode(savedStatus)
-
-    print("Saved status", savedStatus)
-
-    -- for status, statusSettings in pairs(Cache.existingStatuses) do
-    --     -- Base values
-
-    --     local values = {}
-    --     if (statusSettings.multi ~= true) then
-    --         values = {
-    --             -- TODO: Fix values
-    --             [status] = {value = 0.0}
-    --         }
-    --     end
-
-    --     Cache.statuses[plyId][status] = {
-    --         values = values
-    --     }
-
-    --     -- If you have any saved values
-    --     if (decoded) then
-    --         for _status, statusData in pairs(decoded[status].values) do
-    --             Cache.statuses[plyId][status].values[_status] = statusData
-
-    --             print(_status, json.encode(statusData))
-    --         end
-    --     end
-    -- end
-end
-
----@param plyId PlayerId
 local function ensureBaseStatusValues(plyId)
     Cache.statuses[plyId] = {}
 
@@ -57,7 +19,7 @@ local function ensureBaseStatusValues(plyId)
         }
     end
 
-    -- print("here 1", json.encode(Cache.statuses))
+    print("here 1", json.encode(Cache.statuses))
 end
 
 ---@param plyId PlayerId
@@ -70,7 +32,7 @@ local function fetchStatusFromDatabase(plyId)
 
     -- print(dbStatus)
 
-    -- print(json.encode(Cache.statuses))
+    print("here 2", json.encode(Cache.statuses))
     if (decoded) then
         for status in pairs(Cache.existingStatuses) do
             if (not Cache.statuses[plyId][status]) then
@@ -81,11 +43,13 @@ local function fetchStatusFromDatabase(plyId)
                 for _status, statusData in pairs(decoded[status].values) do
                     Cache.statuses[plyId][status].values[_status] = statusData
 
-                    print(_status, json.encode(statusData))
+                    print("here 3", _status, json.encode(statusData))
                 end
             end
         end
     end
+
+    print("here 4", json.encode(Cache.statuses))
 end
 
 ---@param plyId PlayerId

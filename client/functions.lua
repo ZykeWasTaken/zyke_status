@@ -16,21 +16,3 @@ function GetRawStatus(name)
 
     return Cache.statuses[primary].values[secondary], true
 end
-
--- ########## List of shorthand functions to grab common and specific values ########## --
-
----@return number
-exports("GetStress", function()
-    return GetRawStatus("stress").value
-end)
-
-CreateThread(function()
-    while (1) do
-        Wait(1000)
-
-        local stress = exports["zyke_status"]:GetStress()
-        if (stress > 0.0) then
-            print("Stress", stress)
-        end
-    end
-end)
