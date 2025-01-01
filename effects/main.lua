@@ -1,3 +1,6 @@
+-- Registering all the base effects that will occur on the client side
+-- Note that if you add an effect to be queued in here, you will need to add the actual effect in it's own file
+
 -- TODO: Redo the registering, to avoid registering multiple effects that is the same base effects
 
 ---@param name StatusName
@@ -6,7 +9,6 @@ function RegisterEffectFunctions(name)
 
     EffectFunctions[name] = {
         onStart = function(val)
-            print(name, "onStart", val)
             if (statusSettings.effect.screenEffect) then
                 AddToQueue("screenEffect", name)
             end
@@ -16,10 +18,12 @@ function RegisterEffectFunctions(name)
             end
         end,
         onTick = function(val)
-            -- print(fullName, "onTick", val)
+            if (statusSettings.effect.damage) then
+                val = statusSettings.effect.damage
+                SetEntityHealth(PlayerPedId(), GetEntityHealth(PlayerPedId()) - math.floor(val))
+            end
         end,
         onStop = function(val)
-            print(name, "onStop", val)
             if (statusSettings.effect.screenEffect) then
                 RemoveFromQueue("screenEffect", name)
             end
