@@ -15,7 +15,7 @@ Config.Status.high = {
         effect = {
             threshold = 5.0,
             movementSpeed = 1.49, -- Max
-            screenEffect = "BikerFilter",
+            screenEffect = "DaxTrip03",
         }
     }
 }
