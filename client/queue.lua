@@ -119,6 +119,18 @@ local function getDominantValue(queueKey)
     if (queueCount == 0) then return nil end
     if (queueCount == 1) then return 1 end
 
+    -- If value is a number, find the highest value and use that
+    if (type(queue[1].value) == "number") then
+        local highestVal = 1 -- idx
+        for i = 2, #queue do
+            if (queue[i].value > highestVal) then
+                highestVal = i
+            end
+        end
+
+        return highestVal
+    end
+
     ---@param keys table<string, integer>
     ---@return integer
     local function getTotalValueForKeys(keys)
