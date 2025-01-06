@@ -104,6 +104,28 @@ function RemoveFromQueue(queueKey, key, value)
     end
 end
 
+-- Key, index pairs for effect hierarchies, for performance
+-- We want to maintain an array where each effect has it's queue position in the config to avoid confusion
+-- We process it here on start to get a quicker solution when we are managing effects
+---@type table<string, table<string, integer>>
+local effectHierarchy = {}
+for category, values in pairs(Config.EffectHierarchy) do
+    effectHierarchy[category] = {}
+
+    for i = 1, #values do
+        effectHierarchy[category][values[i]] = i
+    end
+end
+
+-- Grabs the index, or returns the length + 1 for an effect in the hierarchy
+---@param category string
+---@param value string
+local function getHierarchyIndex(category, value)
+    if (not effectHierarchy[category]) then return 1 end
+
+    return effectHierarchy[category][value] or #Config.EffectHierarchy[category]
+end
+
 -- TODO: Cache the previous strength of the value, and don't override based on queuwe idx if it is the same
 -- This is to avoid back-and-forths where it is not really needed to switch because the strengths are the same
 
@@ -131,29 +153,17 @@ local function getDominantValue(queueKey)
         return highestVal
     end
 
-    ---@param keys table<string, integer>
-    ---@return integer
-    local function getTotalValueForKeys(keys)
-        local count = 0
-
-        for _, amount in pairs(keys) do
-            count += amount
-        end
-
-        return count
-    end
-
-    local idx, keyCount = 1, getTotalValueForKeys(queue[1].keys)
+    local queueIdx, effectIdx = 1, getHierarchyIndex(queueKey, queue[1].value)
     for i = 2, #queue do
-        local newCount = getTotalValueForKeys(queue[i].keys)
+        local newIdx = getHierarchyIndex(queueKey, queue[i].value)
 
-        if (newCount > keyCount) then
-            idx = i
-            keyCount = newCount
+        if (newIdx < effectIdx) then
+            queueIdx = i
+            effectIdx = newIdx
         end
     end
 
-    return idx
+    return queueIdx
 end
 
 -- TODO: Do some tracking to see if a value should reset or something
