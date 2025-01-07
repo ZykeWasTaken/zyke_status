@@ -46,9 +46,23 @@ function GetAllRawStatuses(plyId)
 end
 
 ---@param plyId PlayerId
----@param primary StatusName
+---@param primary StatusName | StatusName[]
 function SyncPlayerStatus(plyId, primary)
-    TriggerClientEvent("zyke_status:SyncStatus", plyId, primary, Cache.statuses[plyId][primary])
+    if (type(primary) ~= "table") then
+        primary = {primary}
+    end
+
+    local statuses = {}
+    for i = 1, #primary do
+        local val = Cache.statuses[plyId][primary]
+        if (val == nil) then
+            val = "nil"
+        end
+
+        statuses[primary[i]] = val
+    end
+
+    TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
 end
 
 -- Returns the entire table to modify
