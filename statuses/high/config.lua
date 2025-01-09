@@ -14,7 +14,7 @@ Config.Status.high = {
         },
         effect = {
             threshold = 5.0,
-            movementSpeed = 1.49, -- Max
+            movementSpeed = 1.2, -- Max
             screenEffect = "DaxTrip03",
         }
     }
