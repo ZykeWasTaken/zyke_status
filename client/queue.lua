@@ -137,6 +137,9 @@ local function getDominantValue(queueKey)
     local queue = GetQueue(queueKey)
     if (not queue) then return nil end
 
+    -- print("Grabbing dominant values, selection:")
+    -- print(json.encode(queue))
+
     local queueCount = Z.table.count(queue)
     if (queueCount == 0) then return nil end
     if (queueCount == 1) then return 1 end

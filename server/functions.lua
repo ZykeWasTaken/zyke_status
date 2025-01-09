@@ -54,7 +54,7 @@ function SyncPlayerStatus(plyId, primary)
 
     local statuses = {}
     for i = 1, #primary do
-        local val = Cache.statuses[plyId][primary]
+        local val = Cache.statuses[plyId][primary[i]]
         if (val == nil) then
             val = "nil"
         end
@@ -102,6 +102,7 @@ function RemoveFromStatus(plyId, name, amount)
     local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, name, amount)
 
     if (hasRemoved) then
+        print("Removing", plyId, name, amount, primary, secondary)
         SyncPlayerStatus(plyId, primary)
     end
 end
