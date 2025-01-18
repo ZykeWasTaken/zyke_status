@@ -45,24 +45,46 @@ function GetAllRawStatuses(plyId)
     return Cache.statuses[plyId] or {}
 end
 
+-- Create a queue, to prevent multiple events being sent
+---@type table<PlayerId, {created: OsClock, toSync: table<StatusName, true>}>
+local clientSyncQueue = {}
+
 ---@param plyId PlayerId
 ---@param primary StatusName | StatusName[]
 function SyncPlayerStatus(plyId, primary)
+    local createdQueue = false
+    if (not clientSyncQueue[plyId]) then
+        clientSyncQueue[plyId] = {created = os.clock(), toSync = {}}
+        createdQueue = true
+    end
+
     if (type(primary) ~= "table") then
         primary = {primary}
     end
 
-    local statuses = {}
     for i = 1, #primary do
-        local val = Cache.statuses[plyId][primary[i]]
-        if (val == nil) then
-            val = "nil"
-        end
-
-        statuses[primary[i]] = val
+        clientSyncQueue[plyId].toSync[primary[i]] = true
     end
 
-    TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
+    if (not createdQueue) then return end
+
+    CreateThread(function()
+        Wait(25) -- Should sync well even at 1ms for one player, 10ms one a slower machine with a few players, 25ms for a better threshold
+
+        local statuses = {}
+        -- for i = 1, #clientSyncQueue[plyId].toSync do
+        for key in pairs(clientSyncQueue[plyId].toSync) do
+            local val = Cache.statuses[plyId][key]
+            if (val == nil) then
+                val = "nil" -- Set to nil, to recognize it being removed on the client
+            end
+
+            statuses[key] = val
+        end
+
+        clientSyncQueue[plyId] = nil
+        TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
+    end)
 end
 
 -- Returns the entire table to modify
@@ -102,7 +124,6 @@ function RemoveFromStatus(plyId, name, amount)
     local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, name, amount)
 
     if (hasRemoved) then
-        print("Removing", plyId, name, amount, primary, secondary)
         SyncPlayerStatus(plyId, primary)
     end
 end

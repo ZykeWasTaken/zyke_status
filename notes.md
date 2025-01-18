@@ -35,3 +35,8 @@
 
 -   Have some sort of smarter indicator actually check the values that are in the queue, to grab the most important one, and not just whatever has the most keys. It won't really be viable to do so for strings, but numbers should work decent. These queues would have to be movement speed or something, since other things like poison or food/thirst damage won't make sense to handle in that way.
 -   I can also pre-construct a priority list, so that effects & walking styles are prioritized, since I might want to always prioritize some over others. Could make re-do it and go from a list, and if it is not part of a list, just use the highest one in the list. Or use the existing systems, but also check for a priority list. If it is within that priority list, don't care about the key counts.
+
+<!-- Sync multiple values -->
+
+-   Remove sync from each component, have a sync loop running in the background
+-   Sync queue function

@@ -40,3 +40,5 @@
 ---@alias Success boolean
 ---@alias StatusName string
 ---@alias SubStatusName string
+---@alias OsTime integer
+---@alias OsClock number
