@@ -31,7 +31,14 @@ CreateThread(function()
         end
 
         for plyId in pairs(Cache.statuses) do
-            SavePlayerToDatabase(plyId)
+            local _plyId = tonumber(plyId)
+            if (_plyId) then
+                SavePlayerToDatabase(_plyId)
+
+                if (CompatibilityFuncs) then
+                    CompatibilityFuncs.SetStatus(_plyId)
+                end
+            end
         end
 
         -- print(json.encode(Cache.statuses, {indent = true}))
