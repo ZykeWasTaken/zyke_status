@@ -20,6 +20,7 @@ function GetStatusSettings(name)
     return Config.Status[prim][sec] or Config.Status[prim].base
 end
 
+-- These statuses have reversed values, 100.0 being the starting point
 local reversed = Z.table.new({"addiction", "hunger", "thirst"})
 
 -- Checks the threshold and if you should run the effect
