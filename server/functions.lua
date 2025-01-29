@@ -131,6 +131,8 @@ RegisterCommand("add_to_status", function(source, args)
     AddToStatus(source, status, amount or 1.0)
 end, false)
 
+-- Validates the request, and returns the player's status table so that it can be modified
+-- Since these two functionalities almost always have to be bundled together, we use this function
 ---@param plyId PlayerId
 ---@param name StatusName
 function ValidateStatusModification(plyId, name)
