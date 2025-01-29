@@ -31,7 +31,7 @@ local function fetchStatusFromDatabase(plyId)
     if (decoded) then
         for status in pairs(Cache.existingStatuses) do
             if (not Cache.statuses[plyId][status]) then
-                Cache.statuses[plyId][status] = {}
+                Cache.statuses[plyId][status] = {values = {}}
             end
 
             if (decoded[status]) then
