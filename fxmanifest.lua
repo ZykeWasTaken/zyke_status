@@ -25,6 +25,7 @@ server_scripts {
 
     "dev/server.lua",
     "shortcuts/server.lua",
+    "compatibility/server.lua",
 }
 
 client_scripts {
@@ -39,4 +40,9 @@ client_scripts {
     "effects/*.lua",
     "dev/client.lua",
     "shortcuts/client.lua",
+    "compatibility/client.lua",
+}
+
+provides {
+    "esx_status"
 }
