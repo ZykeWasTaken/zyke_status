@@ -158,3 +158,13 @@ function SavePlayerToDatabase(plyId)
 
     MySQL.query.await("INSERT INTO zyke_status (identifier, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?", {plyIdentifier, data, data})
 end
+
+---@param plyId PlayerId
+function ResetStatuses(plyId)
+    for primary, statusValues in pairs(Cache.statuses[plyId]) do
+        for statusName in pairs(statusValues.values) do
+            Z.debug("Resetting", primary .. "." .. statusName, "for", plyId)
+            Cache.existingStatuses[primary].onReset(plyId, statusName)
+        end
+    end
+end

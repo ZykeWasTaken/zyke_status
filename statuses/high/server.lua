@@ -34,5 +34,11 @@ RegisterStatusType(primary, true, {value = 0.0},
         end
 
         return true
+    end,
+    onReset = function(plyId, name)
+        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+        if (not isValid or not data) then return end
+
+        data.values[secondary].value = 0.0
     end
 })

@@ -40,5 +40,11 @@ RegisterStatusType(primary, false, {value = 100.0},
         if (not isValid or not data) then return end
 
         data.values[secondary].value = Z.numbers.round(amount, Config.Settings.decimalAccuracy)
+    end,
+    onReset = function(plyId, name)
+        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+        if (not isValid or not data) then return end
+
+        data.values[secondary].value = 100.0
     end
 })

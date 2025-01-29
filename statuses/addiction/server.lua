@@ -85,5 +85,12 @@ RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
         -- Don't touch the satisfaction value for now
 
         return true
+    end,
+    onReset = function(plyId, name)
+        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+        if (not isValid or not data) then return end
+
+        data.values[secondary].addiction = 0.0
+        data.values[secondary].value = 100.0
     end
 })
