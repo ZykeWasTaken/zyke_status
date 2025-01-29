@@ -11,6 +11,7 @@ function RegisterStatusType(name, multi, baseValues, functions)
         baseValues = baseValues,
         onTick = functions.onTick,
         onAdd = functions.onAdd,
-        onRemove = functions.onRemove
+        onRemove = functions.onRemove,
+        onSet = functions.onSet
     }
 end

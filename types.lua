@@ -16,6 +16,7 @@
 ---@field tickFn? function
 ---@field onAdd function
 ---@field onRemove function
+---@field onSet? function @Only used for backwards compatibility with some base values, we use onReset or onAdd/onRemove
 
 ---@class ServerCache
 ---@field statuses table<PlayerId, table<StatusName, PlayerStatuses>>

@@ -88,6 +88,18 @@ function RemoveFromStatus(plyId, name, amount)
     end
 end
 
+function SetStatusValue(plyId, name, amount)
+    local primary, secondary = SeparateStatusName(name)
+    EnsurePlayerSubStatus(plyId, primary, secondary)
+
+    if (Cache.existingStatuses[primary].onSet) then
+        local hasRemoved = Cache.existingStatuses[primary].onSet(plyId, name, amount)
+        if (hasRemoved) then
+            SyncPlayerStatus(plyId, primary)
+        end
+    end
+end
+
 exports("RemoveFromStatus", RemoveFromStatus)
 
 -- Add value to the status
