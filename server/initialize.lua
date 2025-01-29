@@ -18,8 +18,6 @@ local function ensureBaseStatusValues(plyId)
             values = values
         }
     end
-
-    print("here 1", json.encode(Cache.statuses))
 end
 
 ---@param plyId PlayerId
@@ -30,9 +28,6 @@ local function fetchStatusFromDatabase(plyId)
     local dbStatus = MySQL.scalar.await("SELECT data FROM zyke_status WHERE identifier = ?", {identifier})
     local decoded = dbStatus and json.decode(dbStatus)
 
-    -- print(dbStatus)
-
-    print("here 2", json.encode(Cache.statuses))
     if (decoded) then
         for status in pairs(Cache.existingStatuses) do
             if (not Cache.statuses[plyId][status]) then
@@ -42,14 +37,10 @@ local function fetchStatusFromDatabase(plyId)
             if (decoded[status]) then
                 for _status, statusData in pairs(decoded[status].values) do
                     Cache.statuses[plyId][status].values[_status] = statusData
-
-                    print("here 3", _status, json.encode(statusData))
                 end
             end
         end
     end
-
-    print("here 4", json.encode(Cache.statuses))
 end
 
 ---@param plyId PlayerId

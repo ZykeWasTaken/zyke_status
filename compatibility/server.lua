@@ -102,7 +102,6 @@ function CompatibilityFuncs.SetStatus(plyId)
         local player = Z.getPlayerData(plyId)
         if (not player) then return end
 
-        print("Setting status", status, player)
         player.set("status", status)
         TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
@@ -114,7 +113,6 @@ end
 function CompatibilityFuncs.SaveStatus(plyId)
     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     local identifier = Z.getIdentifier(plyId)
-    print("SaveStatus", plyId, identifier)
     if (not identifier) then return end
 
     if (Framework == "ESX") then
