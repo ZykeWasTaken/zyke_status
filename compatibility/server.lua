@@ -120,3 +120,37 @@ end
 AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
     CompatibilityFuncs.SaveStatus(plyId)
 end)
+
+---@return string[]
+local function getSupportedResources()
+    local _supported = {}
+    local num = GetNumResourceMetadata(ResName, "provide")
+    for i = 1, num do
+        _supported[#_supported+1] = GetResourceMetadata(ResName, "provide", num - 1)
+    end
+
+    return _supported
+end
+
+-- Because of the fxmanifest `provides`, there are some weird behaviours of starting and stopping resources
+-- Simply check if any of the supported systems are listed to be started and warn the server owner
+local supported = Z.table.new(getSupportedResources())
+
+-- Put this in a loop, in case it is somehow missed
+-- Having a backwards compatible resource WILL cause MAJOR issues
+while (1) do
+    local warnings = 0
+
+    for i = 1, #supported do
+        local resState = GetResourceState(supported[i])
+        if (resState == "started" or resState == "starting") then
+            warnings += 1
+            print(("^1[IMPORTANT] A backwards compatible resource has been detected (%s). If this resource is started, it will cause issues."):format(supported[i]))
+            print("[IMPORTANT] Please remove the backward compatible resource from your server!^7")
+        end
+    end
+
+    if (warnings == 0) then break end
+
+    Wait(3000)
+end
