@@ -132,6 +132,8 @@ end
 
 ---@param plyId PlayerId
 function CompatibilityFuncs.SaveStatus(plyId)
+    if (not Cache.statuses[plyId]) then return end
+
     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     local identifier = Z.getIdentifier(plyId)
     if (not identifier) then return end
