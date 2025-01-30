@@ -13,7 +13,7 @@
 ---@class ExistingStatus
 ---@field multi? boolean @Supports multiple instances of the same status type, ex. addiction to multiple substances
 ---@field baseValues table
----@field tickFn? function
+---@field onTick? function
 ---@field onAdd function
 ---@field onRemove function
 ---@field onSet? function @Only used for backwards compatibility with some base values, we use onReset or onAdd/onRemove
