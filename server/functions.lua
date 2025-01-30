@@ -34,6 +34,7 @@ function SyncPlayerStatus(plyId, primary)
         local statuses = {}
         -- for i = 1, #clientSyncQueue[plyId].toSync do
         for key in pairs(clientSyncQueue[plyId].toSync) do
+            ---@type table | "nil"
             local val = Cache.statuses[plyId][key]
             if (val == nil) then
                 val = "nil" -- Set to nil, to recognize it being removed on the client
