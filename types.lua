@@ -24,7 +24,7 @@
 ---@field existingStatuses table<StatusName, ExistingStatus>
 
 ---@class ClientCache
----@field statuses table<StatusName, PlayerStatuses>
+---@field statuses table<StatusName, PlayerStatuses> | nil @nil when unloaded
 
 ---@alias PlayerId integer
 ---@alias Character table

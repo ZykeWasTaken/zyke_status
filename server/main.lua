@@ -33,8 +33,6 @@ CreateThread(function()
         for plyId in pairs(Cache.statuses) do
             local _plyId = tonumber(plyId)
             if (_plyId) then
-                SavePlayerToDatabase(_plyId)
-
                 if (CompatibilityFuncs) then
                     CompatibilityFuncs.SetStatus(_plyId)
                 end

@@ -45,6 +45,8 @@ end
 
 ---@param plyId PlayerId
 local function initializePlayer(plyId)
+    Z.debug("Attempting to initialize", plyId)
+
     ensureBaseStatusValues(plyId)
     fetchStatusFromDatabase(plyId)
 end

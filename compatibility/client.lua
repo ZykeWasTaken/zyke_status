@@ -16,6 +16,7 @@ RegisterNetEvent("esx_status:remove", function(name, value)
     TriggerServerEvent("zyke_status:compatibility:RemoveStatus", name, value)
 end)
 
+-- Is this event even needed between here to dispatch it further, I remember I did some event weirdly because of net stuff?
 RegisterNetEvent("zyke_status:compatibility:onTick", function(values)
     TriggerEvent("esx_status:onTick", values)
 end)
