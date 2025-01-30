@@ -44,5 +44,7 @@ RegisterStatusType(primary, false, {value = 100.0},
         if (not isValid or not data) then return end
 
         data.values[secondary].value = 100.0
+
+        return true
     end
 })

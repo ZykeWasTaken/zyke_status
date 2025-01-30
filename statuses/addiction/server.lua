@@ -92,5 +92,7 @@ RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
 
         data.values[secondary].addiction = 0.0
         data.values[secondary].value = 100.0
+
+        return true
     end
 })

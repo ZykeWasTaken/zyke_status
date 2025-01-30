@@ -166,5 +166,7 @@ function ResetStatuses(plyId)
             Z.debug("Resetting", primary .. "." .. statusName, "for", plyId)
             Cache.existingStatuses[primary].onReset(plyId, statusName)
         end
+
+        SyncPlayerStatus(plyId, primary)
     end
 end
