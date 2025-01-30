@@ -7,3 +7,8 @@ RegisterNetEvent("zyke_status:SyncStatus", function(statuses)
         end
     end
 end)
+
+---@param plyId PlayerId
+AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
+    Cache.statuses = nil
+end)

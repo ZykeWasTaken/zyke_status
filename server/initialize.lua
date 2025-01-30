@@ -69,3 +69,14 @@ for i = 1, #players do
     -- initializeStatusesForPlayer(players[i])
     initializePlayer(players[i])
 end
+
+---@param plyId PlayerId
+AddEventHandler("zyke_lib:OnCharacterSelect", function(plyId)
+    initializePlayer(plyId)
+end)
+
+---@param plyId PlayerId
+AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
+    SavePlayerToDatabase(plyId)
+    Cache.statuses[plyId] = nil
+end)
