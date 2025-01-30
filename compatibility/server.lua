@@ -96,6 +96,7 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
         local baseStatus = {
             CompatibilityFuncs.ConvertStatus(plyId, "hunger"),
             CompatibilityFuncs.ConvertStatus(plyId, "thirst"),
+            CompatibilityFuncs.ConvertStatus(plyId, "stress"),
             -- {name = "drunk", val = 0, percent = 0.0}, -- TODO
         }
 
