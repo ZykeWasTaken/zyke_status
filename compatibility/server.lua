@@ -64,22 +64,39 @@ function CompatibilityFuncs.GetBasePlayerStatus(player)
     return {}
 end
 
--- Same as the fetching, we need to make sure the resource is backwards compatible with other systems
--- We take our data and translate it to the base of the framework
 ---@param plyId PlayerId
----@return table
-function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
+---@param name string
+---@diagnostic disable-next-line: duplicate-set-field
+function CompatibilityFuncs.ConvertStatus(plyId, name)
     local data = Cache.statuses[plyId]
     if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return {} end
 
     if (Framework == "ESX") then
-        local hunger = data.hunger.values.hunger.value
-        local thirst = data.thirst.values.thirst.value
+        if (not data[name]) then return nil end
 
+        local val = data[name].values[name].value
+        return {name = name, val = math.floor(val * 10000), percent = val}
+    elseif (Framework == "QB") then
+    end
+end
+
+-- {
+--     "name": "drunk",
+--     "val": 0,
+--     "percent": 0.0
+-- }
+
+-- Same as the fetching, we need to make sure the resource is backwards compatible with other systems
+-- We take our data and translate it to the base of the framework
+---@param plyId PlayerId
+---@return table
+---@diagnostic disable-next-line: duplicate-set-field
+function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
+    if (Framework == "ESX") then
         local baseStatus = {
-            {name = "hunger", val = math.floor(hunger * 10000), percent = hunger},
-            {name = "thirst", val = math.floor(thirst * 10000), percent = thirst},
-            {name = "drunk", val = 0, percent = 0.0}, -- TODO
+            CompatibilityFuncs.ConvertStatus(plyId, "hunger"),
+            CompatibilityFuncs.ConvertStatus(plyId, "thirst"),
+            -- {name = "drunk", val = 0, percent = 0.0}, -- TODO
         }
 
         return baseStatus
@@ -93,6 +110,10 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 
     return {}
 end
+
+RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
+    cb(CompatibilityFuncs.ConvertStatus(target, name))
+end)
 
 ---@param plyId PlayerId
 function CompatibilityFuncs.SetStatus(plyId)
