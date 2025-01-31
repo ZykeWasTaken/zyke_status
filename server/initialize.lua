@@ -7,6 +7,8 @@ local function ensureBaseStatusValues(plyId)
 
     for status, statusSettings in pairs(Cache.existingStatuses) do
         local values = {}
+
+        -- If it isn't a multi, just set the base value
         if (statusSettings.multi ~= true) then
             values = {
                 -- TODO: Fix values
@@ -28,16 +30,18 @@ local function fetchStatusFromDatabase(plyId)
     local dbStatus = MySQL.scalar.await("SELECT data FROM zyke_status WHERE identifier = ?", {identifier})
     local decoded = dbStatus and json.decode(dbStatus)
 
-    if (decoded) then
-        for status in pairs(Cache.existingStatuses) do
-            if (not Cache.statuses[plyId][status]) then
-                Cache.statuses[plyId][status] = {values = {}}
-            end
+    -- If nothing is saved, set to the default base values
+    if (not decoded) then return ResetStatuses(plyId) end
 
-            if (decoded[status]) then
-                for _status, statusData in pairs(decoded[status].values) do
-                    Cache.statuses[plyId][status].values[_status] = statusData
-                end
+    -- If saved, apply the values
+    for status in pairs(Cache.existingStatuses) do
+        if (not Cache.statuses[plyId][status]) then
+            Cache.statuses[plyId][status] = {values = {}}
+        end
+
+        if (decoded[status]) then
+            for _status, statusData in pairs(decoded[status].values) do
+                Cache.statuses[plyId][status].values[_status] = statusData
             end
         end
     end
