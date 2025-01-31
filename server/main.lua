@@ -19,8 +19,12 @@ end
 
 -- Loop the existing statuses and perform an action every second, if one is specified
 CreateThread(function()
+    local tickSpeed = 1000
+    local lastDbSave = os.time()
+    local dbSaveInterval = 180
+
     while (1) do
-        Wait(1000)
+        Wait(tickSpeed)
 
         for statusName, values in pairs(Cache.existingStatuses) do
             local prim = SeparateStatusName(statusName)
@@ -35,6 +39,18 @@ CreateThread(function()
             if (_plyId) then
                 if (CompatibilityFuncs) then
                     CompatibilityFuncs.SetStatus(_plyId)
+                end
+            end
+        end
+
+        -- We save during logout, but to be save, save every x amount of seconds
+        if (os.time() - lastDbSave > dbSaveInterval) then
+            -- SaveAll
+            for plyId in pairs(Cache.statuses) do
+                local _plyId = tonumber(plyId)
+
+                if (_plyId) then
+                    SavePlayerToDatabase(_plyId)
                 end
             end
         end
