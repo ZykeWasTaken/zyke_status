@@ -45,7 +45,7 @@ CreateThread(function()
 
         -- We save during logout, but to be save, save every x amount of seconds
         if (os.time() - lastDbSave > dbSaveInterval) then
-            -- SaveAll
+            lastDbSave = os.time()
             for plyId in pairs(Cache.statuses) do
                 local _plyId = tonumber(plyId)
 
