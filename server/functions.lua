@@ -157,6 +157,7 @@ function SavePlayerToDatabase(plyId)
 
     local data = json.encode(statuses)
 
+    Z.debug("Saving status for", plyIdentifier, "to database.")
     MySQL.query.await("INSERT INTO zyke_status (identifier, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?", {plyIdentifier, data, data})
 end
 
