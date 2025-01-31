@@ -31,8 +31,13 @@ function SyncPlayerStatus(plyId, primary)
     CreateThread(function()
         Wait(25) -- Should sync well even at 1ms for one player, 10ms one a slower machine with a few players, 25ms for a better threshold
 
+        -- Make sure the player is still active
+        if (not Cache.statuses[plyId]) then
+            clientSyncQueue[plyId] = nil
+            return
+        end
+
         local statuses = {}
-        -- for i = 1, #clientSyncQueue[plyId].toSync do
         for key in pairs(clientSyncQueue[plyId].toSync) do
             ---@type table | "nil"
             local val = Cache.statuses[plyId][key]
