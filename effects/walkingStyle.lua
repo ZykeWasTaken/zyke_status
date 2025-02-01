@@ -15,8 +15,6 @@ local function ensureWalkingStyle(name)
 end
 
 local function clearWalkingStyle()
-    if (not currWalkingStyle) then return end
-
     local ply = PlayerPedId()
     local isMale = IsPedMale(ply)
     local walkStyle = isMale and "move_m@multiplayer" or "move_f@multiplayer"
