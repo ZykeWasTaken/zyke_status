@@ -126,7 +126,17 @@ function CompatibilityFuncs.SetStatus(plyId)
         player.set("status", status)
         TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
+        local ply = Z.getPlayerData(plyId)
+        if (not ply) then return end
 
+        local statuses = Cache.statuses[plyId]
+        local hunger, thirst, stress = statuses.hunger.values.hunger.value, statuses.thirst.values.thirst.value, statuses.stress.values.stress.value
+
+        ply.Functions.SetMetaData("hunger", hunger)
+        ply.Functions.SetMetaData("thirst", thirst)
+        ply.Functions.SetMetaData("stress", stress)
+        TriggerClientEvent("hud:client:UpdateNeeds", plyId, hunger, thirst)
+        TriggerClientEvent("hud:client:UpdateStress", plyId, stress)
     end
 end
 

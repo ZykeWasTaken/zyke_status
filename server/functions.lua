@@ -7,6 +7,9 @@ end
 ---@type table<PlayerId, {created: OsClock, toSync: table<StatusName, true>}>
 local clientSyncQueue = {}
 
+-- Cache for better performance
+local framework, backwardsCompatibility = Framework, Config.Settings.backwardsCompatibility
+
 ---@param plyId PlayerId
 ---@param primary StatusName | StatusName[]
 function SyncPlayerStatus(plyId, primary)
@@ -22,6 +25,18 @@ function SyncPlayerStatus(plyId, primary)
 
     for i = 1, #primary do
         clientSyncQueue[plyId].toSync[primary[i]] = true
+
+        -- QBCore compatibility stuff
+        if (framework == "QB" and backwardsCompatibility == true) then
+            if (primary[i] == "hunger" or primary[i] == "thirst" or primary[i] == "stress") then
+                local ply = Z.getPlayerData(plyId)
+                if (not ply) then return end
+
+                ply.Functions.SetMetaData(primary[i], Cache.statuses[plyId][primary[i]].values[primary[i]].value)
+            end
+        end
+
+        -- TODO: Add ESX stuff in here? It goes via onTick, but that system is rather slow compared to how fast we update in consumables
     end
 
     if (not createdQueue) then return end
