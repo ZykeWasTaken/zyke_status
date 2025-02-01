@@ -216,9 +216,9 @@ CreateThread(function()
 end)
 
 ---@param queueKey string
-function ClearEffectQueue(queueKey)
+function ClearEffectQueueKey(queueKey)
     queues[queueKey] = {}
 end
 
 exports("AddToQueue", AddToQueue)
-exports("ClearEffectQueue", ClearEffectQueue)
+exports("ClearEffectQueueKey", ClearEffectQueueKey)
