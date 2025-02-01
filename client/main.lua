@@ -9,6 +9,10 @@ EffectFunctions = {}
 
 Cache.statuses = Z.callback.await("zyke_status:GetPlayerStatus")
 
+AddEventHandler("zyke_lib:OnCharacterSelect", function()
+    Cache.statuses = Z.callback.await("zyke_status:GetPlayerStatus")
+end)
+
 -- Dev
 CreateThread(function()
     while (1) do
