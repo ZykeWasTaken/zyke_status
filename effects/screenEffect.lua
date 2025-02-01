@@ -7,7 +7,7 @@ local currScreenEffect = nil
 local function ensureScreenEffect(name)
     if (not name) then return end
 
-    if (currScreenEffect ~= name) then
+    if (currScreenEffect ~= name or GetTimecycleModifierIndex() == -1) then
         if (currScreenEffect ~= nil) then
             ClearTimecycleModifier()
         end
