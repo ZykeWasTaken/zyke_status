@@ -27,6 +27,14 @@ RegisterStatusType("stress", false, {value = 0.0},
 
         return true
     end,
+    onSet = function(plyId, name, amount)
+        local isValid, data, _, secondary = ValidateStatusModification(plyId, name)
+        if (not isValid or not data) then return end
+
+        data.values[secondary].value = Z.numbers.round(amount, Config.Settings.decimalAccuracy)
+
+        return true
+    end,
     onReset = function(plyId, name)
         local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
         if (not isValid or not data) then return end
