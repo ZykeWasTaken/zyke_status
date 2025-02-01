@@ -20,10 +20,9 @@ local function ensureScreenEffect(name)
 end
 
 local function clearScreenEffect()
-    if (currScreenEffect ~= nil) then
-        currScreenEffect = nil
-        ClearTimecycleModifier()
-    end
+    currScreenEffect = nil
+    ClearTimecycleModifier()
+    Z.debug("Clearing timcycle (screen) effect.")
 end
 
 RegisterQueueKey("screenEffect", {

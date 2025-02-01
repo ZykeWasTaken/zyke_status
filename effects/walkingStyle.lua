@@ -19,6 +19,7 @@ local function clearWalkingStyle()
     local isMale = IsPedMale(ply)
     local walkStyle = isMale and "move_m@multiplayer" or "move_f@multiplayer"
 
+    Z.debug("Clearing walking style.")
     SetPedMovementClipset(ply, walkStyle, 1.0)
     currWalkingStyle = nil
 end
