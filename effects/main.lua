@@ -111,6 +111,8 @@ CreateThread(function()
             end
 
             prevEffects = availableEffects
+        else
+            prevEffects = {}
         end
 
         Wait(sleep)
