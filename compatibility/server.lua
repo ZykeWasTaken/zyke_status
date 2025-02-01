@@ -159,20 +159,9 @@ AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
     CompatibilityFuncs.SaveStatus(plyId)
 end)
 
----@return string[]
-local function getSupportedResources()
-    local _supported = {}
-    local num = GetNumResourceMetadata(ResName, "provide")
-    for i = 1, num do
-        _supported[#_supported+1] = GetResourceMetadata(ResName, "provide", num - 1)
-    end
-
-    return _supported
-end
-
 -- Because of the fxmanifest `provides`, there are some weird behaviours of starting and stopping resources
 -- Simply check if any of the supported systems are listed to be started and warn the server owner
-local supported = Z.table.new(getSupportedResources())
+local supported = Z.table.new({"esx_status"})
 
 -- Put this in a loop, in case it is somehow missed
 -- Having a backwards compatible resource WILL cause MAJOR issues
