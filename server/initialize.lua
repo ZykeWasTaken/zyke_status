@@ -11,7 +11,6 @@ local function ensureBaseStatusValues(plyId)
         -- If it isn't a multi, just set the base value
         if (statusSettings.multi ~= true) then
             values = {
-                -- TODO: Fix values
                 [status] = {value = 0.0}
             }
         end

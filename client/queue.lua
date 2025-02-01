@@ -126,9 +126,6 @@ local function getHierarchyIndex(category, value)
     return effectHierarchy[category][value] or #Config.EffectHierarchy[category]
 end
 
--- TODO: Cache the previous strength of the value, and don't override based on queuwe idx if it is the same
--- This is to avoid back-and-forths where it is not really needed to switch because the strengths are the same
-
 -- Gets the effect that should be played this tick
 -- Prioritizes order in queue, if effects have the same key count, it will use the earliest one
 -- The queue order does not matter if the effect has the most keys, it will be chosen as it is the most relevant one to use
@@ -168,9 +165,6 @@ local function getDominantValue(queueKey)
 
     return queueIdx
 end
-
--- TODO: Do some tracking to see if a value should reset or something
--- Such as all effects stop playing if there is nothing in screenEffect, and all
 
 -- This thread runs the queued effects
 
