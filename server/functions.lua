@@ -1,5 +1,3 @@
--- TODO Make some zyke_lib feature to add to the statuses
-
 ---@param plyId PlayerId
 function GetAllRawStatuses(plyId)
     return Cache.statuses[plyId] or {}

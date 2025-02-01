@@ -5,7 +5,6 @@ CompatibilityFuncs = {}
 -- esx_status
 -- Default max is 1000000, we use 100.0
 RegisterNetEvent("zyke_status:compatibility:SetStatus", function(name, value)
-    -- TODO: Add a set function
     -- Perhaps also just take a set as a sort of reset, some stuff like addiction will otherwise have issues, unless we only use hunger/thirst/stress from the default systems, bnecause then the addition of setting a value is pretty easy
     if (name == "hunger") then
         SetStatusValue(source, "hunger", value / 10000)
