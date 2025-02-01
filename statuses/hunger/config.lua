@@ -7,7 +7,7 @@ Config.Status.hunger = {
         effect = {
             threshold = 10.0,
             screenEffect = "BeastLaunch02",
-            damage = 1, -- Per tick, note that this can not be a decimal
+            damage = 1, -- Per tick, note that this can not be a decimal due to Gta limitations
         }
     }
 }
