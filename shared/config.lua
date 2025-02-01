@@ -33,6 +33,12 @@ Config.EffectHierarchy = {
         "glasses_yellow", -- https://forge.plebmasters.de/timecyclemods/glasses_yellow (Basic yellow, slightly green on screen bottom)
         "Dax_TripBlend01", -- https://forge.plebmasters.de/timecycleMods/Dax_TripBlend01 (Very subtle blue tint, slightly less contrast)
     },
+    ["walkingStyle"] = {
+        "move_m@drunk@verydrunk",
+        "move_m@drunk@a",
+        "move_m@drunk@slightlydrunk",
+        "move_m@buzzed",
+    }
 
     -- Add other effects that could be recognized
 }

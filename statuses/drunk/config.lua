@@ -4,8 +4,9 @@ Config.Status.drunk = {
             drain = 0.1
         },
         effect = {
-            threshold = 15.0, -- For addiction, remember that this is reversed, satisfaction drops from 100.0
+            threshold = 15.0,
             screenEffect = "BikerFilter",
+            walkingStyle = "move_m@drunk@a",
         },
     }
 }

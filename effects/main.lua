@@ -17,6 +17,10 @@ function RegisterEffectFunctions(name)
             if (statusSettings.effect.movementSpeed) then
                 AddToQueue("movementSpeed", name)
             end
+
+            if (statusSettings.effect.walkingStyle) then
+                AddToQueue("walkingStyle", name)
+            end
         end,
         onTick = function(val)
             if (statusSettings.effect.damage) then
@@ -30,6 +34,10 @@ function RegisterEffectFunctions(name)
 
             if (statusSettings.effect.movementSpeed) then
                 RemoveFromQueue("movementSpeed", name)
+            end
+
+            if (statusSettings.effect.walkingStyle) then
+                RemoveFromQueue("walkingStyle", name)
             end
         end
     }
