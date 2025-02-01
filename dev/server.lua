@@ -27,3 +27,11 @@ Z.registerCommand({"status_clear", "sclear", "status_reset", "sreset"}, function
 end, "Reset Player Status", {
     {"Player Id", "Player Id, or empty to use yourself"}
 })
+
+-- QB eating
+-- RegisterCommand("hunger_test", function(source, args)
+--     -- local ply = Z.getPlayerData(source)
+--     -- ply.Functions.SetMetaData("hunger", ply.PlayerData.metadata.hunger + tonumber(args[1]))
+
+--     TriggerClientEvent("consumables:client:Eat", source, nil, tonumber(args[1]))
+-- end, false)
