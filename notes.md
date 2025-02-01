@@ -40,3 +40,10 @@
 
 -   Remove sync from each component, have a sync loop running in the background
 -   Sync queue function
+
+<!-- NOTES FOR OTHER RESOURCES -->
+
+-   esx_basicneeds
+    -   esx_status:onTick causes damage if there is no food
+
+<!-- TODO -->
