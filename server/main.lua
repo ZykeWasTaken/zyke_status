@@ -58,3 +58,9 @@ CreateThread(function()
         -- print(json.encode(Cache.statuses, {indent = true}))
     end
 end)
+
+-- RegisterCommand("pluhhh", function(source)
+--     TriggerEvent('esx_status:getStatus', source, 'thirst', function(status)
+--         print(json.encode(status, {indent = true}))
+--     end)
+-- end, false)

@@ -100,21 +100,8 @@ CreateThread(function()
     end
 end)
 
-RegisterCommand("pluhh", function()
-    print("?")
-    TriggerEvent('esx_status:getStatus', 'thirst', function(status)
-
-        print(json.encode(status, {indent = true}))
-        -- if status then
-        --     data.drunk = ESX.Math.Round(status.percent)
-        -- end
-    end)
-
-    -- TriggerEvent('esx_status:getStatus', target, 'drunk', function(status)
-
-    --     print(json.encode(status))
-    --     -- if status then
-    --     --     data.drunk = ESX.Math.Round(status.percent)
-    --     -- end
-    -- end)
-end, false)
+-- RegisterCommand("pluhh", function()
+--     TriggerEvent('esx_status:getStatus', 'thirst', function(status)
+--         print(json.encode(status, {indent = true}))
+--     end)
+-- end, false)
