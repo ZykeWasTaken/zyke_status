@@ -92,6 +92,8 @@ function RemoveFromStatus(plyId, name, amount)
     end
 end
 
+exports("RemoveFromStatus", RemoveFromStatus)
+
 function SetStatusValue(plyId, name, amount)
     local primary, secondary = SeparateStatusName(name)
     EnsurePlayerSubStatus(plyId, primary, secondary)
@@ -104,7 +106,7 @@ function SetStatusValue(plyId, name, amount)
     end
 end
 
-exports("RemoveFromStatus", RemoveFromStatus)
+exports("SetStatusValue", SetStatusValue)
 
 -- Add value to the status
 ---@param plyId PlayerId
