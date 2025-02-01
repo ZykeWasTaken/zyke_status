@@ -47,3 +47,15 @@
     -   esx_status:onTick causes damage if there is no food
 
 <!-- TODO -->
+
+<!-- STUFF -->
+
+-   We run the basic structure, to have a primary, values then all the subvalues
+-   Inside of the subvalues we have the key `value`, which is consistent
+    -   Past that, the rest is just random metadata we chuck in there
+    -   We can have stuff such as last time the player attempted to puke for being too drunk etc
+
+<!-- Effects -->
+
+-   When we attempt to run an effect, we check if it is cached, this way, we can easily override and run completely custom effects without doing a bunch of extra work, other than adding what drug it is, and what the effect will be
+-   If there are no cached effects, we cache the default effects and run it

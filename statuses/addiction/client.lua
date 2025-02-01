@@ -1,6 +1,7 @@
 -- You can run any custom effect in here
 -- If you want to run one of our built-in ones, you can ignore this
 -- Usually, these effects need queueing to prevent interference
+-- Note that this completely overrides the default effects
 
 -- Examples of custom effects
 -- EffectFunctions["addiction.nicotine"] = {

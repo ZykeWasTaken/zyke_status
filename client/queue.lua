@@ -172,6 +172,7 @@ end
 -- TODO: Do some tracking to see if a value should reset or something
 -- Such as all effects stop playing if there is nothing in screenEffect, and all
 
+-- This thread runs the queued effects
 CreateThread(function()
     -- Cache the previously ran effects, so we know when to run the reset function
     ---@type table<string, true>
