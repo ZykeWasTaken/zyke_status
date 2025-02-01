@@ -173,10 +173,11 @@ end
 -- Such as all effects stop playing if there is nothing in screenEffect, and all
 
 -- This thread runs the queued effects
+
+-- Cache the previously ran effects, so we know when to run the reset function
+---@type table<string, true>
+local prevEffects = {}
 CreateThread(function()
-    -- Cache the previously ran effects, so we know when to run the reset function
-    ---@type table<string, true>
-    local prevEffects = {}
     local newEffects = {}
 
     while (1) do
@@ -226,6 +227,13 @@ function ClearEffectQueue()
     for key in pairs(queues) do
         queues[key] = {}
     end
+
+    for queueKey in pairs(prevEffects) do
+        if (funcs[queueKey].reset) then funcs[queueKey].reset() end
+    end
+
+    -- Reset the cachead effects, to avoid timing issues
+    prevEffects = {}
 end
 
 exports("AddToQueue", AddToQueue)

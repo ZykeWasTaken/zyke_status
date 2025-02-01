@@ -78,12 +78,17 @@ end
 -- The queued effects are then managed by the queue thread
 -- Some effects are not queued, because we are not looking for a dominant value, we need to execute all of them, such as damage
 --- For example, if you are poisoned and have a broken leg, you should receive damage from both of them
-CreateThread(function()
+-- We run this in a character select to instantly run the previous session
+local inLoop = false
+AddEventHandler("zyke_status:OnStatusFetched", function()
+    Wait(1)
+
     ---@type table<StatusName, number>
     local prevEffects = {} -- Keep track of previous effects
 
-    while (1) do
-        local sleep = Cache.statuses and 1000 or 3000
+    inLoop = true
+    while (inLoop) do
+        local sleep = 1000
 
         if (Cache.statuses) then
             ---@type table<StatusName, number>
@@ -111,10 +116,12 @@ CreateThread(function()
             end
 
             prevEffects = availableEffects
-        else
-            prevEffects = {}
         end
 
         Wait(sleep)
     end
+end)
+
+AddEventHandler("zyke_lib:OnCharacterLogout", function()
+    inLoop = false
 end)
