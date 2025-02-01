@@ -7,6 +7,7 @@ Cache = {
 -- Indexed by primary.secondary
 EffectFunctions = {}
 
+Wait(100)
 Cache.statuses = Z.callback.await("zyke_status:GetPlayerStatus")
 
 AddEventHandler("zyke_lib:OnCharacterSelect", function()
