@@ -22,6 +22,7 @@ local function clearWalkingStyle()
     local walkStyle = isMale and "move_m@multiplayer" or "move_f@multiplayer"
 
     SetPedMovementClipset(ply, walkStyle, 1.0)
+    currWalkingStyle = nil
 end
 
 RegisterQueueKey("walkingStyle", {
