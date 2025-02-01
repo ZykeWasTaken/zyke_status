@@ -11,5 +11,9 @@ RegisterNetEvent("zyke_status:SyncStatus", function(statuses)
 end)
 
 RegisterNetEvent("zyke_lib:OnCharacterLogout", function()
+    -- Go through all statuses and run the reset for the effects
+    -- This is to allow smooth character switching
+    ClearEffectQueue()
+
     Cache.statuses = nil
 end)

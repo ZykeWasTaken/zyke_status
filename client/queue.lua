@@ -220,5 +220,13 @@ function ClearEffectQueueKey(queueKey)
     queues[queueKey] = {}
 end
 
+-- Completely clears the queue effect, which will then also run the reset for all effects
+-- If you wish to clear all of it really quickly, such as when switching characters
+function ClearEffectQueue()
+    for key in pairs(queues) do
+        queues[key] = {}
+    end
+end
+
 exports("AddToQueue", AddToQueue)
 exports("ClearEffectQueueKey", ClearEffectQueueKey)
