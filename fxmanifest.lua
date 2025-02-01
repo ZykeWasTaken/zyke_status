@@ -3,6 +3,10 @@ game "gta5"
 lua54 "yes"
 author "discord.gg/zykeresources"
 
+files {
+    "locales/*.lua",
+}
+
 shared_scripts {
     "@zyke_lib/imports.lua",
     "shared/config.lua",
