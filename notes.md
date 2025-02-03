@@ -48,14 +48,25 @@
 
 <!-- TODO -->
 
+-   For stuff, such as screen effects or movement styles, recognize if a stronger one is already applied via another resource, and then skip applying something from our side maybe? Or add some toggler, where you can block our resource from applying specific effects, an example wouild be an ambulance script with crutches, we don't want to override that movement style
+
 <!-- STUFF -->
 
 -   We run the basic structure, to have a primary, values then all the subvalues
 -   Inside of the subvalues we have the key `value`, which is consistent
     -   Past that, the rest is just random metadata we chuck in there
     -   We can have stuff such as last time the player attempted to puke for being too drunk etc
+    -   This way, we can also cache how long you have been without a status, such as food, and then make you take damage after some period
 
 <!-- Effects -->
 
 -   When we attempt to run an effect, we check if it is cached, this way, we can easily override and run completely custom effects without doing a bunch of extra work, other than adding what drug it is, and what the effect will be
 -   If there are no cached effects, we cache the default effects and run it
+-   Allow multiple effects for a specific status, such as if you are drunk, have different walk styles based on how drunk you are, or the amount of damage you take based on how thirsty you are
+-   Allow different settings how you get the current effect based on some critera, such as how long you have been without water, what level of drunk you are (0-100) etc, this allows for a very customizable development and smooth gameplay experience
+
+<!-- QB Compatibility -->
+
+-   Instead of changing a bunch of values, just go into the SetMetaData function and run an event for the setter for us
+-   All we have to do is remove some of their stress stuff
+-   The drain of hunger/thirst might get messed up because of the setmetadata, unless we can remove something and check if it sent from our resource?
