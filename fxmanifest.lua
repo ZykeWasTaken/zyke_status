@@ -34,14 +34,19 @@ server_scripts {
 
 client_scripts {
     "client/main.lua",
-    "client/queue.lua",
 
     "client/functions.lua",
     "client/eventhandler.lua",
 
     "statuses/**/client.lua",
 
-    "effects/*.lua",
+    "effects/queue.lua",
+    "effects/main.lua",
+    "effects/screenEffect.lua",
+    "effects/movement_speed.lua",
+    "effects/walkingStyle.lua",
+    "effects/blurryVision.lua",
+
     "dev/client.lua",
     "shortcuts/client.lua",
     "compatibility/client.lua",
