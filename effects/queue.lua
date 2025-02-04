@@ -6,17 +6,20 @@
 ---@type table<string, QueueData>
 local queues = {}
 
----@type table<string, {onResourceStop: function, onTick: function, reset: function?}>
+---@alias EffectFunctions {onResourceStop: function, onTick: function?, reset: function?, onStart: function?}
+
+---@type table<string, EffectFunctions>
 local funcs = {}
 
 ---@param key string
----@param functions {onResourceStop: function, onTick: function, reset: function?}
+---@param functions EffectFunctions
 function RegisterQueueKey(key, functions)
     queues[key] = {}
     funcs[key] = {
         onResourceStop = functions.onResourceStop,
         onTick = functions.onTick,
-        reset = functions.reset
+        reset = functions.reset,
+        onStart = functions.onStart
     }
 end
 
@@ -169,7 +172,7 @@ end
 -- This thread runs the queued effects
 
 -- Cache the previously ran effects, so we know when to run the reset function
----@type table<string, true>
+---@type table<string, string | number | integer> @Caches the effect value, to check start/reset
 local prevEffects = {}
 CreateThread(function()
     local newEffects = {}
@@ -177,6 +180,7 @@ CreateThread(function()
     while (1) do
         local sleep = 5000
 
+        ---@type table<string, string | number | integer> 
         newEffects = {}
 
         if (Z.table.doesTableHaveEntries(queues)) then
@@ -186,20 +190,24 @@ CreateThread(function()
                 local val = getDominantValue(queueKey)
 
                 if (val) then
-                    -- prevEffects[queueKey] = true
-                    newEffects[queueKey] = true
+                    if (prevEffects[queueKey] ~= queues[queueKey][val].value) then
+                        if (funcs[queueKey].onStart) then
+                            funcs[queueKey].onStart(queueData[val].value)
+                        end
+                    end
 
                     -- print("Dominant: " .. tostring(val), json.encode(queueData))
                     if (funcs[queueKey].onTick) then
                         funcs[queueKey].onTick(queueData[val].value)
                     end
+
+                    newEffects[queueKey] = queues[queueKey][val].value
                 end
             end
         end
 
         for queueKey in pairs(prevEffects) do
             if (not newEffects[queueKey]) then
-                -- print("Should run stop for", queueKey)
                 if (funcs[queueKey].reset) then funcs[queueKey].reset() end
             end
         end
