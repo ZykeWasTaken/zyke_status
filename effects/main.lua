@@ -21,6 +21,10 @@ function RegisterEffectFunctions(name)
             if (statusSettings.effect.walkingStyle) then
                 AddToQueue("walkingStyle", name)
             end
+
+            if (statusSettings.effect.blurryVision) then
+                AddToQueue("blurryVision", name)
+            end
         end,
         onTick = function(val)
             if (statusSettings.effect.damage) then
@@ -38,6 +42,10 @@ function RegisterEffectFunctions(name)
 
             if (statusSettings.effect.walkingStyle) then
                 RemoveFromQueue("walkingStyle", name)
+            end
+
+            if (statusSettings.effect.blurryVision) then
+                RemoveFromQueue("blurryVision", name)
             end
         end
     }
