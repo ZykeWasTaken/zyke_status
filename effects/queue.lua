@@ -6,7 +6,7 @@
 ---@type table<string, QueueData>
 local queues = {}
 
----@alias EffectFunctions {onResourceStop: function, onTick: function?, reset: function?, onStart: function?}
+---@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?}
 
 ---@type table<string, EffectFunctions>
 local funcs = {}
