@@ -43,7 +43,7 @@ client_scripts {
     "effects/queue.lua",
     "effects/main.lua",
     "effects/screenEffect.lua",
-    "effects/movement_speed.lua",
+    "effects/movementSpeed.lua",
     "effects/walkingStyle.lua",
     "effects/blurryVision.lua",
 
