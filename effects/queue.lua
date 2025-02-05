@@ -10,6 +10,11 @@ local queues = {}
 ---@type string[]
 local queueKeys = {}
 
+-- onResourceStop runs when the resource stops
+-- onTick runs every script tick, which is set at 1000ms
+-- reset runs when the queue key is not running at all, to reset all effects around it, it does not get ran when the effect value changes
+-- onStart runs when an effect has been started
+
 ---@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?}
 
 ---@type table<string, EffectFunctions>
