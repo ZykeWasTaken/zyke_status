@@ -10,20 +10,9 @@ function RegisterEffectFunctions(name)
 
     EffectFunctions[name] = {
         onStart = function(val)
-            if (statusSettings.effect.screenEffect) then
-                AddToQueue("screenEffect", name)
-            end
-
-            if (statusSettings.effect.movementSpeed) then
-                AddToQueue("movementSpeed", name)
-            end
-
-            if (statusSettings.effect.walkingStyle) then
-                AddToQueue("walkingStyle", name)
-            end
-
-            if (statusSettings.effect.blurryVision) then
-                AddToQueue("blurryVision", name)
+            local keys = GetExistingQueueKeys()
+            for i = 1, #keys do
+                AddToQueue(keys[i], name)
             end
         end,
         onTick = function(val)
@@ -32,20 +21,9 @@ function RegisterEffectFunctions(name)
             end
         end,
         onStop = function(val)
-            if (statusSettings.effect.screenEffect) then
-                RemoveFromQueue("screenEffect", name)
-            end
-
-            if (statusSettings.effect.movementSpeed) then
-                RemoveFromQueue("movementSpeed", name)
-            end
-
-            if (statusSettings.effect.walkingStyle) then
-                RemoveFromQueue("walkingStyle", name)
-            end
-
-            if (statusSettings.effect.blurryVision) then
-                RemoveFromQueue("blurryVision", name)
+            local keys = GetExistingQueueKeys()
+            for i = 1, #keys do
+                RemoveFromQueue(keys[i], name)
             end
         end
     }
