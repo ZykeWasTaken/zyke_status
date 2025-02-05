@@ -14,8 +14,9 @@ local queueKeys = {}
 -- onTick runs every script tick, which is set at 1000ms
 -- reset runs when the queue key is not running at all, to reset all effects around it, it does not get ran when the effect value changes
 -- onStart runs when an effect has been started
+-- onStop runs when a specific effect value has stopped, for example, switching between two different screenEffects, it will be ran once for the effect that was stopped, not that this will also run when reset runs, if the effect is ran
 
----@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?}
+---@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?, onStop: function?}
 
 ---@type table<string, EffectFunctions>
 local funcs = {}
@@ -222,6 +223,12 @@ CreateThread(function()
         for queueKey in pairs(prevEffects) do
             if (not newEffects[queueKey]) then
                 if (funcs[queueKey].reset) then funcs[queueKey].reset() end
+            end
+
+            if (prevEffects[queueKey] ~= newEffects[queueKey]) then
+                if (funcs[queueKey].onStop) then
+                    funcs[queueKey].onStop(prevEffects[queueKey])
+                end
             end
         end
 
