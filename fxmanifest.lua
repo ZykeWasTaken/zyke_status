@@ -46,6 +46,7 @@ client_scripts {
     "effects/movementSpeed.lua",
     "effects/walkingStyle.lua",
     "effects/blurryVision.lua",
+    "effects/cameraShaking.lua",
 
     "dev/client.lua",
     "shortcuts/client.lua",
