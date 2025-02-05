@@ -6,6 +6,10 @@
 ---@type table<string, QueueData>
 local queues = {}
 
+-- Array of the keys in queues
+---@type string[]
+local queueKeys = {}
+
 ---@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?}
 
 ---@type table<string, EffectFunctions>
@@ -14,6 +18,10 @@ local funcs = {}
 ---@param key string
 ---@param functions EffectFunctions
 function RegisterQueueKey(key, functions)
+    if (not queues[key]) then
+        queueKeys[#queueKeys+1] = key
+    end
+
     queues[key] = {}
     funcs[key] = {
         onResourceStop = functions.onResourceStop,
@@ -238,5 +246,11 @@ function ClearEffectQueue()
     prevEffects = {}
 end
 
+---@return string[]
+function GetExistingQueueKeys()
+    return queueKeys
+end
+
+exports("GetExistingQueueKeys", GetExistingQueueKeys)
 exports("AddToQueue", AddToQueue)
 exports("ClearEffectQueueKey", ClearEffectQueueKey)
