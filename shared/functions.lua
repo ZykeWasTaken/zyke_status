@@ -66,6 +66,17 @@ end
 -- Re-orders based on the threshold value
 -- This is to make future development easier and mor performant
 function EnsureEffectThresholdOrder()
-    for key, values in pairs(Config.Status) do
+    for key, subValues in pairs(Config.Status) do
+        for subName, values in pairs(subValues) do
+            table.sort(values.effect, function(a, b)
+                return a.threshold > b.threshold
+            end)
+
+            for i = 2, #values.effect do
+                if (values.effect[i].threshold == values.effect[i - 1].threshold) then
+                    print(("^1[WARNING] ^3You have multiple threshold effects registered at the same threshold. Please adjust the values to avoid issues. Status: %s.%s^7"):format(key, subName))
+                end
+            end
+        end
     end
 end
