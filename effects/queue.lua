@@ -53,18 +53,37 @@ end)
 
 ---@param queueKey string
 ---@param key string
+---@param thresholdIdx integer
 ---@param value? string | number
-function AddToQueue(queueKey, key, value)
+function AddToQueue(queueKey, key, thresholdIdx, value)
     Z.debug("Attempting to queue...", queueKey, key, value)
 
     if (not value) then
-        if (IsStatusNameValid(key)) then
+        if (thresholdIdx) then
             local statusSettings = GetStatusSettings(key)
-            value = statusSettings.effect[queueKey]
+
+            value = statusSettings.effect[thresholdIdx][queueKey]
         else
             Z.debug("No effect value provided and no valid status name.")
+            return false
         end
     end
+
+    -- TODO: Re-do this, since we are now using thresholds, if this is ever to be used? Maybe not
+    -- if (not value) then
+    --     if (IsStatusNameValid(key)) then
+    --         local statusSettings = GetStatusSettings(key)
+    --         local thresholdIdx = GetEffectThreshold(key, GetRawStatus(key))
+    --         if (thresholdIdx == -1) then
+    --             Z.debug("No value found...")
+    --             return false
+    --         end
+
+    --         value = statusSettings.effect[thresholdIdx][queueKey]
+    --     else
+    --         Z.debug("No effect value provided and no valid status name.")
+    --     end
+    -- end
 
     if (not value) then Z.debug("No value found...") return false end
 

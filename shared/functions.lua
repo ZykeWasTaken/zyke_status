@@ -27,17 +27,26 @@ local reversed = Z.table.new({"addiction", "hunger", "thirst"})
 -- Some effects may be reversed, so we define it in here
 ---@param name StatusName
 ---@param statusData PlayerStatus | AddictionStatus
-function IsWithinEffectThreshold(name, statusData)
+---@return integer | -1 @Index of effect, -1 if none
+function GetEffectThreshold(name, statusData)
     local prim = SeparateStatusName(name)
     local settings = GetStatusSettings(name)
 
-    if (not settings.effect) then return false end
+    if (not settings.effect) then return -1 end
 
-    if (reversed:contains(prim)) then
-        return statusData.value <= settings.effect.threshold
-    else
-        return statusData.value >= settings.effect.threshold
+    for i = #settings.effect, 1, -1 do
+        if (reversed:contains(prim)) then
+            if (statusData.value <= settings.effect[i].threshold) then
+                return i
+            end
+        else
+            if (statusData.value >= settings.effect[i].threshold) then
+                return i
+            end
+        end
     end
+
+    return -1
 end
 
 -- Verifies if the primary exists, because of our dynamic system you can have any substatus, if it is a multi-status
@@ -51,4 +60,12 @@ function IsStatusNameValid(name)
     -- if it is multi, it just has to match the primary
 
     return Config.Status[prim] ~= nil
+end
+
+-- Goes through all status effects and re-orders them if needed
+-- Re-orders based on the threshold value
+-- This is to make future development easier and mor performant
+function EnsureEffectThresholdOrder()
+    for key, values in pairs(Config.Status) do
+    end
 end
