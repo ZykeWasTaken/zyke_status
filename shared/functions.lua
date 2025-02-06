@@ -80,3 +80,6 @@ function EnsureEffectThresholdOrder()
         end
     end
 end
+
+Wait(100)
+EnsureEffectThresholdOrder()
