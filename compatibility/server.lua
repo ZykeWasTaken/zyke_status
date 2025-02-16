@@ -59,6 +59,12 @@ RegisterNetEvent("zyke_status:compatibility:ResetStatus", function()
     SoftResetStatuses(source)
 end)
 
+AddEventHandler("txAdmin:events:healedPlayer", function(eventData)
+    if (GetInvokingResource() ~= "monitor" or type(eventData) ~= "table" or type(eventData.id) ~= "number") then return end
+
+    TriggerClientEvent("esx_basicneeds:healPlayer", eventData.id)
+end)
+
 -- This will fetch the base status for your framework
 -- This needs to be converted to work with our structure from all different frameworks
 ---@param player table
