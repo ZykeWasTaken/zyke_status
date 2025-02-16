@@ -194,17 +194,12 @@ function ResetStatuses(plyId)
     end
 end
 
-local playerHealAuth = {}
-
--- Function to heal a player, and reset their stats
--- It uses softReset if it exists, falls back to the onReset function
+-- Runs onSoftReset and falls back to onReset for all statuses the player has registered
 ---@param plyId PlayerId
-function HealPlayer(plyId)
-    Z.debug(("[HEALING] Healing %s"):format(plyId))
-
+function SoftResetStatuses(plyId)
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
         for statusName in pairs(statusValues.values) do
-            Z.debug("[HEALING] Resetting", primary .. "." .. statusName, "for", plyId)
+            Z.debug("[SoftResetStatuses] Resetting", primary .. "." .. statusName, "for", plyId)
 
             if (Cache.existingStatuses[primary].onSoftReset) then
                 Cache.existingStatuses[primary].onSoftReset(plyId, statusName)
@@ -213,6 +208,18 @@ function HealPlayer(plyId)
             end
         end
     end
+
+end
+
+local playerHealAuth = {}
+
+-- Function to heal a player, and reset their stats
+-- It uses softReset if it exists, falls back to the onReset function
+---@param plyId PlayerId
+function HealPlayer(plyId)
+    Z.debug(("[HEALING] Healing %s"):format(plyId))
+
+    SoftResetStatuses(plyId)
 
     -- Slightly unsafe event due to FiveM limitations, however, we do warn about heals that are not properly ran
     playerHealAuth[plyId] = true
