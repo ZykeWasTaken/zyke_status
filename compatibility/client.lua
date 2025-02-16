@@ -64,3 +64,11 @@ end
 RegisterNetEvent("esx_status:getStatus", function(name, cb)
     cb(CompatibilityFuncs.ConvertStatus(name))
 end)
+
+RegisterNetEvent("esx_basicneeds:healPlayer", function()
+    TriggerServerEvent("zyke_status:compatibility:HealPlayer")
+end)
+
+RegisterNetEvent("esx_basicneeds:resetStatus", function()
+    TriggerServerEvent("zyke_status:compatibility:ResetStatus")
+end)

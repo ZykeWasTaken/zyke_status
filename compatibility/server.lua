@@ -43,6 +43,22 @@ RegisterNetEvent("zyke_status:compatibility:RemoveStatus", function(name, value)
     end
 end)
 
+RegisterNetEvent("zyke_status:compatibility:HealPlayer", function()
+    if (Config.Settings.debug) then
+        Z.debug(("%s has triggered HealPlayer via compatibility."):format(source))
+    end
+
+    HealPlayer(source)
+end)
+
+RegisterNetEvent("zyke_status:compatibility:ResetStatus", function()
+    if (Config.Settings.debug) then
+        Z.debug(("%s has triggered HealPlayer via compatibility."):format(source))
+    end
+
+    SoftResetStatuses(source)
+end)
+
 -- This will fetch the base status for your framework
 -- This needs to be converted to work with our structure from all different frameworks
 ---@param player table
