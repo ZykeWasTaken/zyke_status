@@ -19,7 +19,6 @@ end)
 local hudState = GetResourceKvpInt("zyke_status:dev_hud_enabled") or 0
 local function devHud()
     while (hudState == 1) do
-        print(hudState)
         local sleep = Cache.statuses and 1 or 3000
 
         if (Cache.statuses) then
