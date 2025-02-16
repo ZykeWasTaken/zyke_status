@@ -17,3 +17,8 @@ RegisterNetEvent("zyke_lib:OnCharacterLogout", function()
 
     Cache.statuses = nil
 end)
+
+RegisterNetEvent("zyke_status:OnHealPlayer", function()
+    SetEntityHealth(PlayerPedId(), GetPedMaxHealth(PlayerPedId()))
+    TriggerServerEvent("zyke_status:OnHealPlayer")
+end)

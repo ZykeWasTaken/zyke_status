@@ -181,6 +181,7 @@ function SavePlayerToDatabase(plyId)
     MySQL.query.await("INSERT INTO zyke_status (identifier, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?", {plyIdentifier, data, data})
 end
 
+-- Runs onReset for all statuses the player has registered
 ---@param plyId PlayerId
 function ResetStatuses(plyId)
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
@@ -192,3 +193,36 @@ function ResetStatuses(plyId)
         SyncPlayerStatus(plyId, primary)
     end
 end
+
+local playerHealAuth = {}
+
+-- Function to heal a player, and reset their stats
+-- It uses softReset if it exists, falls back to the onReset function
+---@param plyId PlayerId
+function HealPlayer(plyId)
+    Z.debug(("[HEALING] Healing %s"):format(plyId))
+
+    for primary, statusValues in pairs(Cache.statuses[plyId]) do
+        for statusName in pairs(statusValues.values) do
+            Z.debug("[HEALING] Resetting", primary .. "." .. statusName, "for", plyId)
+
+            if (Cache.existingStatuses[primary].onSoftReset) then
+                Cache.existingStatuses[primary].onSoftReset(plyId, statusName)
+            else
+                Cache.existingStatuses[primary].onReset(plyId, statusName)
+            end
+        end
+    end
+
+    -- Slightly unsafe event due to FiveM limitations, however, we do warn about heals that are not properly ran
+    playerHealAuth[plyId] = true
+    TriggerClientEvent("zyke_status:OnHealPlayer", plyId)
+end
+
+RegisterNetEvent("zyke_status:OnHealPlayer", function()
+    if (not playerHealAuth[source]) then
+        print(("^1[WARNING] Player %s has ran the healing event without being authorized to do so. Possible exploit attempt. ^7"):format(source))
+    end
+end)
+
+exports("HealPlayer", HealPlayer)
