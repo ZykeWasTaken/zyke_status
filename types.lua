@@ -18,6 +18,7 @@
 ---@field onRemove function
 ---@field onSet? function @Only used for backwards compatibility with some base values, we use onReset or onAdd/onRemove
 ---@field onReset function
+---@field onSoftReset? function @Soft resets that are not complete, for example, addiciton resets satisfaction level but remains addiction
 
 ---@class ServerCache
 ---@field statuses table<PlayerId, table<StatusName, PlayerStatuses>>

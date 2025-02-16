@@ -2,7 +2,7 @@
 ---@param name StatusName
 ---@param multi? boolean
 ---@param baseValues table @Values the state will be required to have
----@param functions {onTick: function?, onAdd: function, onRemove: function, onSet?: function, onReset: function}
+---@param functions {onTick: function?, onAdd: function, onRemove: function, onSet?: function, onReset: function, onSoftReset?: function}
 function RegisterStatusType(name, multi, baseValues, functions)
     Z.debug("Registering", name, multi)
 
@@ -13,6 +13,7 @@ function RegisterStatusType(name, multi, baseValues, functions)
         onAdd = functions.onAdd,
         onRemove = functions.onRemove,
         onSet = functions.onSet,
-        onReset = functions.onReset
+        onReset = functions.onReset,
+        onSoftReset = functions.onSoftReset
     }
 end
