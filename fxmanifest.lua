@@ -30,6 +30,7 @@ server_scripts {
     "dev/server.lua",
     "shortcuts/server.lua",
     "compatibility/server.lua",
+    "server/commands.lua",
 }
 
 client_scripts {
