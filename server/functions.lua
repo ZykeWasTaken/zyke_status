@@ -230,6 +230,8 @@ RegisterNetEvent("zyke_status:OnHealPlayer", function()
     if (not playerHealAuth[source]) then
         print(("^1[WARNING] Player %s has ran the healing event without being authorized to do so. Possible exploit attempt. ^7"):format(source))
     end
+
+    playerHealAuth[source] = nil
 end)
 
 exports("HealPlayer", HealPlayer)
