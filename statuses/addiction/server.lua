@@ -94,5 +94,13 @@ RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
         data.values[secondary].value = 100.0
 
         return true
+    end,
+    onSoftReset = function(plyId, name)
+        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
+        if (not isValid or not data) then return end
+
+        data.values[secondary].value = 100.0
+
+        return true
     end
 })
