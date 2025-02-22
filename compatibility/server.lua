@@ -65,26 +65,6 @@ AddEventHandler("txAdmin:events:healedPlayer", function(eventData)
     TriggerClientEvent("esx_basicneeds:healPlayer", eventData.id)
 end)
 
--- This will fetch the base status for your framework
--- This needs to be converted to work with our structure from all different frameworks
----@param player table
----@return table
-function CompatibilityFuncs.GetBasePlayerStatus(player)
-    if (Framework == "ESX") then
-        local status = {}
-
-        return status
-    elseif (Framework == "QB") then
-        local status = {}
-
-        return status
-    end
-
-    error("MISSING SUPPORTED FRAMEWORK!")
-
-    return {}
-end
-
 ---@param plyId PlayerId
 ---@param name string
 ---@diagnostic disable-next-line: duplicate-set-field
@@ -98,6 +78,7 @@ function CompatibilityFuncs.ConvertStatus(plyId, name)
         local val = data[name].values[name].value
         return {name = name, val = math.floor(val * 10000), percent = val}
     elseif (Framework == "QB") then
+        -- Unused? Since CreateBasePlayerStatus is unused by QB?
     end
 end
 
@@ -123,6 +104,7 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 
         return baseStatus
     elseif (Framework == "QB") then
+        -- DEV: Unused since they always just fetch it on the player, which we update every tick?
         local baseStatus = {}
 
         return baseStatus
@@ -162,21 +144,21 @@ function CompatibilityFuncs.SetStatus(plyId)
     end
 end
 
----@param plyId PlayerId
-function CompatibilityFuncs.SaveStatus(plyId)
-    if (not Cache.statuses[plyId]) then return end
+-- ---@param plyId PlayerId
+-- function CompatibilityFuncs.SaveStatus(plyId)
+--     if (not Cache.statuses[plyId]) then return end
 
-    local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
-    local identifier = Z.getIdentifier(plyId)
-    if (not identifier) then return end
+--     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
+--     local identifier = Z.getIdentifier(plyId)
+--     if (not identifier) then return end
 
-    if (Framework == "ESX") then
-        MySQL.update.await("UPDATE users SET status = ? WHERE identifier = ?", {json.encode(status), identifier})
-    elseif (Framework == "QB") then
-    end
-end
+--     if (Framework == "ESX") then
+--         MySQL.update.await("UPDATE users SET status = ? WHERE identifier = ?", {json.encode(status), identifier})
+--     elseif (Framework == "QB") then
+--     end
+-- end
 
----@param plyId PlayerId
-AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
-    CompatibilityFuncs.SaveStatus(plyId)
-end)
+-- ---@param plyId PlayerId
+-- AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
+--     CompatibilityFuncs.SaveStatus(plyId)
+-- end)

@@ -70,3 +70,64 @@
 -   Instead of changing a bunch of values, just go into the SetMetaData function and run an event for the setter for us
 -   All we have to do is remove some of their stress stuff
 -   The drain of hunger/thirst might get messed up because of the setmetadata, unless we can remove something and check if it sent from our resource?
+
+<!-- Basicneeds stuff -->
+<!-- CLIENT -->
+
+AddEventHandler('esx:onPlayerSpawn', function(spawn)
+if IsDead then
+TriggerEvent('esx_basicneeds:resetStatus')
+end
+
+    IsDead = false
+
+end)
+
+-   FINISHED
+    RegisterNetEvent('esx_basicneeds:healPlayer')
+    AddEventHandler('esx_basicneeds:healPlayer', function()
+    -- restore hunger & thirst
+    TriggerEvent('esx_status:set', 'hunger', 1000000)
+    TriggerEvent('esx_status:set', 'thirst', 1000000)
+
+        -- restore hp
+        local playerPed = PlayerPedId()
+        SetEntityHealth(playerPed, GetEntityMaxHealth(playerPed))
+
+end)
+
+-   FINISHED
+    AddEventHandler('esx_basicneeds:resetStatus', function()
+    TriggerEvent('esx_status:set', 'hunger', 500000)
+    TriggerEvent('esx_status:set', 'thirst', 500000)
+    end)
+
+<!-- SERVER -->
+
+-   FINISHED
+    ESX.RegisterCommand('heal', 'admin', function(xPlayer, args, showError)
+    args.playerId.triggerEvent('esx_basicneeds:healPlayer')
+    args.playerId.showNotification('You have been healed.')
+    end, true, {help = 'Heal a player, or yourself - restores thirst, hunger and health.', validate = true, arguments = {
+    {name = 'playerId', help = 'the player id', type = 'player'}
+    }})
+
+-   FINISHED
+    AddEventHandler('txAdmin:events:healedPlayer', function(eventData)
+    if GetInvokingResource() ~= "monitor" or type(eventData) ~= "table" or type(eventData.id) ~= "number" then
+    return
+    end
+
+        TriggerClientEvent('esx_basicneeds:healPlayer', eventData.id)
+
+end)
+
+REGISTERING FOOD STUFF FOR EATING
+
+<!-- Addictions -->
+
+-   Allow a configuration for two types of addictions.
+-   The default addiciton type should be persistent through deaths, revives etc, it can not just be cleared.
+-   We will have exports available or config settings to clear the addictions when you are revived or such.
+-   By default the addictions will not be cleared, otherwise it feels like they're pretty pointless.
+-   During revives or such, we will reset the satisfaction level, this means that you are not instantly feeling bad after you are healed, but the actual addiction level is persistent, you would need medications or some sort of reset for that to get fixed.
