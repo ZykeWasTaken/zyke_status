@@ -50,6 +50,7 @@ client_scripts {
     "effects/cameraShaking.lua",
 
     "dev/client.lua",
+    "dev/hud.lua",
     "shortcuts/client.lua",
     "compatibility/client.lua",
 }
