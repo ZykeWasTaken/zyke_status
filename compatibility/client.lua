@@ -65,10 +65,14 @@ RegisterNetEvent("esx_status:getStatus", function(name, cb)
     cb(CompatibilityFuncs.ConvertStatus(name))
 end)
 
+-- We catch this to heal the player and reset our statuses properly
+-- We advise you to disable the esx_basicneeds equivilent if you know what you are doing, but not necessary
 RegisterNetEvent("esx_basicneeds:healPlayer", function()
     TriggerServerEvent("zyke_status:compatibility:HealPlayer")
 end)
 
+-- We catch this to heal the player and reset our statuses properly
+-- We advise you to disable the esx_basicneeds equivilent if you know what you are doing, but not necessary
 RegisterNetEvent("esx_basicneeds:resetStatus", function()
     TriggerServerEvent("zyke_status:compatibility:ResetStatus")
 end)

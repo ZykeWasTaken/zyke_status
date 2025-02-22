@@ -53,3 +53,7 @@ client_scripts {
     "shortcuts/client.lua",
     "compatibility/client.lua",
 }
+
+provides {
+    "esx_status"
+}
