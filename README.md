@@ -18,6 +18,14 @@ We have a first iteration of an installation guide available in our documentatio
 
 # Planned TODO
 
+## Easier Development
+
+-   All sorts of re-structuring and additions of functions/exports will be made to allow for easier development for everyone that is interested in interacting with our resource.
+
+## More Statuses
+
+-   Anxiety, pains and whatnot that is suggested or thought of will be added in the near future.
+
 ## Severity For Queues
 
 -   Stack all the active for a queued key, and alter the severity based on the total value. If your screen is slightly blurred because of 3 different effects, it should be combining all values for a final effect multiplier. Really only relevant for number values queued.
