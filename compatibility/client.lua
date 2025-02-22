@@ -1,4 +1,4 @@
-if (Config.Settings.backwardsCompatibility ~= true) then return end
+if (Config.Settings.backwardsCompatibility.enabled ~= true) then return end
 
 CompatibilityFuncs = {}
 

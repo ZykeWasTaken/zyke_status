@@ -27,7 +27,7 @@ function SyncPlayerStatus(plyId, primary)
         clientSyncQueue[plyId].toSync[primary[i]] = true
 
         -- QBCore compatibility stuff
-        if (framework == "QB" and backwardsCompatibility == true) then
+        if (framework == "QB" and backwardsCompatibility.enabled == true) then
             if (primary[i] == "hunger" or primary[i] == "thirst" or primary[i] == "stress") then
                 local ply = Z.getPlayerData(plyId)
                 if (not ply) then return end
