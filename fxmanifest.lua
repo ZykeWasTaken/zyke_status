@@ -25,7 +25,7 @@ server_scripts {
 
     "statuses/**/server.lua",
 
-    "server/eventhandler.lua",
+    "server/events.lua",
 
     "dev/server.lua",
     "shortcuts/server.lua",
@@ -37,7 +37,7 @@ client_scripts {
     "client/main.lua",
 
     "client/functions.lua",
-    "client/eventhandler.lua",
+    "client/events.lua",
 
     "statuses/**/client.lua",
 
