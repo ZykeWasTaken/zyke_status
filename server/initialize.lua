@@ -58,7 +58,10 @@ end
 ---@param primary StatusName
 ---@param secondary SubStatusName
 function EnsurePlayerSubStatus(plyId, primary, secondary)
-    if (not Cache.statuses[plyId][primary].values[secondary]) then
+    if (not plyId) then return end
+    local status = Cache.statuses[plyId]
+
+    if (status and not status[primary].values[secondary]) then
         Cache.statuses[plyId][primary].values[secondary] = {}
 
         for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do
