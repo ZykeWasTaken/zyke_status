@@ -7,7 +7,7 @@ RegisterStatusType(primary, true, {value = 0.0},
                 local statusSettings = GetStatusSettings(primary, subName)
                 local val = statusSettings?.value?.drain or 0
 
-                if (val == 0) then
+                if (val > 0) then
                     RemoveFromStatus(plyId, primary, subName, val, true)
                 end
             end
