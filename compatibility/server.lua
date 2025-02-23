@@ -51,7 +51,7 @@ RegisterNetEvent("zyke_status:compatibility:HealPlayer", function()
     HealPlayer(source)
 end)
 
-RegisterNetEvent("zyke_status:compatibility:ResetStatus", function()
+RegisterNetEvent("zyke_status:compatibility:SoftResetStatuses", function()
     if (Config.Settings.debug) then
         Z.debug(("%s has triggered HealPlayer via compatibility."):format(source))
     end
