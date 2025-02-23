@@ -126,6 +126,12 @@ local esxSetMethodUpdateInterval = {}
 local qbSetMethodUpdateInterval = {}
 
 ---@param plyId PlayerId
+RegisterNetEvent("zyke_lib:OnCharacterLogout", function(plyId)
+    esxSetMethodUpdateInterval[plyId] = nil
+    qbSetMethodUpdateInterval[plyId] = nil
+end)
+
+---@param plyId PlayerId
 function CompatibilityFuncs.SetStatus(plyId)
     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 
