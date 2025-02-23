@@ -6,20 +6,19 @@ end
 Z.registerCommand({"status", "stat"}, function(plyId, args)
     if (not isAllowed(plyId)) then Z.notify(plyId, "noPermission") return end
 
-    local name, action, amount = args[1], args[2], tonumber(args[3])
+    local primary, secondary, action, amount = args[1], args[2], args[3], tonumber(args[4])
     if (not amount or type(amount) ~= "number" or amount <= 0.0) then Z.notify(plyId, "invalidAmount") return end
 
-    local primary, secondary = SeparateStatusName(name)
-
     if (action == "add") then
-        AddToStatus(plyId, name, amount)
+        AddToStatus(plyId, primary, secondary, amount)
     elseif (action == "remove") then
         RemoveFromStatus(plyId, primary, secondary, amount)
     else
         Z.notify(plyId, "incorrectAction")
     end
 end, "Add/Remove from player status", {
-    {"name", "Full status name (ex. high.coke)"},
+    {"primary", "Primary status name (ex. high)"},
+    {"secondary", "Secondary status name (ex. coke)"},
     {"action", "add/remove"},
     {"amount", "0-100"},
 })
@@ -30,7 +29,7 @@ end, "Reset Player Status", {
     {"Player Id", "Player Id, or empty to use yourself"}
 })
 
--- QB eating
+-- QB eating testing
 -- RegisterCommand("hunger_test", function(source, args)
 --     -- local ply = Z.getPlayerData(source)
 --     -- ply.Functions.SetMetaData("hunger", ply.PlayerData.metadata.hunger + tonumber(args[1]))
