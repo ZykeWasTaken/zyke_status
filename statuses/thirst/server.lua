@@ -4,16 +4,15 @@ RegisterStatusType(primary, false, {value = 100.0},
     onTick = function(players)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local fullName = primary .. "." .. subName
-                local statusSettings = GetStatusSettings(fullName)
+                local statusSettings = GetStatusSettings(primary, subName)
 
-                RemoveFromStatus(plyId, fullName, statusSettings?.value?.drain or 0)
+                RemoveFromStatus(plyId, primary, subName, statusSettings?.value?.drain or 0, true)
             end
         end
     end,
-    onAdd = function(plyId, name, amount)
-        local isValid, data, _, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onAdd = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value + amount, Config.Settings.decimalAccuracy)
         if (data.values[secondary].value > 100.0) then
@@ -22,9 +21,9 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         return true
     end,
-    onRemove = function(plyId, name, amount)
-        local isValid, data, _, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onRemove = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value - amount, Config.Settings.decimalAccuracy)
         if (data.values[secondary].value < 0.0) then
@@ -33,15 +32,15 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         return true
     end,
-    onSet = function(plyId, name, amount)
-        local isValid, data, _, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onSet = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = Z.numbers.round(amount, Config.Settings.decimalAccuracy)
     end,
-    onReset = function(plyId, name)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onReset = function(plyId, primary, secondary)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = 100.0
 

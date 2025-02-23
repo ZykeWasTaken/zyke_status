@@ -35,9 +35,9 @@ RegisterNetEvent("zyke_status:compatibility:RemoveStatus", function(name, value)
     end
 
     if (name == "hunger") then
-        RemoveFromStatus(source, "hunger", value / 10000)
+        RemoveFromStatus(source, "hunger", "hunger", value / 10000)
     elseif (name == "thirst") then
-        RemoveFromStatus(source, "thirst", value / 10000)
+        RemoveFromStatus(source, "thirst", "hunger", value / 10000)
     else
         print("Attempting to remove from invalid status:", name)
     end
@@ -139,7 +139,7 @@ function CompatibilityFuncs.SetStatus(plyId)
             player.set("status", status)
         end
 
-        TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
+        -- TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
         local ply = Z.getPlayerData(plyId)
         if (not ply) then return end

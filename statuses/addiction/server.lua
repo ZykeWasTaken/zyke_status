@@ -14,10 +14,12 @@
 -- Custom for this type of status
 -- Has to remove the satisfaction every tick if you are addicted
 ---@param plyId PlayerId
----@param name StatusName
-local function removeSatisfaction(plyId, name, amount)
-    local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-    if (not isValid or not data) then return end
+---@param primary PrimaryName
+---@param secondary SecondaryName
+---@param amount number
+local function removeSatisfaction(plyId, primary, secondary, amount)
+    local data = GetPlayerBaseStatusTable(plyId, primary)
+    if (not data) then return end
 
     if (data.values[secondary].value == 0.0) then return end
 
@@ -32,29 +34,28 @@ end
 -- TODO: Some addSatisfaction
 -- Also, reset satisfaction or something when addiction is draining
 
-local name = "addiction"
-RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
+local primary = "addiction"
+RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 {
     onTick = function(players)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local fullName = name .. "." .. subName
-                local statusSettings = GetStatusSettings(fullName)
+                local statusSettings = GetStatusSettings(primary, subName)
 
                 -- If below the addiction threshold
                 if (values.addiction < statusSettings.addiction.threshold) then
                     -- Not addicted, remove from the addicted status
-                    RemoveFromStatus(plyId, name .. "." .. subName, statusSettings.addiction.drain)
+                    RemoveFromStatus(plyId, primary, subName, statusSettings.addiction.drain, true)
                 else
                     -- Addicted, slowly remove satisfaction
-                    removeSatisfaction(plyId, name .. "." .. subName, statusSettings.value.drain)
+                    removeSatisfaction(plyId, primary, subName, statusSettings.value.drain)
                 end
             end
         end
     end,
-    onAdd = function(plyId, name, amount)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onAdd = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         -- Add onto the addiction value (smaller value, static change for now, TODO: update it exponentially or something)
 
@@ -72,9 +73,9 @@ RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
 
         return true
     end,
-    onRemove = function(plyId, name, amount)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onRemove = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         -- Remove from the addiction value
         data.values[secondary].addiction = Z.numbers.round(data.values[secondary].addiction - amount, Config.Settings.decimalAccuracy)
@@ -86,18 +87,18 @@ RegisterStatusType(name, true, {value = 100.0, addiction = 0.0},
 
         return true
     end,
-    onReset = function(plyId, name)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onReset = function(plyId, primary, secondary)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].addiction = 0.0
         data.values[secondary].value = 100.0
 
         return true
     end,
-    onSoftReset = function(plyId, name)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onSoftReset = function(plyId, primary, secondary)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = 100.0
 

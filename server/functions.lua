@@ -71,11 +71,9 @@ end
 -- The only exception is if the player has not yet selected a character
 -- The secondary, if using multi, is not always guaranteed to exist
 ---@param plyId PlayerId
----@param name StatusName
+---@param primary PrimaryName
 ---@return PlayerStatuses | nil
-function GetPlayerBaseStatusTable(plyId, name)
-    local primary = SeparateStatusName(name)
-
+function GetPlayerBaseStatusTable(plyId, primary)
     return Cache.statuses[plyId] and Cache.statuses[plyId][primary] or nil
 end
 
@@ -88,19 +86,25 @@ function GetStatus(plyId, name)
     if (not Cache.statuses[plyId]) then return 0.0 end
     if (not Cache.statuses[plyId][primary]) then return 0.0 end
 
-    local value = GetPlayerBaseStatusTable(plyId, name)
+    local value = GetPlayerBaseStatusTable(plyId, primary)
     return value and value.values?[secondary]?.value or 0.0
 end
 
 exports("GetStatus", GetStatus)
 
 ---@param plyId PlayerId
----@param name StatusName
+---@param primary PrimaryName
+---@param secondary SecondaryName
 ---@param amount number
-function RemoveFromStatus(plyId, name, amount)
-    local primary, secondary = SeparateStatusName(name)
-    EnsurePlayerSubStatus(plyId, primary, secondary)
-    local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, name, amount)
+---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
+function RemoveFromStatus(plyId, primary, secondary, amount, skipEnsuring)
+    -- print("RemoveFromStatus", plyId, primary, secondary, amount)
+
+    if (not skipEnsuring) then
+        EnsurePlayerSubStatus(plyId, primary, secondary)
+    end
+
+    local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, primary, secondary, amount)
 
     if (hasRemoved) then
         SyncPlayerStatus(plyId, primary)
@@ -109,12 +113,18 @@ end
 
 exports("RemoveFromStatus", RemoveFromStatus)
 
-function SetStatusValue(plyId, name, amount)
-    local primary, secondary = SeparateStatusName(name)
-    EnsurePlayerSubStatus(plyId, primary, secondary)
-
+---@param plyId PlayerId
+---@param primary PrimaryName
+---@param secondary SecondaryName
+---@param amount number
+---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
+function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
     if (Cache.existingStatuses[primary].onSet) then
-        local hasRemoved = Cache.existingStatuses[primary].onSet(plyId, name, amount)
+        if (not skipEnsuring) then
+            EnsurePlayerSubStatus(plyId, primary, secondary)
+        end
+
+        local hasRemoved = Cache.existingStatuses[primary].onSet(plyId, primary, secondary, amount)
         if (hasRemoved) then
             SyncPlayerStatus(plyId, primary)
         end
@@ -125,12 +135,16 @@ exports("SetStatusValue", SetStatusValue)
 
 -- Add value to the status
 ---@param plyId PlayerId
----@param name StatusName
+---@param primary PrimaryName
+---@param secondary SecondaryName
 ---@param amount number
-function AddToStatus(plyId, name, amount)
-    local primary, secondary = SeparateStatusName(name)
-    EnsurePlayerSubStatus(plyId, primary, secondary)
-    local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, name, amount)
+---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
+function AddToStatus(plyId, primary, secondary, amount, skipEnsuring)
+    if (not skipEnsuring) then
+        EnsurePlayerSubStatus(plyId, primary, secondary)
+    end
+
+    local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, primary, secondary, amount)
 
     if (hasAdded) then
         SyncPlayerStatus(plyId, primary)
@@ -138,34 +152,6 @@ function AddToStatus(plyId, name, amount)
 end
 
 exports("AddToStatus", AddToStatus)
-
-RegisterCommand("get_status", function(source, args, raw)
-    local status = args[1]
-    local amount = GetStatus(source, status)
-
-    print(amount)
-end, false)
-
-RegisterCommand("add_to_status", function(source, args)
-    local status, amount = args[1], tonumber(args[2])
-
-    AddToStatus(source, status, amount or 1.0)
-end, false)
-
--- Validates the request, and returns the player's status table so that it can be modified
--- Since these two functionalities almost always have to be bundled together, we use this function
----@param plyId PlayerId
----@param name StatusName
-function ValidateStatusModification(plyId, name)
-    local primary, secondary = SeparateStatusName(name)
-
-    local value = GetPlayerBaseStatusTable(plyId, name)
-    if (not value) then return false, nil end
-
-    EnsurePlayerSubStatus(plyId, primary, secondary)
-
-    return true, value, primary, secondary
-end
 
 ---@param plyId PlayerId
 function SavePlayerToDatabase(plyId)
@@ -187,7 +173,7 @@ function ResetStatuses(plyId)
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
         for statusName in pairs(statusValues.values) do
             Z.debug("[ResetStauses] Resetting", primary .. "." .. statusName, "for", plyId)
-            Cache.existingStatuses[primary].onReset(plyId, statusName)
+            Cache.existingStatuses[primary].onReset(plyId, primary, statusName)
         end
 
         SyncPlayerStatus(plyId, primary)
@@ -202,9 +188,9 @@ function SoftResetStatuses(plyId)
             Z.debug("[SoftResetStatuses] Resetting", primary .. "." .. statusName, "for", plyId)
 
             if (Cache.existingStatuses[primary].onSoftReset) then
-                Cache.existingStatuses[primary].onSoftReset(plyId, statusName)
+                Cache.existingStatuses[primary].onSoftReset(plyId, primary, statusName)
             else
-                Cache.existingStatuses[primary].onReset(plyId, statusName)
+                Cache.existingStatuses[primary].onReset(plyId, primary, statusName)
             end
         end
     end

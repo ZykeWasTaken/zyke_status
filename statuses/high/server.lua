@@ -4,16 +4,18 @@ RegisterStatusType(primary, true, {value = 0.0},
     onTick = function(players)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local fullName = primary .. "." .. subName
-                local statusSettings = GetStatusSettings(fullName)
+                local statusSettings = GetStatusSettings(primary, subName)
+                local val = statusSettings?.value?.drain or 0
 
-                RemoveFromStatus(plyId, fullName, statusSettings?.value?.drain or 0)
+                if (val == 0) then
+                    RemoveFromStatus(plyId, primary, subName, val, true)
+                end
             end
         end
     end,
-    onAdd = function(plyId, name, amount)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onAdd = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         -- Add onto the high value
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value + amount, Config.Settings.decimalAccuracy)
@@ -23,9 +25,9 @@ RegisterStatusType(primary, true, {value = 0.0},
 
         return true
     end,
-    onRemove = function(plyId, name, amount)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onRemove = function(plyId, primary, secondary, amount)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         -- Remove from the high value
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value - amount, Config.Settings.decimalAccuracy)
@@ -35,9 +37,9 @@ RegisterStatusType(primary, true, {value = 0.0},
 
         return true
     end,
-    onReset = function(plyId, name)
-        local isValid, data, primary, secondary = ValidateStatusModification(plyId, name)
-        if (not isValid or not data) then return end
+    onReset = function(plyId, primary, secondary)
+        local data = GetPlayerBaseStatusTable(plyId, primary)
+        if (not data) then return end
 
         data.values[secondary].value = 0.0
 

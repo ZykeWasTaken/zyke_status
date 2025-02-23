@@ -13,11 +13,10 @@ function SeparateStatusName(name)
     return primary, secondary, primary .. "." .. secondary
 end
 
----@param name StatusName
-function GetStatusSettings(name)
-    local prim, sec = SeparateStatusName(name)
-
-    return Config.Status[prim][sec] or Config.Status[prim].base
+---@param primary PrimaryName
+---@param secondary SecondaryName
+function GetStatusSettings(primary, secondary)
+    return Config.Status[primary][secondary] or Config.Status[secondary].base
 end
 
 -- These statuses have reversed values, 100.0 being the starting point
@@ -29,13 +28,13 @@ local reversed = Z.table.new({"addiction", "hunger", "thirst"})
 ---@param statusData PlayerStatus | AddictionStatus
 ---@return integer | -1 @Index of effect, -1 if none
 function GetEffectThreshold(name, statusData)
-    local prim = SeparateStatusName(name)
-    local settings = GetStatusSettings(name)
+    local primary, secondary = SeparateStatusName(name)
+    local settings = GetStatusSettings(primary, secondary)
 
     if (not settings.effect) then return -1 end
 
     for i = #settings.effect, 1, -1 do
-        if (reversed:contains(prim)) then
+        if (reversed:contains(primary)) then
             if (statusData.value <= settings.effect[i].threshold) then
                 return i
             end

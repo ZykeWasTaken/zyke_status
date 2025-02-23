@@ -131,3 +131,10 @@ REGISTERING FOOD STUFF FOR EATING
 -   We will have exports available or config settings to clear the addictions when you are revived or such.
 -   By default the addictions will not be cleared, otherwise it feels like they're pretty pointless.
 -   During revives or such, we will reset the satisfaction level, this means that you are not instantly feeling bad after you are healed, but the actual addiction level is persistent, you would need medications or some sort of reset for that to get fixed.
+
+# Important Development Information
+
+## Verification
+
+-   Never trigger the status methods directly, because they lack verification.
+-   To avoid double-verifications, we encourage you to run the function dedicated to your action, such as `RemoveFromStatus`, it performs all necessary validation to ensure all values exist and is possible to apply. This function then triggers the method on the status to perform the action. If we had another validation on the method, this would perform the same action twice. To avoid unneccessary baggage, we encourage you to do this propperly.

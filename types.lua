@@ -41,7 +41,9 @@
 ---@alias Plate string
 ---@alias FailReason string
 ---@alias Success boolean
----@alias StatusName string
----@alias SubStatusName string
+---@alias StatusName string @Deprecated
+---@alias SubStatusName string @Deprecated
+---@alias PrimaryName string
+---@alias SecondaryName string
 ---@alias OsTime integer
 ---@alias OsClock number

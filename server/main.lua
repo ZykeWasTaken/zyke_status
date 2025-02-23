@@ -27,11 +27,10 @@ CreateThread(function()
     while (1) do
         Wait(tickSpeed)
 
-        for statusName, values in pairs(Cache.existingStatuses) do
-            local prim = SeparateStatusName(statusName)
-
+        local existingStatuses = Cache.existingStatuses
+        for statusName, values in pairs(existingStatuses) do
             if (values.onTick) then
-                values.onTick(getPlayersForStatus(prim))
+                values.onTick(getPlayersForStatus(statusName))
             end
         end
 
@@ -44,7 +43,7 @@ CreateThread(function()
             end
         end
 
-        -- We save during logout, but to be save, save every x amount of seconds
+        -- We save during logout, but to be safe, save every x amount of seconds
         if (os.time() - lastDbSave > dbSaveInterval) then
             lastDbSave = os.time()
             for plyId in pairs(Cache.statuses) do

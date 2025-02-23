@@ -59,7 +59,6 @@ end
 ---@param secondary SubStatusName
 function EnsurePlayerSubStatus(plyId, primary, secondary)
     if (not Cache.statuses[plyId][primary].values[secondary]) then
-        -- Cache.statuses[plyId][primary].values[secondary] = {value = 0.0}
         Cache.statuses[plyId][primary].values[secondary] = {}
 
         for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do

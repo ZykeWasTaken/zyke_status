@@ -10,7 +10,8 @@ local prevThresholdIdxs = {}
 -- We register and cache the effects, this way we can override and run custom functionality for specific drugs easily
 ---@param name StatusName
 function RegisterEffectFunctions(name)
-    local statusSettings = GetStatusSettings(name)
+    local primary, secondary = SeparateStatusName(name)
+    local statusSettings = GetStatusSettings(primary, secondary)
 
     EffectFunctions[name] = {
         onStart = function(val, thresholdIdx)

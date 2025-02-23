@@ -9,10 +9,12 @@ Z.registerCommand({"status", "stat"}, function(plyId, args)
     local name, action, amount = args[1], args[2], tonumber(args[3])
     if (not amount or type(amount) ~= "number" or amount <= 0.0) then Z.notify(plyId, "invalidAmount") return end
 
+    local primary, secondary = SeparateStatusName(name)
+
     if (action == "add") then
         AddToStatus(plyId, name, amount)
     elseif (action == "remove") then
-        RemoveFromStatus(plyId, name, amount)
+        RemoveFromStatus(plyId, primary, secondary, amount)
     else
         Z.notify(plyId, "incorrectAction")
     end
