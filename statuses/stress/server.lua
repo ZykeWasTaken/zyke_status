@@ -1,4 +1,5 @@
-RegisterStatusType("stress", false, {value = 0.0},
+local primary = "stress"
+RegisterStatusType(primary, false, {value = 0.0},
 {
     -- onTick = function()
 
