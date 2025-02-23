@@ -70,22 +70,6 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
         end
     end
 
-    -- TODO: Re-do this, since we are now using thresholds, if this is ever to be used? Maybe not
-    -- if (not value) then
-    --     if (IsStatusNameValid(key)) then
-    --         local statusSettings = GetStatusSettings(key)
-    --         local thresholdIdx = GetEffectThreshold(key, GetRawStatus(key))
-    --         if (thresholdIdx == -1) then
-    --             Z.debug("No value found...")
-    --             return false
-    --         end
-
-    --         value = statusSettings.effect[thresholdIdx][queueKey]
-    --     else
-    --         Z.debug("No effect value provided and no valid status name.")
-    --     end
-    -- end
-
     if (not value) then Z.debug("No value found...") return false end
 
     local queue = GetQueue(queueKey)

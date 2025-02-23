@@ -48,19 +48,6 @@ function GetEffectThreshold(name, statusData)
     return -1
 end
 
--- Verifies if the primary exists, because of our dynamic system you can have any substatus, if it is a multi-status
----@param name StatusName
----@return boolean
-function IsStatusNameValid(name)
-    local prim, sec = SeparateStatusName(name)
-
-    -- TODO: Verify if it is multi-status and if it can be dynamic
-    -- If it is not multi, it has to be an exact name match
-    -- if it is multi, it just has to match the primary
-
-    return Config.Status[prim] ~= nil
-end
-
 -- Goes through all status effects and re-orders them if needed
 -- Re-orders based on the threshold value
 -- This is to make future development easier and mor performant
