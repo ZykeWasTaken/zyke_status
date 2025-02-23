@@ -23,22 +23,6 @@ function SyncPlayerStatus(plyId, primary)
         primary = {primary}
     end
 
-    for i = 1, #primary do
-        clientSyncQueue[plyId].toSync[primary[i]] = true
-
-        -- QBCore compatibility stuff
-        if (framework == "QB" and backwardsCompatibility.enabled == true) then
-            if (primary[i] == "hunger" or primary[i] == "thirst" or primary[i] == "stress") then
-                local ply = Z.getPlayerData(plyId)
-                if (not ply) then return end
-
-                ply.Functions.SetMetaData(primary[i], Cache.statuses[plyId][primary[i]].values[primary[i]].value)
-            end
-        end
-
-        -- TODO: Add ESX stuff in here? It goes via onTick, but that system is rather slow compared to how fast we update in consumables
-    end
-
     if (not createdQueue) then return end
 
     CreateThread(function()

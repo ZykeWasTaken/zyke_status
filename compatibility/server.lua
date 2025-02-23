@@ -78,7 +78,7 @@ local function convertStatus(plyId, name)
         local val = data[name].values[name].value
         return {name = name, val = math.floor(val * 10000), percent = val}
     elseif (Framework == "QB") then
-        -- Unused? Since CreateBasePlayerStatus is unused by QB?
+        return data[name].values[name].value
     end
 end
 
@@ -95,19 +95,18 @@ end
 ---@diagnostic disable-next-line: duplicate-set-field
 function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     if (Framework == "ESX") then
-        local baseStatus = {
+        return {
             convertStatus(plyId, "hunger"),
             convertStatus(plyId, "thirst"),
             convertStatus(plyId, "stress"),
             convertStatus(plyId, "drunk"),
         }
-
-        return baseStatus
     elseif (Framework == "QB") then
-        -- DEV: Unused since they always just fetch it on the player, which we update every tick?
-        local baseStatus = {}
-
-        return baseStatus
+        return {
+            ["hunger"] = convertStatus(plyId, "hunger"),
+            ["thirst"] = convertStatus(plyId, "thirst"),
+            ["stress"] = convertStatus(plyId, "stress"),
+        }
     end
 
     error("MISSING SUPPORTED FRAMEWORK!")
@@ -119,18 +118,20 @@ RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
     cb(convertStatus(target, name))
 end)
 
-local esxSetMethodEnabled = Config.Settings.backwardsCompatibility.esxSetMethodEnabled
-
 -- TODO: Clear on leave
 ---@type table<PlayerId, OsTime>
 local esxSetMethodUpdateInterval = {}
+
+---@type table<PlayerId, OsTime>
+local qbSetMethodUpdateInterval = {}
 
 ---@param plyId PlayerId
 function CompatibilityFuncs.SetStatus(plyId)
     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 
     if (Framework == "ESX") then
-        if (esxSetMethodEnabled == true and os.time() - (esxSetMethodUpdateInterval[plyId] or 0) > 5) then
+        -- Updated every minute by default in ESX
+        if (os.time() - (esxSetMethodUpdateInterval[plyId] or 0) >= 60) then
             esxSetMethodUpdateInterval[plyId] = os.time()
 
             local player = Z.getPlayerData(plyId)
@@ -141,17 +142,21 @@ function CompatibilityFuncs.SetStatus(plyId)
 
         TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
-        local ply = Z.getPlayerData(plyId)
-        if (not ply) then return end
+        -- Updated every 5 minutes by default in QB, or once at the end when food is consumed
+        -- TODO: Create some function for zyke_consumables to trigger, onFinished or something, so that we can track when we should perform a manual save
+        if (os.time() - (qbSetMethodUpdateInterval[plyId] or 0) >= 300) then
+            qbSetMethodUpdateInterval[plyId] = os.time()
 
-        local statuses = Cache.statuses[plyId]
-        local hunger, thirst, stress = statuses.hunger.values.hunger.value, statuses.thirst.values.thirst.value, statuses.stress.values.stress.value
+            local ply = Z.getPlayerData(plyId)
+            if (not ply) then return end
 
-        ply.Functions.SetMetaData("hunger", hunger)
-        ply.Functions.SetMetaData("thirst", thirst)
-        ply.Functions.SetMetaData("stress", stress)
-        TriggerClientEvent("hud:client:UpdateNeeds", plyId, hunger, thirst)
-        TriggerClientEvent("hud:client:UpdateStress", plyId, stress)
+            ply.Functions.SetMetaData("hunger", status.hunger)
+            ply.Functions.SetMetaData("thirst", status.thirst)
+            ply.Functions.SetMetaData("stress", status.stress)
+        end
+
+        TriggerClientEvent("hud:client:UpdateNeeds", plyId, status.hunger, status.thirst)
+        TriggerClientEvent("hud:client:UpdateStress", plyId, status.stress)
     end
 end
 

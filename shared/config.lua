@@ -6,7 +6,6 @@ Config.Settings = {
     backwardsCompatibility = {
         -- Offers backwards compatibility with ESX & QBCore, however, it does create unsecure events (Not by us, we simply mimick what they do)
         enabled = true,
-        esxSetMethodEnabled = false -- Disabled by default, this function is not used throughout ESX but is triggered in esx_status, triggering this creates HUGE performance losses (0.04ms -> 0.16ms idle for one player at 100ms loop speed (1000ms default)) so it is disabled unless you actually need it
     }
 }
 
