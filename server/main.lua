@@ -18,9 +18,9 @@ local function getPlayersForStatus(name)
     return players
 end
 
--- Loop the existing statuses and perform an action every second, if one is specified
+-- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
-    local tickSpeed = 1000
+    local tickSpeed = 1000 -- Probably shouldn't touch
     local lastDbSave = os.time()
     local dbSaveInterval = 180 -- s
 
@@ -45,13 +45,5 @@ CreateThread(function()
                 end
             end
         end
-
-        -- print(json.encode(Cache.statuses, {indent = true}))
     end
 end)
-
--- RegisterCommand("pluhhh", function(source)
---     TriggerEvent('esx_status:getStatus', source, 'thirst', function(status)
---         print(json.encode(status, {indent = true}))
---     end)
--- end, false)
