@@ -1,5 +1,5 @@
 CREATE TABLE IF NOT EXISTS `zyke_status` (
-  `identifier` tinytext,
+  `identifier` VARCHAR(255) NOT NULL,
   `data` mediumtext,
   UNIQUE (`identifier`)
 );
