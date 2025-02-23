@@ -75,3 +75,13 @@ end)
 RegisterNetEvent("esx_basicneeds:resetStatus", function()
     TriggerServerEvent("zyke_status:compatibility:SoftResetStatuses")
 end)
+
+-- Since all of their healing is done in their ambulance resource, we will just soft reset afterwards
+RegisterNetEvent("hospital:client:Revive", function()
+    TriggerServerEvent("zyke_status:compatibility:SoftResetStatuses")
+end)
+
+-- Since all of their healing is done in their ambulance resource, we will just soft reset afterwards
+RegisterNetEvent("hospital:client:TreatWounds", function()
+    TriggerServerEvent("zyke_status:compatibility:SoftResetStatuses")
+end)
