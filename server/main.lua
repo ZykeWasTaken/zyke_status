@@ -6,9 +6,10 @@ Cache = {
 
 ---@param name string @primary
 local function getPlayersForStatus(name)
+    local _statuses = Cache.statuses or {}
     local players = {}
 
-    for plyId, statuses in pairs(Cache.statuses) do
+    for plyId, statuses in pairs(_statuses) do
         if (statuses[name]) then
             players[plyId] = statuses[name]
         end
@@ -21,7 +22,7 @@ end
 CreateThread(function()
     local tickSpeed = 1000
     local lastDbSave = os.time()
-    local dbSaveInterval = 180
+    local dbSaveInterval = 180 -- s
 
     while (1) do
         Wait(tickSpeed)

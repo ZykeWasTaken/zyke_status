@@ -22,8 +22,7 @@ RegisterNetEvent("zyke_status:compatibility:onTick", function(values)
 end)
 
 ---@param name string
----@diagnostic disable-next-line: duplicate-set-field
-function CompatibilityFuncs.ConvertStatus(name)
+local function convertStatus(name)
     local data = Cache.statuses
     if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return {} end
 
@@ -43,10 +42,10 @@ end
 function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     if (Framework == "ESX") then
         local baseStatus = {
-            CompatibilityFuncs.ConvertStatus("hunger"),
-            CompatibilityFuncs.ConvertStatus("thirst"),
-            CompatibilityFuncs.ConvertStatus("stress"),
-            CompatibilityFuncs.ConvertStatus("drunk"),
+            convertStatus("hunger"),
+            convertStatus("thirst"),
+            convertStatus("stress"),
+            convertStatus("drunk"),
         }
 
         return baseStatus
@@ -62,7 +61,7 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 end
 
 RegisterNetEvent("esx_status:getStatus", function(name, cb)
-    cb(CompatibilityFuncs.ConvertStatus(name))
+    cb(convertStatus(name))
 end)
 
 -- We catch this to heal the player and reset our statuses properly

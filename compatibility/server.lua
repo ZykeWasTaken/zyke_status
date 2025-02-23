@@ -68,7 +68,7 @@ end)
 ---@param plyId PlayerId
 ---@param name string
 ---@diagnostic disable-next-line: duplicate-set-field
-function CompatibilityFuncs.ConvertStatus(plyId, name)
+local function convertStatus(plyId, name)
     local data = Cache.statuses[plyId]
     if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return {} end
 
@@ -96,10 +96,10 @@ end
 function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     if (Framework == "ESX") then
         local baseStatus = {
-            CompatibilityFuncs.ConvertStatus(plyId, "hunger"),
-            CompatibilityFuncs.ConvertStatus(plyId, "thirst"),
-            CompatibilityFuncs.ConvertStatus(plyId, "stress"),
-            CompatibilityFuncs.ConvertStatus(plyId, "drunk"),
+            convertStatus(plyId, "hunger"),
+            convertStatus(plyId, "thirst"),
+            convertStatus(plyId, "stress"),
+            convertStatus(plyId, "drunk"),
         }
 
         return baseStatus
@@ -116,18 +116,29 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 end
 
 RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
-    cb(CompatibilityFuncs.ConvertStatus(target, name))
+    cb(convertStatus(target, name))
 end)
+
+local esxSetMethodEnabled = Config.Settings.backwardsCompatibility.esxSetMethodEnabled
+
+-- TODO: Clear on leave
+---@type table<PlayerId, OsTime>
+local esxSetMethodUpdateInterval = {}
 
 ---@param plyId PlayerId
 function CompatibilityFuncs.SetStatus(plyId)
     local status = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 
     if (Framework == "ESX") then
-        local player = Z.getPlayerData(plyId)
-        if (not player) then return end
+        if (esxSetMethodEnabled == true and os.time() - (esxSetMethodUpdateInterval[plyId] or 0) > 5) then
+            esxSetMethodUpdateInterval[plyId] = os.time()
 
-        player.set("status", status)
+            local player = Z.getPlayerData(plyId)
+            if (not player) then return end
+
+            player.set("status", status)
+        end
+
         TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
         local ply = Z.getPlayerData(plyId)
