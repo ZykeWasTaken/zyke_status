@@ -138,8 +138,6 @@ exports("GetStatus", GetStatus)
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function RemoveFromStatus(plyId, primary, secondary, amount, skipEnsuring)
-    -- print("RemoveFromStatus", plyId, primary, secondary, amount)
-
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, primary, secondary)
     end
