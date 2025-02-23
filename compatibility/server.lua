@@ -139,7 +139,7 @@ function CompatibilityFuncs.SetStatus(plyId)
             player.set("status", status)
         end
 
-        -- TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
+        TriggerClientEvent("zyke_status:compatibility:onTick", plyId, status)
     elseif (Framework == "QB") then
         local ply = Z.getPlayerData(plyId)
         if (not ply) then return end
