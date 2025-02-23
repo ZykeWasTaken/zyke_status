@@ -7,9 +7,9 @@ CompatibilityFuncs = {}
 RegisterNetEvent("zyke_status:compatibility:SetStatus", function(name, value)
     -- Perhaps also just take a set as a sort of reset, some stuff like addiction will otherwise have issues, unless we only use hunger/thirst/stress from the default systems, bnecause then the addition of setting a value is pretty easy
     if (name == "hunger") then
-        SetStatusValue(source, "hunger", value / 10000)
+        SetStatusValue(source, "hunger", "hunger", value / 10000)
     elseif (name == "thirst") then
-        SetStatusValue(source, "thirst", value / 10000)
+        SetStatusValue(source, "thirst", "thirst", value / 10000)
     else
         print("Attempting to add to invalid status:", name)
     end
@@ -21,9 +21,9 @@ RegisterNetEvent("zyke_status:compatibility:AddStatus", function(name, value)
     end
 
     if (name == "hunger") then
-        AddToStatus(source, "hunger", value / 10000)
+        AddToStatus(source, "hunger", "hunger", value / 10000)
     elseif (name == "thirst") then
-        AddToStatus(source, "thirst", value / 10000)
+        AddToStatus(source, "thirst", "thirst", value / 10000)
     else
         print("Attempting to add to invalid status:", name)
     end
