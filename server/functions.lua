@@ -10,6 +10,17 @@ local clientSyncQueue = {}
 -- Cache for better performance
 local framework, backwardsCompatibility = Framework, Config.Settings.backwardsCompatibility
 
+local esxSetMethodUpdateInterval = {}
+
+---@type table<PlayerId, OsTime>
+local qbSetMethodUpdateInterval = {}
+
+---@param plyId PlayerId
+RegisterNetEvent("zyke_lib:OnCharacterLogout", function(plyId)
+    esxSetMethodUpdateInterval[plyId] = nil
+    qbSetMethodUpdateInterval[plyId] = nil
+end)
+
 ---@param plyId PlayerId
 ---@param primary StatusName | StatusName[]
 function SyncPlayerStatus(plyId, primary)
@@ -30,7 +41,7 @@ function SyncPlayerStatus(plyId, primary)
     if (not createdQueue) then return end
 
     CreateThread(function()
-        Wait(25) -- Should sync well even at 1ms for one player, 10ms one a slower machine with a few players, 25ms for a better threshold
+        while (os.clock() - clientSyncQueue[plyId].created < 1.0) do Wait(100) end -- 1s limit before sending event
 
         -- Make sure the player is still active
         if (not Cache.statuses[plyId]) then
@@ -50,7 +61,48 @@ function SyncPlayerStatus(plyId, primary)
         end
 
         clientSyncQueue[plyId] = nil
-        TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
+
+        -- FRAMEWORK COMPATIBILITY STUFF
+        -- The code below looks a little messy, basically:
+        -- We trigger the events & methods the framework does by default, so we can remain fully backwards compatible
+        -- Since we don't want to trigger duplicate events, we provide our data in their events, and catch their events on our client side under their name to apply
+        -- If you don't have it enabled, we will just send it via our own events
+        -- This method is sloppy, but allows us slightly better performance since there is one less event to send and intercept
+
+        if (backwardsCompatibility.enabled == true) then
+            local compatStatus = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
+            if (framework == "ESX") then
+                -- Updated every minute by default in ESX
+                if (os.time() - (esxSetMethodUpdateInterval[plyId] or 0) >= 60) then
+                    esxSetMethodUpdateInterval[plyId] = os.time()
+
+                    local player = Z.getPlayerData(plyId)
+                    if (not player) then return end
+
+                    player.set("status", compatStatus)
+                end
+
+                TriggerClientEvent("zyke_status:compatibility:onTick", plyId, compatStatus, statuses)
+            elseif (Framework == "QB") then
+                -- Updated every 5 minutes by default in QB, or once at the end when food is consumed
+                -- TODO: Create some function for zyke_consumables to trigger, onFinished or something, so that we can track when we should perform a manual save
+                if (os.time() - (qbSetMethodUpdateInterval[plyId] or 0) >= 300) then
+                    qbSetMethodUpdateInterval[plyId] = os.time()
+
+                    local ply = Z.getPlayerData(plyId)
+                    if (not ply) then return end
+
+                    ply.Functions.SetMetaData("hunger", compatStatus.hunger)
+                    ply.Functions.SetMetaData("thirst", compatStatus.thirst)
+                    ply.Functions.SetMetaData("stress", compatStatus.stress)
+                end
+
+                TriggerClientEvent("hud:client:UpdateNeeds", plyId, compatStatus.hunger, compatStatus.thirst, statuses)
+                TriggerClientEvent("hud:client:UpdateStress", plyId, compatStatus.stress)
+            end
+        else
+            TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
+        end
     end)
 end
 

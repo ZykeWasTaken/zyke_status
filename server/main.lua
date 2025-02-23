@@ -34,15 +34,6 @@ CreateThread(function()
             end
         end
 
-        for plyId in pairs(Cache.statuses) do
-            local _plyId = tonumber(plyId)
-            if (_plyId) then
-                if (CompatibilityFuncs) then
-                    CompatibilityFuncs.SetStatus(_plyId)
-                end
-            end
-        end
-
         -- We save during logout, but to be safe, save every x amount of seconds
         if (os.time() - lastDbSave > dbSaveInterval) then
             lastDbSave = os.time()
