@@ -5,22 +5,24 @@
 --     {name = 'playerId', help = 'the player id', type = 'player'}
 --     }})
 
-Z.registerCommand({"heal"}, function(plyId, args)
-    local targetId
-    if (args[1] == nil or #args[1] == 0) then
-        targetId = plyId
-    elseif (args[1] == "me" or args[1] == "self") then
-        targetId = plyId
-    else
-        targetId = tonumber(args[1])
-    end
+-- Disabled since we use backwards compatibility with the default events that are triggered
+-- Enable if you don't use those events
+-- Z.registerCommand({"heal"}, function(plyId, args)
+--     local targetId
+--     if (args[1] == nil or #args[1] == 0) then
+--         targetId = plyId
+--     elseif (args[1] == "me" or args[1] == "self") then
+--         targetId = plyId
+--     else
+--         targetId = tonumber(args[1])
+--     end
 
-    if (not targetId) then
-        Z.notify(plyId, "invalidTargetId")
-        return
-    end
+--     if (not targetId) then
+--         Z.notify(plyId, "invalidTargetId")
+--         return
+--     end
 
-    HealPlayer(plyId)
-end, "Heal a target, and restore their statuses", {
-    {"target", "Target id, me or empty for self"},
-})
+--     HealPlayer(plyId)
+-- end, "Heal a target, and restore their statuses", {
+--     {"target", "Target id, me or empty for self"},
+-- })
