@@ -118,11 +118,10 @@ function GetPlayerBaseStatusTable(plyId, primary)
 end
 
 ---@param plyId PlayerId
----@param name StatusName
+---@param primary PrimaryName
+---@param secondary SecondaryName
 ---@return number
-function GetStatus(plyId, name)
-    local primary, secondary = SeparateStatusName(name)
-
+function GetStatus(plyId, primary, secondary)
     if (not Cache.statuses[plyId]) then return 0.0 end
     if (not Cache.statuses[plyId][primary]) then return 0.0 end
 
