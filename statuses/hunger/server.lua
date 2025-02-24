@@ -40,7 +40,7 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         data.values[secondary].value = Z.numbers.round(amount, Config.Settings.decimalAccuracy)
 
-        return true
+        return true, data.values[secondary].value
     end,
     onReset = function(plyId, primary, secondary)
         local data = GetPlayerBaseStatusTable(plyId, primary)
