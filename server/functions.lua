@@ -162,7 +162,16 @@ function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
             EnsurePlayerSubStatus(plyId, primary, secondary)
         end
 
-        local hasRemoved = Cache.existingStatuses[primary].onSet(plyId, primary, secondary, amount)
+        local hasRemoved, newVal = Cache.existingStatuses[primary].onSet(plyId, primary, secondary, amount)
+
+        -- For QB, they process the stress instantly when set
+        if (primary == "stress" and Framework == "QB") then
+            local ply = Z.getPlayerData(plyId)
+            if (ply) then
+                ply.Functions.SetMetaData("stress", newVal)
+            end
+        end
+
         if (hasRemoved) then
             SyncPlayerStatus(plyId, primary)
         end
