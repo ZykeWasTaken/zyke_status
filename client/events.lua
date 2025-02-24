@@ -15,10 +15,14 @@ local backwardsCompat = Config.Settings.backwardsCompatibility
 if (backwardsCompat.enabled == true) then
     if (Framework == "ESX") then
         RegisterNetEvent("zyke_status:compatibility:onTick", function(_, statuses)
+            if (not statuses) then return end
+
             syncStatus(statuses)
         end)
     elseif (Framework == "QB") then
         RegisterNetEvent("hud:client:UpdateNeeds", function(_, _, statuses)
+            if (not statuses) then return end
+
             syncStatus(statuses)
         end)
     end
