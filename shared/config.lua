@@ -6,6 +6,14 @@ Config.Settings = {
     backwardsCompatibility = {
         -- Offers backwards compatibility with ESX & QBCore, however, it does create unsecure events (Not by us, we simply mimick what they do)
         enabled = true,
+    },
+    stressEvents = {
+        -- A lot of huds & status management systems already manage stress, and we catch the common events they send out
+        -- Because of this, we may create duplicate events resulting in twice the gain & relieve
+        -- To combat this, you can easily disable these events that we catch
+        -- However, if your server is not already catching these, you can keep these enabled
+        gainStress = true,
+        relieveStress = true
     }
 }
 
