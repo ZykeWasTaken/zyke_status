@@ -18,7 +18,7 @@ if (Config.Settings.stressEvents.relieveStress) then
 
         local prev = GetStatus(source, "stress", "stress")
         local newVal = prev + amount
-        if (newVal > 100) then newVal = 0 end
+        if (newVal > 100) then newVal = 100 end
 
         SetStatusValue(source, "stress", "stress", newVal)
     end)
