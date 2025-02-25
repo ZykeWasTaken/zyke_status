@@ -169,7 +169,7 @@ function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
         if (qbActions and qbActions[primary]) then
             local ply = Z.getPlayerData(plyId)
             if (ply) then
-                ply.Functions.SetMetaData(qbActions[primary], newVal)
+                ply.Functions.SetMetaData(primary, newVal)
             end
         end
 
