@@ -57,7 +57,7 @@ function SyncPlayerStatus(plyId, primary)
     CreateThread(function()
         if (os.time() - (clientLastUpdated[plyId] or 0) < 1) then
             -- If the last request was made in the span of a second, wait to sync
-            while (os.time() - clientLastUpdated[plyId] < 1) do print("WAITING SYNC") Wait(100) end -- 1s limit before sending event
+            while (os.time() - clientLastUpdated[plyId] < 1) do Wait(100) end -- 1s limit before sending event
         else
             -- Wait a small bit to catch multiple requests to bundle them
             Wait(25)
