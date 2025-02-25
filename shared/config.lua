@@ -15,7 +15,11 @@ Config.Settings = {
         gainStress = true,
         relieveStress = true
     },
-    automaticIntervalScaling = true, -- Scales the interval wait time based on player count for main thread for passive drain, to preserve performance since frequent updates are not high priority, but nice to have frequent if resources are available
+    threadInterval = {
+        playerScaling = 0.02, -- Percentage scaling based on player count
+        multiplier = 30, -- s, max 180, recommended 5-30
+        databaseSave = 180, -- s
+    }
 }
 
 -- Don't touch

@@ -20,35 +20,30 @@ end
 
 -- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
-    local playerScale = Config.Settings.automaticIntervalScaling
+    local baseSpeed = 1000 -- Do not touch
+    local interval = Config.Settings.threadInterval
 
     -- Modify the base thread speed for better performance
     -- Processes the same data, but in slower intervals with multipliers for all values
-    -- Thread works fine in 1 multiplier, processes ~100 players at ~0.04ms
-    local baseSpeed = 1000 -- Do not touch
-    local multiplier = 3
-
+    local multiplier = interval.multiplier
     local lastDbSave = os.time()
-    local dbSaveInterval = 180 -- s
 
     while (1) do
-        if (playerScale) then
-            local totalPlayers = GetNumPlayerIndices()
+        if (interval.playerScaling) then
+            local totPlys = GetNumPlayerIndices()
 
-            -- 50 players = 10s
-            -- 100 players = 20s
-            -- 300 players = 60s & hits ceiling
-            if (totalPlayers > 0) then
-                local floor, ceiling = 3, 60
+            if (totPlys > 0) then
+                local floor, ceiling = interval.multiplier, 180
 
-                multiplier = math.floor(totalPlayers / 5)
+                multiplier = interval.multiplier + (totPlys * interval.multiplier * interval.playerScaling)
+
                 if (multiplier < floor) then
                     multiplier = floor
                 elseif (multiplier > ceiling) then
                     multiplier = ceiling
                 end
             else
-                multiplier = 30
+                multiplier = interval.multiplier > 30 and interval.multiplier or 30
             end
         end
 
@@ -64,7 +59,7 @@ CreateThread(function()
         end
 
         -- We save during logout, but to be safe, save every x amount of seconds
-        if (os.time() - lastDbSave > dbSaveInterval) then
+        if (os.time() - lastDbSave > interval.databaseSave) then
             lastDbSave = os.time()
             for plyId in pairs(Cache.statuses) do
                 local _plyId = tonumber(plyId)
