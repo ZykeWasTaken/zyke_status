@@ -111,3 +111,11 @@ end
 RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
     cb(convertStatus(target, name))
 end)
+
+RegisterNetEvent("consumables:server:addThirst", function(amount)
+    SetStatusValue(source, "thirst", "thirst", amount, false)
+end)
+
+RegisterNetEvent("consumables:server:addHunger", function(amount)
+    SetStatusValue(source, "hunger", "hunger", amount, false)
+end)
