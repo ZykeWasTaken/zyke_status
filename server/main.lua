@@ -20,8 +20,11 @@ end
 
 -- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
+    -- Modify the base thread speed for beter performance
+    -- Processes the same data, but in slower intervals with multipliers for all values
+    -- Thread works fine in 1 multiplier, processes ~100 players at ~0.04ms
     local baseSpeed = 1000 -- Do not touch
-    local multiplier = 3 -- If 3, waits baseSpeed * 3, and applied data * 3, slower updates for performance reasons
+    local multiplier = 3
 
     local lastDbSave = os.time()
     local dbSaveInterval = 180 -- s
