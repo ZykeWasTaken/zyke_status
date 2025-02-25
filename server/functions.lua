@@ -3,8 +3,16 @@ function GetAllRawStatuses(plyId)
     return Cache.statuses[plyId] or {}
 end
 
+-- Cache when you last had an update, so that we can attempt to keep the data up to date smoother
+-- Utilizing a 25ms threshold we can catch everything that wants to update and perform it instantly
+-- All requests within a second of the first update will be queued and executed once the timeout is done
+-- This approach keeps the data up to date, without spamming spamming just in case there's tons requests to update every second.
+-- This is different from clientSyncQueue, as that just collects what has to be synced
+---@type table<PlayerId, OsTime>
+local clientLastUpdated = {}
+
 -- Create a queue, to prevent multiple events being sent
----@type table<PlayerId, {created: OsClock, toSync: table<StatusName, true>}>
+---@type table<PlayerId, {toSync: table<StatusName, true>}>
 local clientSyncQueue = {}
 
 -- Cache for better performance
@@ -19,14 +27,20 @@ local qbSetMethodUpdateInterval = {}
 RegisterNetEvent("zyke_lib:OnCharacterLogout", function(plyId)
     esxSetMethodUpdateInterval[plyId] = nil
     qbSetMethodUpdateInterval[plyId] = nil
+    clientSyncQueue[plyId] = nil
+    clientLastUpdated[plyId] = nil
 end)
 
+-- To preverse performance, we rarely update the framework data because it uses a lot of performance as is not needed during slow thread updating
+-- However, when using an item directly, the update is very sluggish because of the wait, and in some cases may break altogether
+-- To combat this, on use, we force a framework update, along with skipping any extended waiting period
+-- There is still a 100ms threshold to catch everything to bundle the update, but that is negligable
 ---@param plyId PlayerId
 ---@param primary StatusName | StatusName[]
 function SyncPlayerStatus(plyId, primary)
     local createdQueue = false
     if (not clientSyncQueue[plyId]) then
-        clientSyncQueue[plyId] = {created = os.clock(), toSync = {}}
+        clientSyncQueue[plyId] = {toSync = {}}
         createdQueue = true
     end
 
@@ -41,7 +55,13 @@ function SyncPlayerStatus(plyId, primary)
     if (not createdQueue) then return end
 
     CreateThread(function()
-        while (os.clock() - clientSyncQueue[plyId].created < 1.0) do Wait(100) end -- 1s limit before sending event
+        if (os.time() - (clientLastUpdated[plyId] or 0) < 1) then
+            -- If the last request was made in the span of a second, wait to sync
+            while (os.time() - clientLastUpdated[plyId] < 1) do print("WAITING SYNC") Wait(100) end -- 1s limit before sending event
+        else
+            -- Wait a small bit to catch multiple requests to bundle them
+            Wait(25)
+        end
 
         -- Make sure the player is still active
         if (not Cache.statuses[plyId]) then
@@ -61,6 +81,7 @@ function SyncPlayerStatus(plyId, primary)
         end
 
         clientSyncQueue[plyId] = nil
+        clientLastUpdated[plyId] = os.time()
 
         -- FRAMEWORK COMPATIBILITY STUFF
         -- The code below looks a little messy, basically:
