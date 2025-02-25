@@ -12,6 +12,7 @@ local prevThresholdIdxs = {}
 function RegisterEffectFunctions(name)
     local primary, secondary = SeparateStatusName(name)
     local statusSettings = GetStatusSettings(primary, secondary)
+    if (not statusSettings) then return end
 
     EffectFunctions[name] = {
         onStart = function(val, thresholdIdx)

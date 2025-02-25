@@ -5,6 +5,8 @@ RegisterStatusType(primary, false, {value = 0.0},
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
                 local statusSettings = GetStatusSettings(primary, subName)
+                if (not statusSettings) then return end
+
                 local val = (statusSettings?.value?.drain or 0) * multiplier
 
                 if (val > 0) then

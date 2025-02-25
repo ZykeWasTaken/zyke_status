@@ -15,8 +15,12 @@ end
 
 ---@param primary PrimaryName
 ---@param secondary SecondaryName
+---@return table | nil
 function GetStatusSettings(primary, secondary)
-    return Config.Status[primary][secondary] or Config.Status[secondary].base
+    local baseEffect = Config.Status[primary]
+    if (not baseEffect) then print(("Effect could not be found:"):format(primary, secondary)) return nil end
+
+    return baseEffect[secondary] or baseEffect.base
 end
 
 -- These statuses have reversed values, 100.0 being the starting point
@@ -31,7 +35,7 @@ function GetEffectThreshold(name, statusData)
     local primary, secondary = SeparateStatusName(name)
     local settings = GetStatusSettings(primary, secondary)
 
-    if (not settings.effect) then return -1 end
+    if (not settings or not settings.effect) then return -1 end
 
     for i = #settings.effect, 1, -1 do
         if (reversed:contains(primary)) then
