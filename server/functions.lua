@@ -150,6 +150,8 @@ end
 
 exports("RemoveFromStatus", RemoveFromStatus)
 
+local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, ["thirst"] = true} or nil
+
 ---@param plyId PlayerId
 ---@param primary PrimaryName
 ---@param secondary SecondaryName
@@ -163,11 +165,11 @@ function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
 
         local hasRemoved, newVal = Cache.existingStatuses[primary].onSet(plyId, primary, secondary, amount)
 
-        -- For QB, they process the stress instantly when set
-        if (primary == "stress" and Framework == "QB") then
+        -- All QB status actions are set, which they update instantly, so we'll mimic this
+        if (qbActions and qbActions[primary]) then
             local ply = Z.getPlayerData(plyId)
             if (ply) then
-                ply.Functions.SetMetaData("stress", newVal)
+                ply.Functions.SetMetaData(qbActions[primary], newVal)
             end
         end
 
