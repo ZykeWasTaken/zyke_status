@@ -20,7 +20,9 @@ end
 
 -- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
-    -- Modify the base thread speed for beter performance
+    local playerScale = Config.Settings.automaticIntervalScaling
+
+    -- Modify the base thread speed for better performance
     -- Processes the same data, but in slower intervals with multipliers for all values
     -- Thread works fine in 1 multiplier, processes ~100 players at ~0.04ms
     local baseSpeed = 1000 -- Do not touch
@@ -30,7 +32,29 @@ CreateThread(function()
     local dbSaveInterval = 180 -- s
 
     while (1) do
-        Wait(baseSpeed * multiplier)
+        if (playerScale) then
+            local totalPlayers = GetNumPlayerIndices()
+
+            -- 50 players = 10s
+            -- 100 players = 20s
+            -- 300 players = 60s & hits ceiling
+            if (totalPlayers > 0) then
+                local floor, ceiling = 3, 60
+
+                multiplier = math.floor(totalPlayers / 5)
+                if (multiplier < floor) then
+                    multiplier = floor
+                elseif (multiplier > ceiling) then
+                    multiplier = ceiling
+                end
+            else
+                multiplier = 30
+            end
+        end
+
+        local sleep = baseSpeed * multiplier
+
+        Wait(sleep)
 
         local existingStatuses = Cache.existingStatuses
         for statusName, values in pairs(existingStatuses) do

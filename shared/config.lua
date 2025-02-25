@@ -14,7 +14,8 @@ Config.Settings = {
         -- However, if your server is not already catching these, you can keep these enabled
         gainStress = true,
         relieveStress = true
-    }
+    },
+    automaticIntervalScaling = true, -- Scales the interval wait time based on player count for main thread for passive drain, to preserve performance since frequent updates are not high priority, but nice to have frequent if resources are available
 }
 
 -- Don't touch
