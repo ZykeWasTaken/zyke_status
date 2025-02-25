@@ -37,7 +37,7 @@ end
 local primary = "addiction"
 RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 {
-    onTick = function(players)
+    onTick = function(players, multiplier)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
                 local statusSettings = GetStatusSettings(primary, subName)
@@ -45,10 +45,18 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
                 -- If below the addiction threshold
                 if (values.addiction < statusSettings.addiction.threshold) then
                     -- Not addicted, remove from the addicted status
-                    RemoveFromStatus(plyId, primary, subName, statusSettings.addiction.drain, true)
+                    local val = (statusSettings?.addiction?.drain or 0) * multiplier
+
+                    if (val > 0) then
+                        RemoveFromStatus(plyId, primary, subName, val, true)
+                    end
                 else
                     -- Addicted, slowly remove satisfaction
-                    removeSatisfaction(plyId, primary, subName, statusSettings.value.drain)
+                    local val = (statusSettings?.value?.drain or 0) * multiplier
+
+                    if (val > 0) then
+                        removeSatisfaction(plyId, primary, subName, val)
+                    end
                 end
             end
         end

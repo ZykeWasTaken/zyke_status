@@ -20,17 +20,19 @@ end
 
 -- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
-    local tickSpeed = 1000 -- Probably shouldn't touch
+    local baseSpeed = 1000 -- Do not touch
+    local multiplier = 3 -- If 3, waits baseSpeed * 3, and applied data * 3, slower updates for performance reasons
+
     local lastDbSave = os.time()
     local dbSaveInterval = 180 -- s
 
     while (1) do
-        Wait(tickSpeed)
+        Wait(baseSpeed * multiplier)
 
         local existingStatuses = Cache.existingStatuses
         for statusName, values in pairs(existingStatuses) do
             if (values.onTick) then
-                values.onTick(getPlayersForStatus(statusName))
+                values.onTick(getPlayersForStatus(statusName), multiplier)
             end
         end
 

@@ -1,11 +1,11 @@
 local primary = "high"
 RegisterStatusType(primary, true, {value = 0.0},
 {
-    onTick = function(players)
+    onTick = function(players, multiplier)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
                 local statusSettings = GetStatusSettings(primary, subName)
-                local val = statusSettings?.value?.drain or 0
+                local val = (statusSettings?.value?.drain or 0) * multiplier
 
                 if (val > 0) then
                     RemoveFromStatus(plyId, primary, subName, val, true)
