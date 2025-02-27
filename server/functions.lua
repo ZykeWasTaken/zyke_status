@@ -264,7 +264,7 @@ function ResetStatuses(plyId)
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
         for statusName in pairs(statusValues.values) do
             Z.debug("[ResetStauses] Resetting", primary .. "." .. statusName, "for", plyId)
-            Cache.existingStatuses[primary].onReset(plyId, primary, statusName)
+            Cache.existingStatuses[primary].onReset(plyId, {primary, statusName})
         end
 
         SyncPlayerStatus(plyId, primary)
@@ -279,9 +279,9 @@ function SoftResetStatuses(plyId)
             Z.debug("[SoftResetStatuses] Resetting", primary .. "." .. statusName, "for", plyId)
 
             if (Cache.existingStatuses[primary].onSoftReset) then
-                Cache.existingStatuses[primary].onSoftReset(plyId, primary, statusName)
+                Cache.existingStatuses[primary].onSoftReset(plyId, {primary, statusName})
             else
-                Cache.existingStatuses[primary].onReset(plyId, primary, statusName)
+                Cache.existingStatuses[primary].onReset(plyId, {primary, statusName})
             end
         end
     end
