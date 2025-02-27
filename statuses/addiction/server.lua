@@ -14,10 +14,11 @@
 -- Custom for this type of status
 -- Has to remove the satisfaction every tick if you are addicted
 ---@param plyId PlayerId
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@param amount number
-local function removeSatisfaction(plyId, primary, secondary, amount)
+local function removeSatisfaction(plyId, statusNames, amount)
+    local primary, secondary = statusNames[1], statusNames[2]
+
     local data = GetPlayerBaseStatusTable(plyId, primary)
     if (not data) then return end
 
@@ -40,7 +41,7 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
     onTick = function(players, multiplier)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local statusSettings = GetStatusSettings(primary, subName)
+                local statusSettings = GetStatusSettings({primary, subName})
                 if (not statusSettings) then return end
 
                 -- If below the addiction threshold
@@ -49,20 +50,22 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
                     local val = (statusSettings?.addiction?.drain or 0) * multiplier
 
                     if (val > 0) then
-                        RemoveFromStatus(plyId, primary, subName, val, true)
+                        RemoveFromStatus(plyId, {primary, subName}, val, true)
                     end
                 else
                     -- Addicted, slowly remove satisfaction
                     local val = (statusSettings?.value?.drain or 0) * multiplier
 
                     if (val > 0) then
-                        removeSatisfaction(plyId, primary, subName, val)
+                        removeSatisfaction(plyId, {primary, subName}, val)
                     end
                 end
             end
         end
     end,
-    onAdd = function(plyId, primary, secondary, amount)
+    onAdd = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -82,7 +85,9 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 
         return true
     end,
-    onRemove = function(plyId, primary, secondary, amount)
+    onRemove = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -96,7 +101,9 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 
         return true
     end,
-    onReset = function(plyId, primary, secondary)
+    onReset = function(plyId, statusNames)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -105,7 +112,9 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 
         return true
     end,
-    onSoftReset = function(plyId, primary, secondary)
+    onSoftReset = function(plyId, statusNames)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 

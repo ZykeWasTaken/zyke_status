@@ -4,7 +4,9 @@ RegisterStatusType(primary, false, {value = 0.0},
     -- onTick = function()
 
     -- end,
-    onAdd = function(plyId, primary, secondary, amount)
+    onAdd = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -16,7 +18,9 @@ RegisterStatusType(primary, false, {value = 0.0},
 
         return true
     end,
-    onRemove = function(plyId, primary, secondary, amount)
+    onRemove = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -28,7 +32,9 @@ RegisterStatusType(primary, false, {value = 0.0},
 
         return true
     end,
-    onSet = function(plyId, primary, secondary, amount)
+    onSet = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -39,7 +45,9 @@ RegisterStatusType(primary, false, {value = 0.0},
 
         return true, newVal
     end,
-    onReset = function(plyId, primary, secondary)
+    onReset = function(plyId, statusNames)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 

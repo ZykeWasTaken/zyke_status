@@ -139,36 +139,34 @@ function GetPlayerBaseStatusTable(plyId, primary)
 end
 
 ---@param plyId PlayerId
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@return number
-function GetStatus(plyId, primary, secondary)
+function GetStatus(plyId, statusNames)
     if (not Cache.statuses[plyId]) then return 0.0 end
-    if (not Cache.statuses[plyId][primary]) then return 0.0 end
+    if (not Cache.statuses[plyId][statusNames[1]]) then return 0.0 end
 
-    local value = GetPlayerBaseStatusTable(plyId, primary)
-    return value and value.values?[secondary]?.value or 0.0
+    local value = GetPlayerBaseStatusTable(plyId, statusNames[1])
+    return value and value.values?[statusNames[1] or statusNames[2]]?.value or 0.0
 end
 
 exports("GetStatus", GetStatus)
 
 ---@param plyId PlayerId
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
-function RemoveFromStatus(plyId, primary, secondary, amount, skipEnsuring)
-    local isValid = IsValidStatus(primary, secondary)
-    if (not isValid) then print(("Invalid status has attempted to be removed: %s %s"):format(tostring(primary), tostring(secondary))) return end
+function RemoveFromStatus(plyId, statusNames, amount, skipEnsuring)
+    local isValid = IsValidStatus(statusNames)
+    if (not isValid) then print(("Invalid status has attempted to be removed: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
 
     if (not skipEnsuring) then
-        EnsurePlayerSubStatus(plyId, primary, secondary)
+        EnsurePlayerSubStatus(plyId, statusNames)
     end
 
-    local hasRemoved = Cache.existingStatuses[primary].onRemove(plyId, primary, secondary, amount)
+    local hasRemoved = Cache.existingStatuses[statusNames[1]].onRemove(plyId, statusNames, amount)
 
     if (hasRemoved) then
-        SyncPlayerStatus(plyId, primary)
+        SyncPlayerStatus(plyId, statusNames[1])
     end
 end
 
@@ -177,31 +175,30 @@ exports("RemoveFromStatus", RemoveFromStatus)
 local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, ["thirst"] = true} or nil
 
 ---@param plyId PlayerId
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
-function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
-    local isValid = IsValidStatus(primary, secondary)
-    if (not isValid) then print(("Invalid status has attempted to be set: %s %s"):format(tostring(primary), tostring(secondary))) return end
+function SetStatusValue(plyId, statusNames, amount, skipEnsuring)
+    local isValid = IsValidStatus(statusNames)
+    if (not isValid) then print(("Invalid status has attempted to be set: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
 
-    if (Cache.existingStatuses[primary].onSet) then
+    if (Cache.existingStatuses[statusNames[1]].onSet) then
         if (not skipEnsuring) then
-            EnsurePlayerSubStatus(plyId, primary, secondary)
+            EnsurePlayerSubStatus(plyId, statusNames)
         end
 
-        local hasRemoved, newVal = Cache.existingStatuses[primary].onSet(plyId, primary, secondary, amount)
+        local hasRemoved, newVal = Cache.existingStatuses[statusNames[1]].onSet(plyId, statusNames, amount)
 
         -- All QB status actions are set, which they update instantly, so we'll mimic this
-        if (qbActions and qbActions[primary]) then
+        if (qbActions and qbActions[statusNames[1]]) then
             local ply = Z.getPlayerData(plyId)
             if (ply) then
-                ply.Functions.SetMetaData(primary, newVal)
+                ply.Functions.SetMetaData(statusNames[1], newVal)
             end
         end
 
         if (hasRemoved) then
-            SyncPlayerStatus(plyId, primary)
+            SyncPlayerStatus(plyId, statusNames[1])
         end
     end
 end
@@ -209,16 +206,17 @@ end
 exports("SetStatusValue", SetStatusValue)
 
 -- We ensure that the statuses added will be handled in some way, otherwise they will indefinently just stay on our characters unless manually removed
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@return boolean
-function IsValidStatus(primary, secondary)
-    if (not Config.Status[primary]) then return false end
+function IsValidStatus(statusNames)
+    if (not Config.Status[statusNames[1]]) then return false end
 
-    local existingStatus = Cache.existingStatuses[primary]
+    local existingStatus = Cache.existingStatuses[statusNames[1]]
     if (not existingStatus) then return false end
 
     -- Verify if the status is allowed to have a substatus
+    local primary = statusNames[1]
+    local secondary = statusNames[2] or statusNames[1]
     if (existingStatus.multi == false and secondary ~= primary) then return false end
 
     return true
@@ -226,22 +224,21 @@ end
 
 -- Add value to the status
 ---@param plyId PlayerId
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
-function AddToStatus(plyId, primary, secondary, amount, skipEnsuring)
-    local isValid = IsValidStatus(primary, secondary)
-    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
+function AddToStatus(plyId, statusNames, amount, skipEnsuring)
+    local isValid = IsValidStatus(statusNames)
+    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
 
     if (not skipEnsuring) then
-        EnsurePlayerSubStatus(plyId, primary, secondary)
+        EnsurePlayerSubStatus(plyId, statusNames)
     end
 
-    local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, primary, secondary, amount)
+    local hasAdded = Cache.existingStatuses[statusNames[1]].onAdd(plyId, statusNames, amount)
 
     if (hasAdded) then
-        SyncPlayerStatus(plyId, primary)
+        SyncPlayerStatus(plyId, statusNames[1])
     end
 end
 
@@ -315,3 +312,26 @@ RegisterNetEvent("zyke_status:OnHealPlayer", function()
 end)
 
 exports("HealPlayer", HealPlayer)
+
+---@alias BulkAction "add" | "remove" | "set"
+
+-- Run one bulk export instead of multiple requests
+-- Has no benefits except for a cleaner layout when triggering multiple effects
+-- Will be processed top to bottom of list
+---@param plyId PlayerId
+---@param actions {[1]: BulkAction, [2]: StatusNames, [3]: number}[]
+function BulkAction(plyId, actions)
+    for i = 1, #actions do
+        if (actions[i][1] == "add") then
+            AddToStatus(plyId, actions[i][2], actions[i][3])
+        elseif (actions[i][1] == "remove") then
+            RemoveFromStatus(plyId, actions[i][2], actions[i][3])
+        elseif (actions[i][1] == "set") then
+            SetStatusValue(plyId, actions[i][2], actions[i][3])
+        else
+            print(("Player %s attempted to trigger an incorrect action:"):format(plyId), json.encode(actions[i]))
+        end
+    end
+end
+
+exports("BulkAction", BulkAction)

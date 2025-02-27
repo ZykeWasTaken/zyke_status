@@ -55,11 +55,13 @@ local function initializePlayer(plyId)
 end
 
 ---@param plyId PlayerId
----@param primary StatusName
----@param secondary SubStatusName
-function EnsurePlayerSubStatus(plyId, primary, secondary)
+---@param statusNames StatusNames
+function EnsurePlayerSubStatus(plyId, statusNames)
     if (not plyId) then return end
     local status = Cache.statuses[plyId]
+
+    local primary = statusNames[1]
+    local secondary = statusNames[2] or statusNames[1]
 
     if (status and not status[primary].values[secondary]) then
         Cache.statuses[plyId][primary].values[secondary] = {}

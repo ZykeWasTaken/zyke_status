@@ -13,14 +13,13 @@ function SeparateStatusName(name)
     return primary, secondary, primary .. "." .. secondary
 end
 
----@param primary PrimaryName
----@param secondary SecondaryName
+---@param statusNames StatusNames
 ---@return table | nil
-function GetStatusSettings(primary, secondary)
-    local baseEffect = Config.Status[primary]
-    if (not baseEffect) then print(("Effect could not be found:"):format(primary, secondary)) return nil end
+function GetStatusSettings(statusNames)
+    local baseEffect = Config.Status[statusNames[1]]
+    if (not baseEffect) then print(("Effect could not be found:"):format(statusNames[1], statusNames[2])) return nil end
 
-    return baseEffect[secondary] or baseEffect.base
+    return baseEffect[statusNames[2] or statusNames[1]] or baseEffect.base
 end
 
 -- These statuses have reversed values, 100.0 being the starting point
@@ -33,7 +32,7 @@ local reversed = Z.table.new({"addiction", "hunger", "thirst"})
 ---@return integer | -1 @Index of effect, -1 if none
 function GetEffectThreshold(name, statusData)
     local primary, secondary = SeparateStatusName(name)
-    local settings = GetStatusSettings(primary, secondary)
+    local settings = GetStatusSettings({primary, secondary})
 
     if (not settings or not settings.effect) then return -1 end
 

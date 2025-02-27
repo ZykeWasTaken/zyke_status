@@ -45,5 +45,6 @@
 ---@alias SubStatusName string @Deprecated
 ---@alias PrimaryName string
 ---@alias SecondaryName string
+---@alias StatusNames {[1]: PrimaryName, [2]?: SecondaryName} @Defaults 2nd idx to primary if nil
 ---@alias OsTime integer
 ---@alias OsClock number

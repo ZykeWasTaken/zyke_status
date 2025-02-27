@@ -61,7 +61,7 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
     if (not value) then
         if (thresholdIdx) then
             local primary, secondary = SeparateStatusName(key)
-            local statusSettings = GetStatusSettings(primary, secondary)
+            local statusSettings = GetStatusSettings({primary, secondary})
             if (not statusSettings) then return end
 
             value = statusSettings.effect[thresholdIdx][queueKey]

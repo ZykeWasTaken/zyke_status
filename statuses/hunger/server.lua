@@ -4,18 +4,20 @@ RegisterStatusType(primary, false, {value = 100.0},
     onTick = function(players, multiplier)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local statusSettings = GetStatusSettings(primary, subName)
+                local statusSettings = GetStatusSettings({primary, subName})
                 if (not statusSettings) then return end
 
                 local val = (statusSettings?.value?.drain or 0) * multiplier
 
                 if (val > 0) then
-                    RemoveFromStatus(plyId, primary, subName, val, true)
+                    RemoveFromStatus(plyId, {primary, subName}, val, true)
                 end
             end
         end
     end,
-    onAdd = function(plyId, primary, secondary, amount)
+    onAdd = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -27,7 +29,9 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         return true
     end,
-    onRemove = function(plyId, primary, secondary, amount)
+    onRemove = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -39,7 +43,9 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         return true
     end,
-    onSet = function(plyId, primary, secondary, amount)
+    onSet = function(plyId, statusNames, amount)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
@@ -50,7 +56,9 @@ RegisterStatusType(primary, false, {value = 100.0},
 
         return true, newVal
     end,
-    onReset = function(plyId, primary, secondary)
+    onReset = function(plyId, statusNames)
+        local secondary = statusNames[2] or primary
+
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
