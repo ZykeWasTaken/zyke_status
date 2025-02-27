@@ -231,12 +231,12 @@ end
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function AddToStatus(plyId, primary, secondary, amount, skipEnsuring)
+    local isValid = IsValidStatus(primary, secondary)
+    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
+
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, primary, secondary)
     end
-
-    local isValid = IsValidStatus(primary, secondary)
-    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
 
     local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, primary, secondary, amount)
 
