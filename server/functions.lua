@@ -158,6 +158,9 @@ exports("GetStatus", GetStatus)
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function RemoveFromStatus(plyId, primary, secondary, amount, skipEnsuring)
+    local isValid = IsValidStatus(primary, secondary)
+    if (not isValid) then print(("Invalid status has attempted to be removed: %s %s"):format(tostring(primary), tostring(secondary))) return end
+
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, primary, secondary)
     end
