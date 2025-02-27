@@ -183,7 +183,7 @@ local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, [
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
     local isValid = IsValidStatus(primary, secondary)
-    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
+    if (not isValid) then print(("Invalid status has attempted to be set: %s %s"):format(tostring(primary), tostring(secondary))) return end
 
     if (Cache.existingStatuses[primary].onSet) then
         if (not skipEnsuring) then
