@@ -24,7 +24,9 @@ end, "Add/Remove from player status", {
 })
 
 Z.registerCommand({"status_clear", "sclear", "status_reset", "sreset"}, function(plyId, args)
-    -- Cache.status
+    if (not isAllowed(plyId)) then Z.notify(plyId, "noPermission") return end
+
+    ResetStatuses(plyId)
 end, "Reset Player Status", {
     {"Player Id", "Player Id, or empty to use yourself"}
 })
