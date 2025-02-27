@@ -59,7 +59,7 @@ function EnsureEffectThresholdOrder()
     for key, subValues in pairs(Config.Status) do
         for subName, values in pairs(subValues) do
             table.sort(values.effect, function(a, b)
-                return a.threshold > b.threshold
+                return a.threshold < b.threshold
             end)
 
             for i = 2, #values.effect do
