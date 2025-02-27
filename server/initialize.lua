@@ -64,6 +64,7 @@ function EnsurePlayerSubStatus(plyId, statusNames)
     local secondary = statusNames[2] or statusNames[1]
 
     if (status and not status[primary].values[secondary]) then
+        ---@diagnostic disable-next-line: missing-fields
         Cache.statuses[plyId][primary].values[secondary] = {}
 
         for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do
