@@ -32,7 +32,7 @@ Config.Status.addiction = {
     },
     ["nicotine"] = {
         addiction = {
-            drain = 0.01,
+            drain = 0.002,
             threshold = 10.0,
         },
         value = {

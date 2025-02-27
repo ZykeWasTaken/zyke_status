@@ -18,5 +18,20 @@ Config.Status.high = {
                 screenEffect = "DaxTrip03",
             }
         }
+    },
+    ["nicotine"] = {
+        value = {
+            drain = 0.05
+        },
+        effect = {
+            {
+                threshold = 5.0,
+                screenEffect = "DanceIntensity02",
+            },
+            {
+                threshold = 10.0,
+                screenEffect = "NG_filmic15",
+            }
+        }
     }
 }
