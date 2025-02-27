@@ -179,6 +179,9 @@ local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, [
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function SetStatusValue(plyId, primary, secondary, amount, skipEnsuring)
+    local isValid = IsValidStatus(primary, secondary)
+    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
+
     if (Cache.existingStatuses[primary].onSet) then
         if (not skipEnsuring) then
             EnsurePlayerSubStatus(plyId, primary, secondary)
@@ -202,6 +205,22 @@ end
 
 exports("SetStatusValue", SetStatusValue)
 
+-- We ensure that the statuses added will be handled in some way, otherwise they will indefinently just stay on our characters unless manually removed
+---@param primary PrimaryName
+---@param secondary SecondaryName
+---@return boolean
+function IsValidStatus(primary, secondary)
+    if (not Config.Status[primary]) then return false end
+
+    local existingStatus = Cache.existingStatuses[primary]
+    if (not existingStatus) then return false end
+
+    -- Verify if the status is allowed to have a substatus
+    if (existingStatus.multi == false and secondary ~= primary) then return false end
+
+    return true
+end
+
 -- Add value to the status
 ---@param plyId PlayerId
 ---@param primary PrimaryName
@@ -212,6 +231,9 @@ function AddToStatus(plyId, primary, secondary, amount, skipEnsuring)
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, primary, secondary)
     end
+
+    local isValid = IsValidStatus(primary, secondary)
+    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(primary), tostring(secondary))) return end
 
     local hasAdded = Cache.existingStatuses[primary].onAdd(plyId, primary, secondary, amount)
 
