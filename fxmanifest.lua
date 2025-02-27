@@ -59,3 +59,7 @@ client_scripts {
 provides {
     "esx_status"
 }
+
+dependencies {
+    "zyke_lib"
+}
