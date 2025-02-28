@@ -6,6 +6,10 @@ Config.Settings = {
     backwardsCompatibility = {
         -- Offers backwards compatibility with ESX & QBCore, however, it does create unsecure events (Not by us, we simply mimick what they do)
         enabled = true,
+        -- To combat some systems simply not nil-checking, we provide a set of default data to ensure there is no error
+        -- Yes, this is not a good solution, but this has to be done to avoid troubleshooting other people's codes and creating snippets for them
+        -- It is disabled by default because it should not be used, but can be enabled if you are having errors with fetching statuses sometimes
+        dummyReturn = false,
     },
     stressEvents = {
         -- A lot of huds & status management systems already manage stress, and we catch the common events they send out

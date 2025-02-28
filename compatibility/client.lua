@@ -22,15 +22,20 @@ RegisterNetEvent("zyke_status:compatibility:onTick", function(values)
 end)
 
 ---@param name string
+---@return table | nil
+---@diagnostic disable-next-line: duplicate-set-field
 local function convertStatus(name)
+    local defaultReturn = Config.Settings.backwardsCompatibility.dummyReturn and {name = name, val = 1000000, percent = 100} or nil
+
     local data = Cache.statuses
-    if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return {} end
+    if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return defaultReturn end
 
     if (Framework == "ESX") then
-        if (not data[name]) then return nil end
+        if (not data[name]) then return defaultReturn end
 
         local val = data[name].values[name].value
-        return {name = name, val = math.floor(val * 10000), percent = val}
+
+        return val == nil and defaultReturn or {name = name, val = math.floor(val * 10000), percent = val}
     elseif (Framework == "QB") then
     end
 end
