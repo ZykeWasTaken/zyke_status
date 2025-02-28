@@ -157,7 +157,7 @@ exports("GetStatus", GetStatus)
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function RemoveFromStatus(plyId, statusNames, amount, skipEnsuring)
     local isValid = IsValidStatus(statusNames)
-    if (not isValid) then print(("Invalid status has attempted to be removed: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
+    if (not isValid) then print(("Invalid status has attempted to be removed: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, statusNames)
@@ -180,7 +180,7 @@ local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, [
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function SetStatusValue(plyId, statusNames, amount, skipEnsuring)
     local isValid = IsValidStatus(statusNames)
-    if (not isValid) then print(("Invalid status has attempted to be set: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
+    if (not isValid) then print(("Invalid status has attempted to be set: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
     if (Cache.existingStatuses[statusNames[1]].onSet) then
         if (not skipEnsuring) then
@@ -229,7 +229,7 @@ end
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function AddToStatus(plyId, statusNames, amount, skipEnsuring)
     local isValid = IsValidStatus(statusNames)
-    if (not isValid) then print(("Invalid status has attempted to be added: %s %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]))) return end
+    if (not isValid) then print(("Invalid status has attempted to be added: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
     if (not skipEnsuring) then
         EnsurePlayerSubStatus(plyId, statusNames)
