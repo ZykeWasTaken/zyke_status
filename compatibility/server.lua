@@ -2,17 +2,24 @@ if (Config.Settings.backwardsCompatibility.enabled ~= true) then return end
 
 CompatibilityFuncs = {}
 
+---@type table<PrimaryName, true>
+local existingESXStatuses = {
+    ["hunger"] = true,
+    ["thirst"] = true,
+    ["drunk"] = true,
+    ["stress"] = true, -- Not really default, but exists frequently in resources and by default within our systems
+}
+
 -- esx_status
 -- Default max is 1000000, we use 100.0
 RegisterNetEvent("zyke_status:compatibility:SetStatus", function(name, value)
-    -- Perhaps also just take a set as a sort of reset, some stuff like addiction will otherwise have issues, unless we only use hunger/thirst/stress from the default systems, bnecause then the addition of setting a value is pretty easy
-    if (name == "hunger") then
-        SetStatusValue(source, {"hunger"}, value / 10000)
-    elseif (name == "thirst") then
-        SetStatusValue(source, {"thirst"}, value / 10000)
-    else
-        print("Attempting to add to invalid status:", name)
+    if (Config.Settings.debug) then
+        Z.debug(("%s set status %s to %s via compatibility."):format(source, name, value / 10000))
     end
+
+    if (not existingESXStatuses[name]) then print("Attempting to set invalid status:", name) return end
+
+    SetStatusValue(source, {name}, value / 10000)
 end)
 
 RegisterNetEvent("zyke_status:compatibility:AddStatus", function(name, value)
@@ -20,13 +27,9 @@ RegisterNetEvent("zyke_status:compatibility:AddStatus", function(name, value)
         Z.debug(("%s added %s to status and gained %s via compatibility."):format(source, name, value / 10000))
     end
 
-    if (name == "hunger") then
-        AddToStatus(source, {"hunger"}, value / 10000)
-    elseif (name == "thirst") then
-        AddToStatus(source, {"thirst"}, value / 10000)
-    else
-        print("Attempting to add to invalid status:", name)
-    end
+    if (not existingESXStatuses[name]) then print("Attempting to set invalid status:", name) return end
+
+    AddToStatus(source, {name}, value / 10000)
 end)
 
 RegisterNetEvent("zyke_status:compatibility:RemoveStatus", function(name, value)
@@ -34,13 +37,9 @@ RegisterNetEvent("zyke_status:compatibility:RemoveStatus", function(name, value)
         Z.debug(("%s removed %s from status and gained %s via compatibility."):format(source, name, value / 10000))
     end
 
-    if (name == "hunger") then
-        RemoveFromStatus(source, {"hunger"}, value / 10000)
-    elseif (name == "thirst") then
-        RemoveFromStatus(source, {"thirst"}, value / 10000)
-    else
-        print("Attempting to remove from invalid status:", name)
-    end
+    if (not existingESXStatuses[name]) then print("Attempting to set invalid status:", name) return end
+
+    RemoveFromStatus(source, {name}, value / 10000)
 end)
 
 RegisterNetEvent("zyke_status:compatibility:HealPlayer", function()
