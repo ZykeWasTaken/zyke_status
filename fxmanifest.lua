@@ -50,6 +50,8 @@ client_scripts {
     "effects/blurryVision.lua",
     "effects/cameraShaking.lua",
 
+    "client/small_resources/driving.lua",
+
     "dev/client.lua",
     "dev/hud.lua",
     "shortcuts/client.lua",

@@ -23,6 +23,13 @@ Config.Settings = {
         playerScaling = 0.02, -- Percentage scaling based on player count
         multiplier = 30, -- s, max 180, recommended 5-30
         databaseSave = 180, -- s
+    },
+    smallResources = {
+        ["driving"] = {
+            enabled = false,
+            minSpeed = 100.0, -- Minimum average speed to trigger, in km/h
+            gainAmount = {min = 0.1, max = 0.5} -- Every 10s, 1 decimal max
+        },
     }
 }
 
