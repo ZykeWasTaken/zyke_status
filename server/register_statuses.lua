@@ -4,7 +4,7 @@
 ---@param baseValues table @Values the state will be required to have
 ---@param functions {onTick: function?, onAdd: function, onRemove: function, onSet?: function, onReset: function, onSoftReset?: function}
 function RegisterStatusType(name, multi, baseValues, functions)
-    Z.debug("Registering", name, multi)
+    Z.debug("Registering: " .. name .. ", multi: " .. tostring(multi))
 
     Cache.existingStatuses[name] = {
         multi = multi and true or false,
