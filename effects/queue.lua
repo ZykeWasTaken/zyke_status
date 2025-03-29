@@ -1,9 +1,9 @@
 -- Handles value queueing
 -- Primarily meant to handle effects
 
----@alias QueueData {value: string, keys: table<string, integer>}[]
+---@alias QueueData {value: string, keys: table<string, integer>}
 
----@type table<string, QueueData>
+---@type table<string, QueueData[]>
 local queues = {}
 
 -- Array of the keys in queues
@@ -150,10 +150,10 @@ local function getDominantValue(queueKey)
     local queue = queues[queueKey]
     if (not queue) then return nil end
 
-    -- print("Grabbing dominant values, selection:")
+    -- print(queueKey, "Grabbing dominant values, selection:")
     -- print(json.encode(queue))
 
-    local queueCount = Z.table.count(queue)
+    local queueCount = #queue
     if (queueCount == 0) then return nil end
     if (queueCount == 1) then return 1 end
 
@@ -200,6 +200,8 @@ CreateThread(function()
             sleep = 1000
 
             for queueKey, queueData in pairs(queues) do
+                if (#queueData == 0) then goto continue end
+
                 local val = getDominantValue(queueKey)
 
                 if (val) then
@@ -216,6 +218,8 @@ CreateThread(function()
 
                     newEffects[queueKey] = queues[queueKey][val].value
                 end
+
+                ::continue::
             end
         end
 
