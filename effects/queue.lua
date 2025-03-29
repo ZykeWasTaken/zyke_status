@@ -253,7 +253,7 @@ function ClearEffectQueue()
         if (funcs[queueKey].reset) then funcs[queueKey].reset() end
     end
 
-    -- Reset the cachead effects, to avoid timing issues
+    -- Reset the cached effects, to avoid timing issues
     prevEffects = {}
 end
 
