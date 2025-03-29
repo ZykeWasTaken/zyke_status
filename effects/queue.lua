@@ -37,12 +37,6 @@ function RegisterQueueKey(key, functions)
     }
 end
 
----@param key string
----@return QueueData
-function GetQueue(key)
-    return queues[key]
-end
-
 AddEventHandler("onResourceStop", function(resName)
     if (GetCurrentResourceName() ~= resName) then return end
 
@@ -73,7 +67,7 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
 
     if (not value) then Z.debug("No value found...") return false end
 
-    local queue = GetQueue(queueKey)
+    local queue = queues[queueKey]
     if (not queue) then Z.debug("No queue found for queueKey") return false end
 
     local idx
@@ -104,7 +98,7 @@ end
 ---@param key string
 ---@param value? string @You only need to provide this if you are using the same key for two different effects under the same queueKey, otherwise it will pick the first one it finds
 function RemoveFromQueue(queueKey, key, value)
-    local queue = GetQueue(queueKey)
+    local queue = queues[queueKey]
     if (not queue) then return false end
 
     for i = 1, #queue do
@@ -153,7 +147,7 @@ end
 -- The queue order does not matter if the effect has the most keys, it will be chosen as it is the most relevant one to use
 ---@return integer | nil @key
 local function getDominantValue(queueKey)
-    local queue = GetQueue(queueKey)
+    local queue = queues[queueKey]
     if (not queue) then return nil end
 
     -- print("Grabbing dominant values, selection:")
