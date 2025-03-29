@@ -167,7 +167,7 @@ local function getDominantValue(queueKey)
     if (type(queue[1].value) == "number") then
         local highestVal = 1 -- idx
         for i = 2, #queue do
-            if (queue[i].value > highestVal) then
+            if (queue[i].value > queue[highestVal].value) then
                 highestVal = i
             end
         end
