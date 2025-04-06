@@ -113,9 +113,15 @@ function SyncPlayerStatus(plyId, primary)
                     local ply = Z.getPlayerData(plyId)
                     if (not ply) then return end
 
-                    ply.Functions.SetMetaData("hunger", compatStatus.hunger)
-                    ply.Functions.SetMetaData("thirst", compatStatus.thirst)
-                    ply.Functions.SetMetaData("stress", compatStatus.stress)
+                    if (UsingQbox) then
+                        exports.qbx_core:SetMetadata(plyId, "hunger", compatStatus.hunger)
+                        exports.qbx_core:SetMetadata(plyId, "thirst", compatStatus.thirst)
+                        exports.qbx_core:SetMetadata(plyId, "stress", compatStatus.stress)
+                    else
+                        ply.Functions.SetMetaData("hunger", compatStatus.hunger)
+                        ply.Functions.SetMetaData("thirst", compatStatus.thirst)
+                        ply.Functions.SetMetaData("stress", compatStatus.stress)
+                    end
                 end
 
                 TriggerClientEvent("hud:client:UpdateNeeds", plyId, compatStatus.hunger, compatStatus.thirst, statuses)
@@ -193,7 +199,11 @@ function SetStatusValue(plyId, statusNames, amount, skipEnsuring)
         if (qbActions and qbActions[statusNames[1]]) then
             local ply = Z.getPlayerData(plyId)
             if (ply) then
-                ply.Functions.SetMetaData(statusNames[1], newVal)
+                if (UsingQbox) then
+                    exports.qbx_core:SetMetadata(plyId, statusNames[1], newVal)
+                else
+                    ply.Functions.SetMetaData(statusNames[1], newVal)
+                end
             end
         end
 

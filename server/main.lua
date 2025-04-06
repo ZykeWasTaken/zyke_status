@@ -4,6 +4,9 @@ Cache = {
     existingStatuses = {},
 }
 
+-- We have to call the SetMetaData export directly to have the correct invoker
+UsingQbox = GetResourceState("qbx_core") == "started" and true or false
+
 ---@param name string @primary
 local function getPlayersForStatus(name)
     local _statuses = Cache.statuses or {}
