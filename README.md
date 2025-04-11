@@ -1,3 +1,5 @@
+# [> Download](https://github.com/ZykeWasTaken/zyke_status/releases/latest)
+
 # Information
 
 This resource is a work-in-progress status system meant to elevate how your character processes hunger, thirst, stress, addictions, highs and much more. It also has a versatile and dynamic effect system to queue and stack effects to prevent interruptions when using different resources requiring different effects.
