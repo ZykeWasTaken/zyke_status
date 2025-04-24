@@ -47,12 +47,13 @@ end)
 
 ---@param queueKey string
 ---@param key string
----@param thresholdIdx integer
+---@param thresholdIdx? integer @Required if there is no value
 ---@param value? string | number
 function AddToQueue(queueKey, key, thresholdIdx, value)
     Z.debug("Attempting to queue...", queueKey, key, value)
 
     if (not value) then
+        -- If we don't provide a value, that means we are using a static effect registered
         if (thresholdIdx) then
             local primary, secondary = SeparateStatusName(key)
             local statusSettings = GetStatusSettings({primary, secondary})
