@@ -120,6 +120,15 @@ function RemoveFromQueue(queueKey, key, value)
     end
 end
 
+---@param toRemove {[1]: string, [2]: string}[]
+function RemoveFromQueueBulk(toRemove)
+    for i = 1, #toRemove do
+        RemoveFromQueue(toRemove[i][1], toRemove[i][2])
+    end
+end
+
+exports("RemoveFromQueueBulk", RemoveFromQueueBulk)
+
 -- Key, index pairs for effect hierarchies, for performance
 -- We want to maintain an array where each effect has it's queue position in the config to avoid confusion
 -- We process it here on start to get a quicker solution when we are managing effects
@@ -269,3 +278,4 @@ end
 exports("GetExistingQueueKeys", GetExistingQueueKeys)
 exports("AddToQueue", AddToQueue)
 exports("ClearEffectQueueKey", ClearEffectQueueKey)
+exports("RemoveFromQueue", RemoveFromQueue)
