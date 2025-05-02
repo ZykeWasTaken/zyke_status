@@ -73,6 +73,8 @@ function EnsurePlayerSubStatus(plyId, statusNames)
     end
 end
 
+while (not QueriesExecuted) do Wait(100) end
+
 Wait(100)
 local players = Z.getPlayers()
 for i = 1, #players do
