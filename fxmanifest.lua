@@ -50,6 +50,7 @@ client_scripts {
     "effect_manager/effects/walkingStyle.lua",
     "effect_manager/effects/blurryVision.lua",
     "effect_manager/effects/cameraShaking.lua",
+    "effect_manager/effects/strength.lua",
 
     "client/small_resources/driving.lua",
 
