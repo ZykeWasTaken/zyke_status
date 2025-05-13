@@ -73,12 +73,10 @@ function EnsurePlayerSubStatus(plyId, statusNames)
     end
 end
 
-while (not QueriesExecuted) do Wait(100) end
+while (not QueriesExecuted) do Wait(10) end
 
-Wait(100)
 local players = Z.getPlayers()
 for i = 1, #players do
-    -- initializeStatusesForPlayer(players[i])
     initializePlayer(players[i])
 end
 
@@ -92,3 +90,5 @@ AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
     SavePlayerToDatabase(plyId)
     Cache.statuses[plyId] = nil
 end)
+
+TriggerClientEvent("zyke_status:HasInitialized", -1)
