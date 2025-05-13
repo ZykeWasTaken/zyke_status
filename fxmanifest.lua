@@ -43,13 +43,13 @@ client_scripts {
 
     "statuses/**/client.lua",
 
-    "effects/queue.lua",
-    "effects/main.lua",
-    "effects/screenEffect.lua",
-    "effects/movementSpeed.lua",
-    "effects/walkingStyle.lua",
-    "effects/blurryVision.lua",
-    "effects/cameraShaking.lua",
+    "effect_manager/queue.lua",
+    "effect_manager/main.lua",
+    "effect_manager/effects/screenEffect.lua",
+    "effect_manager/effects/movementSpeed.lua",
+    "effect_manager/effects/walkingStyle.lua",
+    "effect_manager/effects/blurryVision.lua",
+    "effect_manager/effects/cameraShaking.lua",
 
     "client/small_resources/driving.lua",
 
