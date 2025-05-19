@@ -1,13 +1,23 @@
 -- Handles value queueing
 -- Primarily meant to handle effects
 
+---@alias QueueKey
+---| "blockJumping"
+---| "blockSprinting"
+---| "blurryVision"
+---| "cameraShaking"
+---| "movementSpeed"
+---| "screenEffect"
+---| "strength"
+---| "walkingStyle"
+
 ---@alias QueueData {value: string, keys: table<string, integer>}
 
----@type table<string, QueueData[]>
+---@type table<QueueKey, QueueData[]>
 local queues = {}
 
 -- Array of the keys in queues
----@type string[]
+---@type QueueKey[]
 local queueKeys = {}
 
 -- onResourceStop runs when the resource stops
@@ -16,12 +26,17 @@ local queueKeys = {}
 -- onStart runs when an effect has been started
 -- onStop runs when a specific effect value has stopped, for example, switching between two different screenEffects, it will be ran once for the effect that was stopped, not that this will also run when reset runs, if the effect is ran
 
----@alias EffectFunctions {onResourceStop: function?, onTick: function?, reset: function?, onStart: function?, onStop: function?}
+---@class EffectFunctions
+---@field onResourceStop fun()?
+---@field onTick fun(value: string | number | integer)?
+---@field reset fun()?
+---@field onStart fun(value: string | number | integer)?
+---@field onStop fun(value: string | number | integer)?
 
----@type table<string, EffectFunctions>
+---@type table<QueueKey, EffectFunctions>
 local funcs = {}
 
----@param key string
+---@param key QueueKey
 ---@param functions EffectFunctions
 function RegisterQueueKey(key, functions)
     if (not queues[key]) then
@@ -45,7 +60,7 @@ AddEventHandler("onResourceStop", function(resName)
     end
 end)
 
----@param queueKey string
+---@param queueKey QueueKey
 ---@param key string
 ---@param thresholdIdx? integer @Required if there is no value
 ---@param value? string | number
@@ -95,7 +110,7 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
     end
 end
 
----@param queueKey string
+---@param queueKey QueueKey
 ---@param key string
 ---@param value? string @You only need to provide this if you are using the same key for two different effects under the same queueKey, otherwise it will pick the first one it finds
 function RemoveFromQueue(queueKey, key, value)
@@ -155,6 +170,7 @@ end
 -- Gets the effect that should be played this tick
 -- Prioritizes order in queue, if effects have the same key count, it will use the earliest one
 -- The queue order does not matter if the effect has the most keys, it will be chosen as it is the most relevant one to use
+---@param queueKey QueueKey
 ---@return integer | nil @key
 local function getDominantValue(queueKey)
     local queue = queues[queueKey]
@@ -195,7 +211,7 @@ end
 -- This thread runs the queued effects
 
 -- Cache the previously ran effects, so we know when to run the reset function
----@type table<string, string | number | integer> @Caches the effect value, to check start/reset
+---@type table<QueueKey, string | number | integer> @Caches the effect value, to check start/reset
 local prevEffects = {}
 CreateThread(function()
     local newEffects = {}
@@ -203,7 +219,7 @@ CreateThread(function()
     while (1) do
         local sleep = 5000
 
-        ---@type table<string, string | number | integer> 
+        ---@type table<QueueKey, string | number | integer> 
         newEffects = {}
 
         if (Z.table.doesTableHaveEntries(queues)) then
