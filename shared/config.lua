@@ -10,6 +10,14 @@ Config.Settings = {
         -- Yes, this is not a good solution, but this has to be done to avoid troubleshooting other people's codes and creating snippets for them
         -- It is disabled by default because it should not be used, but can be enabled if you are having errors with fetching statuses sometimes
         dummyReturn = false,
+
+        -- QBCore & Qbox Specific
+        -- You can manage this directly within our system if you want
+        -- But to simplify our guide, we don't take control of these by default
+        -- https://github.com/qbcore-framework/qb-core/blob/main/server/events.lua#L151
+        -- https://github.com/Qbox-project/qbx_smallresources/blob/main/qbx_consumables/server.lua#L159
+        addThirstEvent = false,
+        addHungerEvent = false,
     },
     stressEvents = {
         -- A lot of huds & status management systems already manage stress, and we catch the common events they send out

@@ -118,10 +118,14 @@ RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
     cb(convertStatus(target, name))
 end)
 
-RegisterNetEvent("consumables:server:addThirst", function(amount)
-    SetStatusValue(source, {"thirst"}, amount, false)
-end)
+if (Config.Settings.backwardsCompatibility.addThirstEvent) then
+    RegisterNetEvent("consumables:server:addThirst", function(amount)
+        SetStatusValue(source, {"thirst"}, amount, false)
+    end)
+end
 
-RegisterNetEvent("consumables:server:addHunger", function(amount)
-    SetStatusValue(source, {"hunger"}, amount, false)
-end)
+if (Config.Settings.backwardsCompatibility.addHungerEvent) then
+    RegisterNetEvent("consumables:server:addHunger", function(amount)
+        SetStatusValue(source, {"hunger"}, amount, false)
+    end)
+end
