@@ -16,8 +16,8 @@ Config.Settings = {
         -- Because of this, we may create duplicate events resulting in twice the gain & relieve
         -- To combat this, you can easily disable these events that we catch
         -- However, if your server is not already catching these, you can keep these enabled
-        gainStress = true,
-        relieveStress = true
+        gainStress = false,
+        relieveStress = false
     },
     threadInterval = {
         playerScaling = 0.02, -- Percentage scaling based on player count
