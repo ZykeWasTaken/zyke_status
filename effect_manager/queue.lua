@@ -39,11 +39,10 @@ local funcs = {}
 ---@param key QueueKey
 ---@param functions EffectFunctions
 function RegisterQueueKey(key, functions)
-    if (not queues[key]) then
+    if (not Z.table.contains(queueKeys, key)) then
         queueKeys[#queueKeys+1] = key
     end
 
-    queues[key] = {}
     funcs[key] = {
         onResourceStop = functions.onResourceStop,
         onTick = functions.onTick,
@@ -84,7 +83,10 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
     if (not value) then Z.debug("No value found...") return false end
 
     local queue = queues[queueKey]
-    if (not queue) then Z.debug("No queue found for queueKey") return false end
+    if (not queue) then
+        queue = {}
+        queues[queueKey] = queue
+    end
 
     local idx
     for i = 1, #queue do
@@ -128,6 +130,10 @@ function RemoveFromQueue(queueKey, key, value)
                     if (Z.table.count(queue[i].keys) == 0) then
                         table.remove(queue, i)
                     end
+                end
+
+                if (#queue == 0) then
+                    queues[queueKey] = nil
                 end
 
                 return
@@ -217,7 +223,7 @@ CreateThread(function()
     local newEffects = {}
 
     while (1) do
-        local sleep = 5000
+        local sleep = 3000
 
         ---@type table<QueueKey, string | number | integer> 
         newEffects = {}
@@ -269,14 +275,14 @@ end)
 
 ---@param queueKey string
 function ClearEffectQueueKey(queueKey)
-    queues[queueKey] = {}
+    queues[queueKey] = nil
 end
 
 -- Completely clears the queue effect, which will then also run the reset for all effects
 -- If you wish to clear all of it really quickly, such as when switching characters
 function ClearEffectQueue()
     for key in pairs(queues) do
-        queues[key] = {}
+        queues[key] = nil
     end
 
     for queueKey in pairs(prevEffects) do
