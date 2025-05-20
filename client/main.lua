@@ -1,6 +1,7 @@
 ---@type ClientCache
 Cache = {
-    statuses = nil
+    statuses = nil,
+    directEffects = nil
 }
 
 -- List of functions for effects
@@ -9,6 +10,9 @@ EffectFunctions = {}
 
 local function init()
     Cache.statuses = Z.callback.await("zyke_status:GetPlayerStatus")
+    Cache.directEffects = Z.callback.await("zyke_status:GetPlayerDirectEffects")
+    TriggerEvent("zyke_status:OnDirectEffectsUpdated", Cache.directEffects, {})
+
     TriggerEvent("zyke_status:OnStatusFetched")
 end
 

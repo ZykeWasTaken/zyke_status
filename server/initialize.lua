@@ -52,6 +52,7 @@ local function initializePlayer(plyId)
 
     ensureBaseStatusValues(plyId)
     fetchStatusFromDatabase(plyId)
+    EnsureDirectEffectsFromDatabase(plyId)
 end
 
 ---@param plyId PlayerId
@@ -89,6 +90,7 @@ end)
 AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
     SavePlayerToDatabase(plyId)
     Cache.statuses[plyId] = nil
+    Cache.directEffects[plyId] = nil
 end)
 
 TriggerClientEvent("zyke_status:HasInitialized", -1)

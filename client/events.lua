@@ -44,3 +44,22 @@ RegisterNetEvent("zyke_status:OnHealPlayer", function()
     SetEntityHealth(PlayerPedId(), GetPedMaxHealth(PlayerPedId()))
     TriggerServerEvent("zyke_status:OnHealPlayer")
 end)
+
+local keyPrefix = "direct_effect:"
+---@param currEffects table<StatusName, integer | number | string | boolean>
+---@param removedEffects QueueKey[] @List of effects that was removed this tick, none of these effects would be inside of currEffects
+RegisterNetEvent("zyke_status:OnDirectEffectsUpdated", function(currEffects, removedEffects)
+    Cache.directEffects = currEffects
+
+    for i = 1, #removedEffects do
+        RemoveFromQueue(removedEffects[i], keyPrefix .. removedEffects[i], nil)
+    end
+
+    for queueKey, value in pairs(currEffects) do
+        local key = keyPrefix .. queueKey
+
+        if (not DoseKeyExistsInQueueKey(queueKey, key)) then
+            AddToQueue(queueKey, key, nil, value)
+        end
+    end
+end)

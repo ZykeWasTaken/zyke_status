@@ -38,6 +38,9 @@ Config.Settings = {
             minSpeed = 100.0, -- Minimum average speed to trigger, in km/h
             gainAmount = {min = 0.1, max = 0.5} -- Every 10s, 1 decimal max
         },
+    },
+    directEffects = {
+        accuracyMerge = 0.1, -- If your new value is within 0.1 (inclusive) of the value you are checking it again, merge them to avoid large sets of iteraitons, only relevant for number values
     }
 }
 

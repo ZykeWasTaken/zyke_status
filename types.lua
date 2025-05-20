@@ -20,12 +20,21 @@
 ---@field onReset function
 ---@field onSoftReset? function @Soft resets that are not complete, for example, addiciton resets satisfaction level but remains addiction
 
+---@class DirectEffectInput : DirectEffect
+---@field name QueueKey
+
+---@class DirectEffect
+---@field value number | integer | string | boolean
+---@field duration number -- Seconds
+
 ---@class ServerCache
 ---@field statuses table<PlayerId, table<StatusName, PlayerStatuses>>
 ---@field existingStatuses table<StatusName, ExistingStatus>
+---@field directEffects table<PlayerId, table<QueueKey, DirectEffect[]>>
 
 ---@class ClientCache
 ---@field statuses table<StatusName, PlayerStatuses> | nil @nil when unloaded
+---@field directEffects table<QueueKey, integer | number | string | boolean> | nil @nil when unloaded
 
 ---@alias PlayerId integer
 ---@alias Character table

@@ -1,0 +1,1 @@
+Z.callback.register("zyke_status:GetPlayerDirectEffects", function(plyId) return GetDirectEffectsForClient(plyId) end)

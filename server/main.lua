@@ -1,6 +1,7 @@
 ---@type ServerCache
 Cache = {
     statuses = {},
+    directEffects = {},
     existingStatuses = {},
 }
 

@@ -29,6 +29,9 @@ server_scripts {
 
     "server/events.lua",
 
+    "server/direct_effects/functions.lua",
+    "server/direct_effects/events.lua",
+
     "dev/server.lua",
     "shortcuts/server.lua",
     "compatibility/server.lua",

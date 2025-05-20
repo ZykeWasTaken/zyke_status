@@ -1,4 +1,5 @@
 ---@param plyId PlayerId
+---@return table<StatusName, PlayerStatuses>
 function GetAllRawStatuses(plyId)
     return Cache.statuses[plyId] or {}
 end
@@ -262,10 +263,11 @@ function SavePlayerToDatabase(plyId)
     local plyIdentifier = Z.getIdentifier(plyId)
     if (not plyIdentifier) then return end
 
-    local data = json.encode(statuses)
+    local encodedStatuses = json.encode(statuses)
+    local encodedDirectEffects = json.encode(Cache.directEffects[plyId])
 
     Z.debug("Saving status for", plyIdentifier, "to database.")
-    MySQL.query.await("INSERT INTO zyke_status (identifier, data) VALUES (?, ?) ON DUPLICATE KEY UPDATE data = ?", {plyIdentifier, data, data})
+    MySQL.query.await("INSERT INTO zyke_status (identifier, data, direct_effects) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data = ?, direct_effects = ?", {plyIdentifier, encodedStatuses, encodedDirectEffects, encodedStatuses, encodedDirectEffects})
 end
 
 -- Runs onReset for all statuses the player has registered

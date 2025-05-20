@@ -5,6 +5,7 @@ local queries = {
 		CREATE TABLE IF NOT EXISTS `zyke_status` (
 			`identifier` VARCHAR(255) NOT NULL,
 			`data` MEDIUMTEXT NOT NULL DEFAULT "{}",
+			`direct_effects` MEDIUMTEXT NOT NULL DEFAULT "{}",
 			UNIQUE (`identifier`)
 		);
 	]]

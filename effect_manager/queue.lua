@@ -62,7 +62,7 @@ end)
 ---@param queueKey QueueKey
 ---@param key string
 ---@param thresholdIdx? integer @Required if there is no value
----@param value? string | number
+---@param value? integer | number | string | boolean
 function AddToQueue(queueKey, key, thresholdIdx, value)
     Z.debug("Attempting to queue...", queueKey, key, value)
 
@@ -110,6 +110,21 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
             value = value, keys = {[key] = 1}
         })
     end
+end
+
+-- Checks if the key exists in the queueKey data
+---@param queueKey QueueKey
+---@param key string
+function DoseKeyExistsInQueueKey(queueKey, key)
+    if (not queues[queueKey]) then return false end
+
+    for i = 1, #queues[queueKey] do
+        if (queues[queueKey][i].keys[key]) then
+            return true
+        end
+    end
+
+    return false
 end
 
 ---@param queueKey QueueKey
