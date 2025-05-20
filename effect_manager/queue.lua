@@ -20,6 +20,10 @@ local queues = {}
 ---@type QueueKey[]
 local queueKeys = {}
 
+-- Cache the previously ran effects, so we know when to run the reset function
+---@type table<QueueKey, string | number | integer> @Caches the effect value, to check start/reset
+local prevEffects = {}
+
 -- onResourceStop runs when the resource stops
 -- onTick runs every script tick, which is set at 1000ms
 -- reset runs when the queue key is not running at all, to reset all effects around it, it does not get ran when the effect value changes
@@ -110,6 +114,12 @@ function AddToQueue(queueKey, key, thresholdIdx, value)
             value = value, keys = {[key] = 1}
         })
     end
+
+    TriggerEvent("zyke_status:OnQueueUpdated")
+end
+
+local function shouldQueueRemainActive()
+    return Z.table.doesTableHaveEntries(queues) == true or Z.table.doesTableHaveEntries(prevEffects) == true
 end
 
 -- Checks if the key exists in the queueKey data
@@ -197,9 +207,6 @@ local function getDominantValue(queueKey)
     local queue = queues[queueKey]
     if (not queue) then return nil end
 
-    -- print(queueKey, "Grabbing dominant values, selection:")
-    -- print(json.encode(queue))
-
     local queueCount = #queue
     if (queueCount == 0) then return nil end
     if (queueCount == 1) then return 1 end
@@ -229,45 +236,43 @@ local function getDominantValue(queueKey)
     return queueIdx
 end
 
+-- We use events to catch queue updated and then run a thread
+-- This is to eliminate background threads when nothing is happening, and instantly executing the effecst once they are queued
 -- This thread runs the queued effects
 
--- Cache the previously ran effects, so we know when to run the reset function
----@type table<QueueKey, string | number | integer> @Caches the effect value, to check start/reset
-local prevEffects = {}
-CreateThread(function()
+local queueActive = false -- Cheap flag instead of checking table population
+RegisterNetEvent("zyke_status:OnQueueUpdated", function()
+    if (queueActive) then return end
+
     local newEffects = {}
 
-    while (1) do
-        local sleep = 3000
+    queueActive = true
+    while (queueActive) do
+        local sleep = 1000
 
         ---@type table<QueueKey, string | number | integer> 
         newEffects = {}
 
-        if (Z.table.doesTableHaveEntries(queues)) then
-            sleep = 1000
+        for queueKey, queueData in pairs(queues) do
+            if (#queueData == 0) then goto continue end
 
-            for queueKey, queueData in pairs(queues) do
-                if (#queueData == 0) then goto continue end
+            local val = getDominantValue(queueKey)
 
-                local val = getDominantValue(queueKey)
-
-                if (val) then
-                    if (prevEffects[queueKey] ~= queues[queueKey][val].value) then
-                        if (funcs[queueKey].onStart) then
-                            funcs[queueKey].onStart(queueData[val].value)
-                        end
+            if (val) then
+                if (prevEffects[queueKey] ~= queues[queueKey][val].value) then
+                    if (funcs[queueKey].onStart) then
+                        funcs[queueKey].onStart(queueData[val].value)
                     end
-
-                    -- print("Dominant: " .. tostring(val), json.encode(queueData))
-                    if (funcs[queueKey].onTick) then
-                        funcs[queueKey].onTick(queueData[val].value)
-                    end
-
-                    newEffects[queueKey] = queues[queueKey][val].value
                 end
 
-                ::continue::
+                if (funcs[queueKey].onTick) then
+                    funcs[queueKey].onTick(queueData[val].value)
+                end
+
+                newEffects[queueKey] = queues[queueKey][val].value
             end
+
+            ::continue::
         end
 
         for queueKey in pairs(prevEffects) do
@@ -283,6 +288,10 @@ CreateThread(function()
         end
 
         prevEffects = newEffects
+
+        if (not shouldQueueRemainActive()) then
+            queueActive = false
+        end
 
         Wait(sleep)
     end
