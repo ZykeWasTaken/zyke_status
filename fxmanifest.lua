@@ -59,7 +59,6 @@ client_scripts {
 
     "client/small_resources/driving.lua",
 
-    "dev/client.lua",
     "dev/hud.lua",
     "shortcuts/client.lua",
     "compatibility/client.lua",
