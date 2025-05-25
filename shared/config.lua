@@ -19,6 +19,21 @@ Config.Settings = {
         addThirstEvent = false,
         addHungerEvent = false,
     },
+    playerInstanceUpdate = {
+        -- How often we should update the player instance, all in seconds
+        -- This is usually not needed and we avoid it as it is very resource intensive due to the side effects
+        -- But if your hud doesn't catch the default events and rely on the player object, you may need to change these
+        -- The hudOverriding takes priority over the frameworks
+        frameworks = {
+            QB = 300,
+            QBX = 300,
+            ESX = 60
+        },
+        hudOverriding = {
+            -- Override how often we trigger the update for specific huds automatically, since they don't catch events
+            ["tom_hud"] = 1,
+        }
+    },
     stressEvents = {
         -- A lot of huds & status management systems already manage stress, and we catch the common events they send out
         -- Because of this, we may create duplicate events resulting in twice the gain & relieve

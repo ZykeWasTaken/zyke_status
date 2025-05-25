@@ -32,6 +32,31 @@ RegisterNetEvent("zyke_lib:OnCharacterLogout", function(plyId)
     clientLastUpdated[plyId] = nil
 end)
 
+-- Grab the correct interval
+-- For check framework, then check hud overriding
+local playerInstanceUpdateInterval = 300
+if (UsingQbox) then
+    playerInstanceUpdateInterval = Config.Settings.playerInstanceUpdate.frameworks.QBX
+else
+    playerInstanceUpdateInterval = Config.Settings.playerInstanceUpdate.frameworks[Framework]
+end
+
+for hudName, interval in pairs(Config.Settings.playerInstanceUpdate.hudOverriding) do
+    local state = GetResourceState(hudName)
+
+    if (
+        state == "started" or
+        state == "starting" or
+        -- For the stop checks, they most likely wouldn't have the resource on their server if they weren't using it
+        -- So it is probably just not started yet
+        state == "stopped" or
+        state == "stopping"
+    ) then
+        playerInstanceUpdateInterval = interval
+        break
+    end
+end
+
 -- To preverse performance, we rarely update the framework data because it uses a lot of performance as is not needed during slow thread updating
 -- However, when using an item directly, the update is very sluggish because of the wait, and in some cases may break altogether
 -- To combat this, on use, we force a framework update, along with skipping any extended waiting period
@@ -95,7 +120,7 @@ function SyncPlayerStatus(plyId, primary)
             local compatStatus = CompatibilityFuncs.CreateBasePlayerStatus(plyId)
             if (framework == "ESX") then
                 -- Updated every minute by default in ESX
-                if (os.time() - (esxSetMethodUpdateInterval[plyId] or 0) >= 60) then
+                if (os.time() - (esxSetMethodUpdateInterval[plyId] or 0) >= playerInstanceUpdateInterval) then
                     esxSetMethodUpdateInterval[plyId] = os.time()
 
                     local player = Z.getPlayerData(plyId)
@@ -108,7 +133,7 @@ function SyncPlayerStatus(plyId, primary)
             elseif (Framework == "QB") then
                 -- Updated every 5 minutes by default in QB, or once at the end when food is consumed
                 -- TODO: Create some function for zyke_consumables to trigger, onFinished or something, so that we can track when we should perform a manual save
-                if (os.time() - (qbSetMethodUpdateInterval[plyId] or 0) >= 300) then
+                if (os.time() - (qbSetMethodUpdateInterval[plyId] or 0) >= playerInstanceUpdateInterval) then
                     qbSetMethodUpdateInterval[plyId] = os.time()
 
                     local ply = Z.getPlayerData(plyId)
