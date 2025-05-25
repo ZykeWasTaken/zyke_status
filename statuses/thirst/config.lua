@@ -1,8 +1,8 @@
 Config.Status.thirst = {
     ["base"] = {
         value = {
-            drain = 0.005,
-            -- drain = 0.1,
+            -- Per second 0.01 takes 100 seconds to drain 1%, which is ~160 minutes for 100%
+            drain = 0.01,
         },
         effect = {
             {

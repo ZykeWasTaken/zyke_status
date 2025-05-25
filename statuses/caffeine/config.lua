@@ -1,7 +1,8 @@
 Config.Status.caffeine = {
     ["base"] = {
         value = {
-            drain = 0.01
+            -- Per second 0.05 takes 20 seconds to drain 1%, which is ~33 minutes for 100%
+            drain = 0.05
         },
         effect = {
             {threshold = 5.00, movementSpeed = 1.05},

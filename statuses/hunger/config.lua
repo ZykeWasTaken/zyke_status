@@ -1,8 +1,8 @@
 Config.Status.hunger = {
     ["base"] = {
         value = {
-            drain = 0.003,
-            -- drain = 0.1,
+            -- Per second 0.005 takes 200 seconds to drain 1%, which is ~320 minutes for 100%
+            drain = 0.005,
         },
         effect = {
             {threshold = 30.0, screenEffect = "BeastLaunch02"}, -- Some base screen effect
