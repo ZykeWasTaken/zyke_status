@@ -13,10 +13,14 @@ Config.Settings = {
 
         -- QBCore & Qbox Specific
         -- You can manage this directly within our system if you want
-        -- But to simplify our guide, we don't take control of these by default
-        -- https://github.com/qbcore-framework/qb-core/blob/main/server/events.lua#L151
-        -- https://github.com/Qbox-project/qbx_smallresources/blob/main/qbx_consumables/server.lua#L159
+        -- But to simplify our setup guide, we don't take control of these by default
+
+        -- QBCore: https://github.com/qbcore-framework/qb-smallresources/blob/main/server/consumables.lua#L213
+        -- Qbox: https://github.com/Qbox-project/qbx_smallresources/blob/main/qbx_consumables/server.lua#L182
         addThirstEvent = false,
+
+        -- QBCore: https://github.com/qbcore-framework/qb-smallresources/blob/main/server/consumables.lua#L220
+        -- Qbox: https://github.com/Qbox-project/qbx_smallresources/blob/main/qbx_consumables/server.lua#L159
         addHungerEvent = false,
     },
     playerInstanceUpdate = {
