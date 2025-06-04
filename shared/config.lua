@@ -36,6 +36,7 @@ Config.Settings = {
         hudOverriding = {
             -- Override how often we trigger the update for specific huds automatically, since they don't catch events
             ["tom_hud"] = 1,
+            ["izzy-hudv6"] = 1,
         }
     },
     stressEvents = {
