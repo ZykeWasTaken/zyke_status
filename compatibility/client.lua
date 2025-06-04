@@ -25,10 +25,21 @@ end)
 ---@return table | nil
 ---@diagnostic disable-next-line: duplicate-set-field
 local function convertStatus(name)
-    local defaultReturn = Config.Settings.backwardsCompatibility.dummyReturn and {name = name, val = 1000000, percent = 100, getPercent = function() return 100 end} or nil
+    local useDummyReturn = Config.Settings.backwardsCompatibility.dummyReturn
+    local defaultReturn = useDummyReturn and {name = name, val = 1000000, percent = 100, getPercent = function() return 100 end} or nil
 
     local data = Cache.statuses
-    if (not data) then error("Attempting to create a player base status, but the player is not cached, critical!") return defaultReturn end
+    if (not data) then
+        if (useDummyReturn) then
+            if (Config.Settings.debug) then
+                Z.debug("Attempting to create a player base status, but the player is not cached, could be critical!")
+            end
+        else
+            print("^1[WARNING] Attempting to create a player base status, but the player is not cached, could be critical! Enable dummy returns or fix the code grabbing this data.^7")
+        end
+
+        return defaultReturn
+    end
 
     if (Framework == "ESX") then
         if (not data[name]) then return defaultReturn end
