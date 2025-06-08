@@ -107,6 +107,8 @@ function AddDirectEffect(plyId, effects)
 	syncDirectEffectsToClient(plyId)
 end
 
+exports("AddDirectEffect", AddDirectEffect)
+
 -- RegisterCommand("test_direct_effects", function(plyId)
 -- 	AddDirectEffect(plyId, {
 -- 		{
