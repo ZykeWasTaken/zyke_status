@@ -67,6 +67,8 @@ function AddDirectEffect(plyId, effects)
 
 				plyEffects[effects[i].name][1] = {value = newVal, duration = newDur}
 			else
+				local newValType = type(newVal)
+
 				-- Iterate all of the cached effects to see where we should add this in
 				-- If we are higher than the value we are currently iterating, we should add it to the top, or merge it to the value if it is within range
 				local hasAdded = false
@@ -74,26 +76,34 @@ function AddDirectEffect(plyId, effects)
 					local effect = plyEffects[effects[i].name][j]
 					local currVal = effect.value
 
-					-- First, check if we are above, and if so, we should add it above the current index
-					-- We also double check and make sure that we are not within merge range
-					if (newVal >= currVal) then
-						if (not canMergeValues(newVal, currVal)) then
-							table.insert(plyEffects[effects[i].name], j, {value = newVal, duration = effects[i].duration})
-							hasAdded = true
-						else
+					if (newValType == "number") then
+						-- First, check if we are above, and if so, we should add it above the current index
+						-- We also double check and make sure that we are not within merge range
+						if (newVal >= currVal) then
+							if (not canMergeValues(newVal, currVal)) then
+								table.insert(plyEffects[effects[i].name], j, {value = newVal, duration = effects[i].duration})
+								hasAdded = true
+							else
+								local newDur = effect.duration + effects[i].duration
+								plyEffects[effects[i].name][j] = {value = newVal, duration = newDur}
+								hasAdded = true
+							end
+
+							break
+						end
+
+						-- If they're close enough to eachother, we merge them
+						if (canMergeValues(newVal, currVal)) then
 							local newDur = effect.duration + effects[i].duration
 							plyEffects[effects[i].name][j] = {value = newVal, duration = newDur}
 							hasAdded = true
 						end
-
-						break
-					end
-
-					-- If they're close enough to eachother, we merge them
-					if (canMergeValues(newVal, currVal)) then
-						local newDur = effect.duration + effects[i].duration
-						plyEffects[effects[i].name][j] = {value = newVal, duration = newDur}
-						hasAdded = true
+					elseif (newValType == "string") then
+						if (newVal == currVal) then
+							local newDur = effect.duration + effects[i].duration
+							plyEffects[effects[i].name][j] = {value = newVal, duration = newDur}
+							hasAdded = true
+						end
 					end
 				end
 
