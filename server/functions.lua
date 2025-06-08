@@ -280,6 +280,22 @@ end
 
 exports("AddToStatus", AddToStatus)
 
+-- Automatically chooses add/remove based on amount being positive or negative
+---@param plyId PlayerId
+---@param statusNames StatusNames
+---@param amount number
+---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
+function AutoToStatus(plyId, statusNames, amount, skipEnsuring)
+    if (amount > 0.0) then
+        AddToStatus(plyId, statusNames, amount, skipEnsuring)
+    else
+        amount = math.abs(amount)
+        RemoveFromStatus(plyId, statusNames, amount, skipEnsuring)
+    end
+end
+
+exports("AutoToStatus", AutoToStatus)
+
 ---@param plyId PlayerId
 function SavePlayerToDatabase(plyId)
     local statuses = Cache.statuses[plyId]
