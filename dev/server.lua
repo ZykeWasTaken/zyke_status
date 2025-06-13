@@ -9,9 +9,9 @@ Z.registerCommand({"status", "stat"}, function(plyId, args)
     local primary, secondary, action, amount = args[1], args[2], args[3], tonumber(args[4])
     if (not amount or type(amount) ~= "number" or amount <= 0.0) then Z.notify(plyId, "invalidAmount") return end
 
-    if (action == "add") then
+    if (action == "add" or action == "+") then
         AddToStatus(plyId, {primary, secondary}, amount)
-    elseif (action == "remove") then
+    elseif (action == "remove" or action == "-") then
         RemoveFromStatus(plyId, {primary, secondary}, amount)
     else
         Z.notify(plyId, "incorrectAction")
