@@ -2,6 +2,8 @@ function GetAllRawStatuses()
     return Cache.statuses
 end
 
+exports("GetAllRawStatuses", GetAllRawStatuses)
+
 -- Second return is if initialized
 ---@param statusNames StatusNames
 ---@return {value: number} | PlayerStatus | AddictionStatus, boolean
