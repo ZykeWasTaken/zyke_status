@@ -39,6 +39,7 @@ Config.Settings = {
             ["izzy-hudv6"] = 1,
             ["17mov_Hud"] = 1,
             ["ts_hud"] = 1,
+            ["vms_hud"] = 1
         }
     },
     stressEvents = {
