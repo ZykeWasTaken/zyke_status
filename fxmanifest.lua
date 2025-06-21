@@ -59,6 +59,7 @@ client_scripts {
     "effect_manager/effects/blockSprinting.lua",
 
     "client/small_resources/driving.lua",
+    "client/small_resources/shooting.lua",
     "client/small_resources/stat_decimals.lua",
 
     "dev/hud.lua",

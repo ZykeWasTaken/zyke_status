@@ -61,6 +61,15 @@ Config.Settings = {
             minSpeed = 100.0, -- Minimum average speed to trigger, in km/h
             gainAmount = {min = 0.1, max = 0.5} -- Every 10s, 1 decimal max
         },
+        ["shooting"] = {
+            -- If you want to change this gain for any reaosn, you can modify client/small_resources/shooting.lua
+            -- We process the stress in 2000ms batches to preserve performance
+            -- We process shots in 400ms intervals, meaning repeated shots like an assault rifle will not trigger stress massively faster than a pistol, just slightly
+            -- You can change these values in client/small_resources/shooting.lua
+
+            enabled = true,
+            gainAmount = {min = 0.1, max = 0.5} -- Shot * gainAmount
+        }
     },
     directEffects = {
         accuracyMerge = 0.1, -- If your new value is within 0.1 (inclusive) of the value you are checking it again, merge them to avoid large sets of iteraitons, only relevant for number values
