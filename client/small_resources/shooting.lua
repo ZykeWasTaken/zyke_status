@@ -27,16 +27,17 @@ CreateThread(function()
 	local lastShot = GetGameTimer()
 
 	local hasWeapon = false
+	local ped = PlayerPedId()
 
 	-- Cache shots to process batches
 	local shots = 0
 
 	while (1) do
 		local sleep = 100
-		local ped = PlayerPedId()
 
 		if (GetGameTimer() - checkRequirements < 500) then
 			hasWeapon = GetCurrentPedWeapon(ped, false)
+			ped = PlayerPedId()
 			checkRequirements = GetGameTimer()
 		end
 
