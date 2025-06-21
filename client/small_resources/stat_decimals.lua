@@ -40,7 +40,7 @@ function AddToStat(stat, amount, max)
 		local currHealth = GetEntityHealth(ply)
 
 		-- If more than max, don't process it
-		if (currHealth >= max) then
+		if (max and currHealth >= max) then
 			stats[stat] = 0.0
 			return
 		end
@@ -60,7 +60,7 @@ function AddToStat(stat, amount, max)
 		local currArmor = GetPedArmour(ply)
 
 		-- If more than max, don't process it
-		if (currArmor >= max) then
+		if (max and currArmor >= max) then
 			stats[stat] = 0.0
 			return
 		end
