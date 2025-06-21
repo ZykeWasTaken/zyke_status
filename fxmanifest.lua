@@ -35,7 +35,8 @@ server_scripts {
     "dev/server.lua",
     "shortcuts/server.lua",
     "compatibility/server.lua",
-    "server/commands.lua",
+
+    "server/commands/heal.lua",
 }
 
 client_scripts {

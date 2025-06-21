@@ -64,6 +64,13 @@ Config.Settings = {
     },
     directEffects = {
         accuracyMerge = 0.1, -- If your new value is within 0.1 (inclusive) of the value you are checking it again, merge them to avoid large sets of iteraitons, only relevant for number values
+    },
+    commands = {
+        heal = {
+            command = {"heal", "healing"}, -- The command name, if you want to use a different name, you can change it here, or add in more after it
+            permission = {"command"},
+            overwrite = false, -- By default, we only register the command if nothing else does, set to true if you want us to register it (it can still be overwritten by other resources starting after us)
+        }
     }
 }
 
