@@ -24,9 +24,12 @@ RegisterNetEvent("zyke_status:HasInitialized", function()
     init()
 end)
 
-Wait(500)
-if (LocalPlayer.state.hasLoaded) then
+RegisterNetEvent("zyke_lib:OnLoaderFinished", function()
+    while not (LocalPlayer.state["z:hasLoaded"]) do
+        Wait(100)
+    end
+
     if (Cache.statuses ~= nil) then return end
 
     init()
-end
+end)
