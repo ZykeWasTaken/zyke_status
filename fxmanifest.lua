@@ -17,15 +17,11 @@ files {
     "compatibility/**/*",
 }
 
-shared_scripts {
-    "@zyke_lib/imports.lua",
-}
-
-server_scripts {
-    "@oxmysql/lib/MySQL.lua",
-}
+shared_script "@zyke_lib/imports.lua"
 
 loader {
+    "server:@oxmysql/lib/MySQL.lua",
+
     -- Shared files
     "shared/config.lua",
     "shared/functions.lua",
@@ -103,6 +99,4 @@ provides {
     "esx_status"
 }
 
-dependencies {
-    "zyke_lib"
-}
+dependency "zyke_lib"
