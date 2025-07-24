@@ -27,7 +27,8 @@ function RegisterEffectFunctions(name)
         end,
         onTick = function(val, thresholdIdx)
             if (statusSettings.effect[thresholdIdx].damage) then
-                SetEntityHealth(PlayerPedId(), GetEntityHealth(PlayerPedId()) - math.floor(statusSettings.effect[thresholdIdx].damage))
+                local amount = statusSettings.effect[thresholdIdx].damage
+                AddToStat("health", -amount)
             end
         end,
         onStop = function(val, thresholdIdx)
