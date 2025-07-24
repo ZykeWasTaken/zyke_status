@@ -53,6 +53,8 @@ local function initializePlayer(plyId)
     ensureBaseStatusValues(plyId)
     fetchStatusFromDatabase(plyId)
     EnsureDirectEffectsFromDatabase(plyId)
+
+    SyncPlayerStatus(plyId, GetAllPrimaryStatuses())
 end
 
 ---@param plyId PlayerId
