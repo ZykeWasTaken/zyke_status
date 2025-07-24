@@ -73,8 +73,8 @@ function SyncPlayerStatus(plyId, primary)
     if (type(primary) ~= "table") then
         clientSyncQueue[plyId].toSync[primary] = true
     else
-        for _ = 1, #primary do
-            clientSyncQueue[plyId].toSync[primary] = true
+        for i = 1, #primary do
+            clientSyncQueue[plyId].toSync[primary[i]] = true
         end
     end
 
