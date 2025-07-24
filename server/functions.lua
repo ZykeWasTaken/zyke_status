@@ -361,6 +361,8 @@ RegisterNetEvent("zyke_status:OnHealPlayer", function()
         print(("^1[WARNING] Player %s has ran the healing event without being authorized to do so. Possible exploit attempt. ^7"):format(source))
     end
 
+    SyncPlayerStatus(source, GetAllPrimaryStatuses())
+
     playerHealAuth[source] = nil
 end)
 
@@ -388,3 +390,15 @@ function BulkAction(plyId, actions)
 end
 
 exports("BulkAction", BulkAction)
+
+-- Pre-load and cache an array of all the primary status names
+---@type PrimaryName[]
+local primaryStatuses = {}
+for statusName in pairs(Cache.existingStatuses) do
+    primaryStatuses[#primaryStatuses+1] = statusName
+end
+
+---@return PrimaryName[]
+function GetAllPrimaryStatuses()
+    return primaryStatuses
+end
