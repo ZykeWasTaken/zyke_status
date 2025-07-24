@@ -25,7 +25,7 @@ end
 ---@return table<QueueKey, integer | number | string | boolean>
 function GetDirectEffectsForClient(plyId)
 	local formattedEffects = {}
-	local plyEffects = Cache.directEffects[plyId]
+	local plyEffects = Cache?.directEffects?[plyId] or {}
 
 	for key, value in pairs(plyEffects) do
 		formattedEffects[key] = value[1].value
