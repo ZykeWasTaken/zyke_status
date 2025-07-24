@@ -22,27 +22,36 @@ local function canMergeValues(newVal, currVal)
 end
 
 ---@param plyId PlayerId
----@return table<QueueKey, integer | number | string | boolean>
+---@return table<QueueKey, integer | number | string | boolean>, number
 function GetDirectEffectsForClient(plyId)
 	local formattedEffects = {}
 	local plyEffects = Cache?.directEffects?[plyId] or {}
+	local totalDuration = 0
 
 	for key, value in pairs(plyEffects) do
 		formattedEffects[key] = value[1].value
+
+		for i = 1, #value do
+			totalDuration += value[i].duration
+		end
 	end
 
-	return formattedEffects
+	return formattedEffects, totalDuration
 end
 
 ---@param plyId PlayerId
 ---@param removedEffects QueueKey[]?
-local function syncDirectEffectsToClient(plyId, removedEffects)
-	TriggerClientEvent("zyke_status:OnDirectEffectsUpdated", plyId, GetDirectEffectsForClient(plyId), removedEffects or {})
+---@param activationThreshold? integer | "prev" @"prev" to keep, nil/0 to restore, integer to set
+local function syncDirectEffectsToClient(plyId, removedEffects, activationThreshold)
+	local formattedEffects, totalDuration = GetDirectEffectsForClient(plyId)
+
+	TriggerClientEvent("zyke_status:OnDirectEffectsUpdated", plyId, formattedEffects, removedEffects or {}, totalDuration, activationThreshold)
 end
 
 ---@param plyId PlayerId
 ---@param effects DirectEffectInput[]
-function AddDirectEffect(plyId, effects)
+---@param activationThreshold? integer | "prev" @"prev" to keep, nil/0 to restore, integer to set
+function AddDirectEffect(plyId, effects, activationThreshold)
 	-- When adding an effect, we may already have a similar one in here
 	-- Make sure that we merge them if so, to lessen the iterations needed
 
@@ -114,7 +123,7 @@ function AddDirectEffect(plyId, effects)
 		end
 	end
 
-	syncDirectEffectsToClient(plyId)
+	syncDirectEffectsToClient(plyId, nil, activationThreshold)
 end
 
 exports("AddDirectEffect", AddDirectEffect)
@@ -151,7 +160,6 @@ CreateThread(function()
 			local toRemove = waitInterval / 1000
 
 			for queueKey, directEffectData in pairs(plyEffects) do
-
 				local removedIdxs = 0
 				for i = 1, #directEffectData do
 					i = i - removedIdxs
@@ -176,7 +184,7 @@ CreateThread(function()
 			end
 
 			if (#queueKeysRemoved > 0) then
-				syncDirectEffectsToClient(plyId, queueKeysRemoved)
+				syncDirectEffectsToClient(plyId, queueKeysRemoved, "prev")
 			end
 		end
 	end

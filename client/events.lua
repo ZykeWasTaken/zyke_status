@@ -48,8 +48,11 @@ end)
 local keyPrefix = "direct_effect:"
 ---@param currEffects table<StatusName, integer | number | string | boolean>
 ---@param removedEffects QueueKey[] @List of effects that was removed this tick, none of these effects would be inside of currEffects
-RegisterNetEvent("zyke_status:OnDirectEffectsUpdated", function(currEffects, removedEffects)
+---@param totalDuration number @Total duration of all effects together
+---@param activationThreshold? integer | "prev" @"prev" to keep, nil/0 to restore, integer to set
+RegisterNetEvent("zyke_status:OnDirectEffectsUpdated", function(currEffects, removedEffects, totalDuration, activationThreshold)
     Cache.directEffects = currEffects
+    Cache.directEffectsTotalDuration = totalDuration
 
     for i = 1, #removedEffects do
         RemoveFromQueue(removedEffects[i], keyPrefix .. removedEffects[i], nil)
@@ -59,7 +62,7 @@ RegisterNetEvent("zyke_status:OnDirectEffectsUpdated", function(currEffects, rem
         local key = keyPrefix .. queueKey
 
         if (not DoseKeyExistsInQueueKey(queueKey, key)) then
-            AddToQueue(queueKey, key, nil, value)
+            AddToQueue(queueKey, key, nil, value, activationThreshold)
         end
     end
 end)

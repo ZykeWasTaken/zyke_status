@@ -35,6 +35,7 @@
 ---@class ClientCache
 ---@field statuses table<StatusName, PlayerStatuses> | nil @nil when unloaded
 ---@field directEffects table<QueueKey, integer | number | string | boolean> | nil @nil when unloaded
+---@field directEffectsTotalDuration number | nil @nil when unloaded
 
 ---@alias PlayerId integer
 ---@alias Character table

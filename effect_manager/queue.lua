@@ -13,6 +13,15 @@
 
 ---@alias QueueData {value: string, keys: table<string, integer>}
 
+-- Total seconds of all direct effects together before can start actually triggering them
+-- This is to prevent effects from only triggering for a few seconds unless we specifically want that
+-- If we trigger without a set threshold it will set it to 0
+-- Even if we haven't hit a threshold yet, the timer will still be ticking away in the background
+-- We only accept lower values for new thresholds, since if there is an active threshold, that means an effect will be active, and we don't want to raise the bar for an existing effect
+-- Once all of our effects are done, we will reset the threshold to 0
+local thresholdToActivate = 0
+local hasActivatedEffects = false
+
 ---@type table<QueueKey, QueueData[]>
 local queues = {}
 
@@ -67,8 +76,33 @@ end)
 ---@param key string
 ---@param thresholdIdx? integer @Required if there is no value
 ---@param value? integer | number | string | boolean
-function AddToQueue(queueKey, key, thresholdIdx, value)
+---@param newThresholdToActivate? integer | "prev" @"prev" to keep, nil/0 to restore, integer to set, total seconds of all effects together before can start actually triggering them
+function AddToQueue(queueKey, key, thresholdIdx, value, newThresholdToActivate)
     Z.debug("Attempting to queue...", queueKey, key, value)
+
+    -- This threshold part is a little messy and will probably be refactored in the future, but the concept is working
+
+    -- Keep the previous threshold
+    if (newThresholdToActivate == "prev") then
+        newThresholdToActivate = thresholdToActivate
+
+        -- If the don't specify a threshold, or we set it as 0, we reset it
+    elseif (newThresholdToActivate == nil or newThresholdToActivate == 0) then
+        thresholdToActivate = 0
+
+        -- If we haven't activated any effects yet, and haven't set a threshold, we set it to whatever the input is
+    elseif (
+        not hasActivatedEffects
+        and thresholdToActivate == 0
+    ) then
+        ---@diagnostic disable-next-line: cast-local-type
+        thresholdToActivate = newThresholdToActivate or 0
+
+        -- If we specify a threshold, we set it if it is lower than the old
+    elseif (newThresholdToActivate < thresholdToActivate) then
+        ---@diagnostic disable-next-line: cast-local-type
+        thresholdToActivate = newThresholdToActivate
+    end
 
     if (not value) then
         -- If we don't provide a value, that means we are using a static effect registered
@@ -253,6 +287,18 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
         ---@type table<QueueKey, string | number | integer> 
         newEffects = {}
 
+        -- This is to manage direct effects:
+        -- If we haven't activated any effects yet, we check for a threshold
+        -- If we have a threshold at 0, that means there is no active threshold, and we can skip the check if so
+        -- if we have a threshold set, we check if our total duration is greater than the threshold
+        -- If we run a effect via other means like a status, it will run the AddToQueue function without a threshold, which sets it to 0 and will force-start all effects
+        if (
+            not hasActivatedEffects
+            and thresholdToActivate ~= 0
+            and thresholdToActivate > Cache.directEffectsTotalDuration
+        ) then goto continue end
+
+        hasActivatedEffects = true
         for queueKey, queueData in pairs(queues) do
             if (#queueData == 0) then goto continue end
 
@@ -293,8 +339,14 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
             queueActive = false
         end
 
+        ::continue::
+
         Wait(sleep)
     end
+
+    -- We reset the threshold
+    thresholdToActivate = 0
+    hasActivatedEffects = false
 end)
 
 ---@param queueKey string
