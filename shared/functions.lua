@@ -23,7 +23,11 @@ function GetStatusSettings(statusNames)
 end
 
 -- These statuses have reversed values, 100.0 being the starting point
-local reversed = Z.table.new({"addiction", "hunger", "thirst"})
+local reversed = {
+    ["addiction"] = true,
+    ["hunger"] = true,
+    ["thirst"] = true,
+}
 
 -- Checks the threshold and if you should run the effect
 -- Some effects may be reversed, so we define it in here
@@ -36,12 +40,14 @@ function GetEffectThreshold(name, statusData)
 
     if (not settings or not settings.effect) then return -1 end
 
-    for i = #settings.effect, 1, -1 do
-        if (reversed:contains(primary)) then
+    if (reversed[primary]) then
+        for i = #settings.effect, 1, -1 do
             if (statusData.value <= settings.effect[i].threshold) then
                 return i
             end
-        else
+        end
+    else
+        for i = #settings.effect, 1, -1 do
             if (statusData.value >= settings.effect[i].threshold) then
                 return i
             end
@@ -57,9 +63,15 @@ end
 function EnsureEffectThresholdOrder()
     for key, subValues in pairs(Config.Status) do
         for subName, values in pairs(subValues) do
-            table.sort(values.effect, function(a, b)
-                return a.threshold < b.threshold
-            end)
+            if (reversed[key]) then
+                table.sort(values.effect, function(a, b)
+                    return a.threshold > b.threshold
+                end)
+            else
+                table.sort(values.effect, function(a, b)
+                    return a.threshold < b.threshold
+                end)
+            end
 
             for i = 2, #values.effect do
                 if (values.effect[i].threshold == values.effect[i - 1].threshold) then
