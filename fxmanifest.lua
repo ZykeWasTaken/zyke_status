@@ -85,6 +85,7 @@ loader {
     "client:effect_manager/effects/strength.lua",
     "client:effect_manager/effects/blockJumping.lua",
     "client:effect_manager/effects/blockSprinting.lua",
+    "client:effect_manager/effects/stumble.lua",
 
     "client/small_resources/driving.lua",
     "client/small_resources/shooting.lua",

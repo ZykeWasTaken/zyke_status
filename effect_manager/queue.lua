@@ -10,6 +10,7 @@
 ---| "screenEffect"
 ---| "strength"
 ---| "walkingStyle"
+---| "stumble"
 
 ---@alias QueueData {value: string, keys: table<string, integer>}
 
