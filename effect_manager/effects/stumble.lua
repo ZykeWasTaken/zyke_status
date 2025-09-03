@@ -31,8 +31,6 @@ RegisterQueueKey("stumble", {
 
 				chance *= value
 
-				print("value", value, "stumbleRoll", stumbleRoll, "chance", chance)
-
 				-- If we did hit the roll, set us to ragdoll
 				if (stumbleRoll <= chance) then
 					SetPedToRagdoll(PlayerPedId(), 500, 2000, 0, false, false, false)
