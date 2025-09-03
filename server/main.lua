@@ -24,34 +24,43 @@ end
 
 -- Loop the existing statuses and perform onTick for all available players
 CreateThread(function()
-    local baseSpeed = 1000 -- Do not touch
     local interval = Config.Settings.threadInterval
 
     local lastDbSave = os.time()
 
+    -- Track when the next update should happen, so we can run quicker iterations if needed, since we are otherwise stuck in a long sleep
+    local nextUpdate = 0
+    local firstUpdate = true
+
     while (1) do
-        -- Modify the base thread speed for better performance
-        -- Processes the same data, but in slower intervals with multipliers for all values
-        local additionalWait = 0
-        if (interval.playerScaling == true) then
-            local totPlys = GetNumPlayerIndices()
-            additionalWait = totPlys * interval.playerScalingAddition
-        end
+        local sleep = 1000
 
-        local multiplier = interval.baseInterval + additionalWait
-        if (multiplier > interval.databaseSave) then
-            multiplier = interval.databaseSave
-        end
-
-        local sleep = baseSpeed * multiplier
-
-        Wait(sleep)
-
-        local existingStatuses = Cache.existingStatuses
-        for statusName, values in pairs(existingStatuses) do
-            if (values.onTick) then
-                values.onTick(getPlayersForStatus(statusName), multiplier)
+        if (nextUpdate < os.time()) then
+            -- Decide when we should update all players, for better performance
+            -- Processes the same data, but in slower intervals with multipliers for all values
+            local additionalWait = 0
+            if (interval.playerScaling == true) then
+                local totPlys = GetNumPlayerIndices()
+                additionalWait = totPlys * interval.playerScalingAddition
             end
+
+            local multiplier = interval.baseInterval + additionalWait
+            if (multiplier > interval.databaseSave) then
+                multiplier = interval.databaseSave
+            end
+
+            nextUpdate = os.time() + multiplier
+
+            if (not firstUpdate) then
+                local existingStatuses = Cache.existingStatuses
+                for statusName, values in pairs(existingStatuses) do
+                    if (values.onTick) then
+                        values.onTick(getPlayersForStatus(statusName), multiplier)
+                    end
+                end
+            end
+
+            firstUpdate = false
         end
 
         -- We save during logout, but to be safe, save every x amount of seconds
@@ -65,5 +74,7 @@ CreateThread(function()
                 end
             end
         end
+
+        Wait(sleep)
     end
 end)
