@@ -1,7 +1,9 @@
 local handHash = `WEAPON_UNARMED`
 
 RegisterQueueKey("strength", {
-    onStart = function(val)
+    onTick = function(val)
+		if (type(val) ~= "number") then return end
+
 		SetWeaponDamageModifier(handHash, val)
     end,
 	reset = function()

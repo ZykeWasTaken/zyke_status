@@ -36,7 +36,7 @@ local prevEffects = {}
 -- onResourceStop runs when the resource stops
 -- onTick runs every script tick, which is set at 1000ms
 -- reset runs when the queue key is not running at all, to reset all effects around it, it does not get ran when the effect value changes
--- onStart runs when an effect has been started
+-- onStart runs when an effect has been started (not if it changes value, just if the effect was previously not ran at all)
 -- onStop runs when a specific effect value has stopped, for example, switching between two different screenEffects, it will be ran once for the effect that was stopped, not that this will also run when reset runs, if the effect is ran
 
 ---@class EffectFunctions
@@ -305,7 +305,11 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
             local val = getDominantValue(queueKey)
 
             if (val) then
-                if (prevEffects[queueKey] ~= queues[queueKey][val].value) then
+                if (
+                    -- onStart should only trigger if the previous effect was nil (and we got a new value, which we already checked)
+                    -- All other changes should go under onTick
+                    prevEffects[queueKey] == nil
+                ) then
                     if (funcs[queueKey].onStart) then
                         funcs[queueKey].onStart(queueData[val].value)
                     end
