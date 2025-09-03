@@ -16,7 +16,7 @@ RegisterQueueKey("stumble", {
 
         CreateThread(function()
             while (value ~= 0.0) do
-				local stumbleRoll = math.random(1, 100)
+				local stumbleRoll = math.random(1, 10000) / 100 -- 2 decimal support
 				local chance = baseChance
 
 				local isWalking = IsPedWalking(PlayerPedId()) == 1 -- Just walking normally
