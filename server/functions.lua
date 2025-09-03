@@ -314,6 +314,8 @@ end
 -- Runs onReset for all statuses the player has registered
 ---@param plyId PlayerId
 function ResetStatuses(plyId)
+    if (not Cache.statuses[plyId]) then return end
+
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
         for statusName in pairs(statusValues.values) do
             Z.debug("[ResetStauses] Resetting", primary .. "." .. statusName, "for", plyId)
@@ -327,6 +329,8 @@ end
 -- Runs onSoftReset and falls back to onReset for all statuses the player has registered
 ---@param plyId PlayerId
 function SoftResetStatuses(plyId)
+    if (not Cache.statuses[plyId]) then return end
+
     for primary, statusValues in pairs(Cache.statuses[plyId]) do
         for statusName in pairs(statusValues.values) do
             Z.debug("[SoftResetStatuses] Resetting", primary .. "." .. statusName, "for", plyId)
