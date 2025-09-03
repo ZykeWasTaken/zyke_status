@@ -27,28 +27,20 @@ CreateThread(function()
     local baseSpeed = 1000 -- Do not touch
     local interval = Config.Settings.threadInterval
 
-    -- Modify the base thread speed for better performance
-    -- Processes the same data, but in slower intervals with multipliers for all values
-    local multiplier = interval.multiplier
     local lastDbSave = os.time()
 
     while (1) do
-        if (interval.playerScaling) then
+        -- Modify the base thread speed for better performance
+        -- Processes the same data, but in slower intervals with multipliers for all values
+        local additionalWait = 0
+        if (interval.playerScaling == true) then
             local totPlys = GetNumPlayerIndices()
+            additionalWait = totPlys * interval.playerScalingAddition
+        end
 
-            if (totPlys > 0) then
-                local floor, ceiling = interval.multiplier, 180
-
-                multiplier = interval.multiplier + (totPlys * interval.multiplier * interval.playerScaling)
-
-                if (multiplier < floor) then
-                    multiplier = floor
-                elseif (multiplier > ceiling) then
-                    multiplier = ceiling
-                end
-            else
-                multiplier = interval.multiplier > 30 and interval.multiplier or 30
-            end
+        local multiplier = interval.baseInterval + additionalWait
+        if (multiplier > interval.databaseSave) then
+            multiplier = interval.databaseSave
         end
 
         local sleep = baseSpeed * multiplier

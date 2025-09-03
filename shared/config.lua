@@ -53,9 +53,10 @@ Config.Settings = {
         relieveStress = false
     },
     threadInterval = {
-        playerScaling = 0.02, -- Percentage scaling based on player count
-        multiplier = 30, -- s, max 180, recommended 5-30
-        databaseSave = 180, -- s
+        playerScaling = true, -- Scales the interval based on player count
+        baseInterval = 30, -- seconds, how often we update the players
+        playerScalingAddition = 1.0, -- seconds, how much we add to the interval for each player that is loaded to ease the load, the amount that is handled is scaled accordingly
+        databaseSave = 180, -- seconds, also the max for the thread interval
     },
     smallResources = {
         ["driving"] = {
