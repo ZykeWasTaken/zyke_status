@@ -41,7 +41,7 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
     onTick = function(players, multiplier)
         for plyId, status in pairs(players) do
             for subName, values in pairs(status.values) do
-                local statusSettings = GetStatusSettings({primary, subName})
+                local statusSettings = GetStatusSettings(primary, subName)
                 if (not statusSettings) then return end
 
                 -- If below the addiction threshold
