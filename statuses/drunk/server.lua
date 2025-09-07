@@ -1,16 +1,20 @@
 local primary = "drunk"
+local primarySettings = Config.Status[primary]
+
 RegisterStatusType(primary, false, {value = 0.0},
 {
-    onTick = function(players, multiplier)
-        for plyId, status in pairs(players) do
-            for subName, values in pairs(status.values) do
-                local statusSettings = GetStatusSettings(primary, subName)
-                if (not statusSettings) then return end
+    onTick = function(players)
+        for i = 1, #players do
+            local plyId = players[i][1]
+            local statuses = players[i][2]
 
-                local val = (statusSettings?.value?.drain or 0) * multiplier
+            for j = 1, #statuses do
+                local name, multiplier = statuses[j][1], statuses[j][2]
+                local secSettings = primarySettings[name] or primarySettings.base
+                local val = (secSettings?.value?.drain or 0) * multiplier
 
-                if (val > 0) then
-                    RemoveFromStatus(plyId, {primary, subName}, val, true)
+                if (val > 0.0) then
+                    RemoveFromStatus(plyId, {primary, name}, val, true)
                 end
             end
         end

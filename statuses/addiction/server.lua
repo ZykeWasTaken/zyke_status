@@ -11,6 +11,9 @@
 --- To have a high satisfaction value, keep smoking and you can reset it back to 100
 --- Depending on the specific addiction settings, this will have different impacts
 
+local primary = "addiction"
+local primarySettings = Config.Status[primary]
+
 -- Custom for this type of status
 -- Has to remove the satisfaction every tick if you are addicted
 ---@param plyId PlayerId
@@ -35,31 +38,38 @@ end
 -- TODO: Some addSatisfaction
 -- Also, reset satisfaction or something when addiction is draining
 
-local primary = "addiction"
 RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 {
-    onTick = function(players, multiplier)
-        for plyId, status in pairs(players) do
-            for subName, values in pairs(status.values) do
-                local statusSettings = GetStatusSettings(primary, subName)
-                if (not statusSettings) then return end
+    -- The addiction onTick looks a little different from the default format
+    onTick = function(players)
+        for i = 1, #players do
+            local plyId = players[i][1]
+            local statuses = players[i][2]
 
-                -- If below the addiction threshold
-                if (values.addiction < statusSettings.addiction.threshold) then
-                    -- Not addicted, remove from the addicted status
-                    local val = (statusSettings?.addiction?.drain or 0) * multiplier
+            for j = 1, #statuses do
+                local name, multiplier = statuses[j][1], statuses[j][2]
+                local secSettings = primarySettings[name] or primarySettings.base
 
-                    if (val > 0) then
-                        RemoveFromStatus(plyId, {primary, subName}, val, true)
+                local plyValues = GetPlayerBaseStatusTable(plyId, primary)
+                if (not plyValues) then goto endOfSubStatus end
+
+                local threshold = secSettings.addiction.threshold
+
+                if (plyValues.values[name].addiction < threshold) then
+                    local val = (secSettings?.addiction?.drain or 0) * multiplier
+
+                    if (val > 0.0) then
+                        RemoveFromStatus(plyId, {primary, name}, val, true)
                     end
                 else
-                    -- Addicted, slowly remove satisfaction
-                    local val = (statusSettings?.value?.drain or 0) * multiplier
+                    local val = (secSettings?.value?.drain or 0) * multiplier
 
-                    if (val > 0) then
-                        removeSatisfaction(plyId, {primary, subName}, val)
+                    if (val > 0.0) then
+                        removeSatisfaction(plyId, {primary, name}, val)
                     end
                 end
+
+                ::endOfSubStatus::
             end
         end
     end,

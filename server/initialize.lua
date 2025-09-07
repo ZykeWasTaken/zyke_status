@@ -55,6 +55,7 @@ local function initializePlayer(plyId)
     EnsureDirectEffectsFromDatabase(plyId)
 
     SyncPlayerStatus(plyId, GetAllPrimaryStatuses())
+    EnsurePlayerSubStatusesCache(plyId)
 end
 
 ---@param plyId PlayerId
@@ -74,6 +75,8 @@ function EnsurePlayerSubStatus(plyId, statusNames)
             Cache.statuses[plyId][primary].values[secondary][key] = baseValue
         end
     end
+
+    EnsureSubStatus(primary, secondary)
 end
 
 while (not QueriesExecuted) do Wait(10) end

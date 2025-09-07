@@ -19,6 +19,7 @@
 ---@field onSet? function @Only used for backwards compatibility with some base values, we use onReset or onAdd/onRemove
 ---@field onReset function
 ---@field onSoftReset? function @Soft resets that are not complete, for example, addiciton resets satisfaction level but remains addiction
+---@field subStatuses table<SecondaryName, boolean> @Keep track of all existing sub statuses, all static statuses will be added instantly, but dynamic statuses are added as they are loaded/added/set
 
 ---@class DirectEffectInput : DirectEffect
 ---@field name QueueKey

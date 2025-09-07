@@ -272,6 +272,9 @@ function AddToStatus(plyId, statusNames, amount, skipEnsuring)
     end
 
     local hasAdded = Cache.existingStatuses[statusNames[1]].onAdd(plyId, statusNames, amount)
+    if (IsStatusPriority(statusNames[1], statusNames[2])) then
+        AddPriorityPlayer(plyId)
+    end
 
     if (hasAdded) then
         SyncPlayerStatus(plyId, statusNames[1])
