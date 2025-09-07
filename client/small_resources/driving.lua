@@ -28,7 +28,6 @@ AddStateBagChangeHandler("currentVehicle", nil, function(bagName, key, value)
 		local avgSpeed = totalSpeed / intervals
 		if (avgSpeed > config.minSpeed) then
 			local val = math.random(math.floor(config.gainAmount.min * 10), math.floor(config.gainAmount.max * 10)) / 10
-			print("val", val)
 
 			TriggerServerEvent('hud:server:GainStress', val)
 		end
