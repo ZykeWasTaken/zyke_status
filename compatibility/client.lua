@@ -57,14 +57,13 @@ end
 ---@diagnostic disable-next-line: duplicate-set-field
 function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     if (Framework == "ESX") then
-        local baseStatus = {
-            convertStatus("hunger"),
-            convertStatus("thirst"),
-            convertStatus("stress"),
-            convertStatus("drunk"),
-        }
+        local statuses = {}
+        statuses[#statuses+1] = convertStatus("hunger")
+        statuses[#statuses+1] = convertStatus("thirst")
+        statuses[#statuses+1] = convertStatus("stress")
+        statuses[#statuses+1] = convertStatus("drunk")
 
-        return baseStatus
+        return statuses
     elseif (Framework == "QB") then
         local baseStatus = {}
 
