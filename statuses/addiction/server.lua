@@ -103,8 +103,13 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
 
         -- Remove from the addiction value
         data.values[secondary].addiction = Z.numbers.round(data.values[secondary].addiction - amount, Config.Settings.decimalAccuracy)
-        if (data.values[secondary].addiction < 0.0) then
+        if (data.values[secondary].addiction <= 0.0) then
             data.values[secondary].addiction = 0.0
+
+            -- if we have no addiciton, and our satisfaction is at 100, remove the status
+            if (data.values[secondary].value >= 100.0) then
+                data.values[secondary] = nil
+            end
         end
 
         -- Don't touch the satisfaction value for now
@@ -117,11 +122,11 @@ RegisterStatusType(primary, true, {value = 100.0, addiction = 0.0},
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
-        data.values[secondary].addiction = 0.0
-        data.values[secondary].value = 100.0
+        data.values[secondary] = nil
 
         return true
     end,
+    -- For soft resetting, we don't reset the addiction value, since that should be persistent
     onSoftReset = function(plyId, statusNames)
         local secondary = statusNames[2] or primary
 

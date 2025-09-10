@@ -41,8 +41,8 @@ RegisterStatusType(primary, false, {value = 0.0},
 
         -- Remopve from the drunk value
         data.values[secondary].value = Z.numbers.round(data.values[secondary].value - amount, Config.Settings.decimalAccuracy)
-        if (data.values[secondary].value < 0.0) then
-            data.values[secondary].value = 0.0
+        if (data.values[secondary].value <= 0.0) then
+            data.values[secondary] = nil
         end
 
         return true
@@ -53,7 +53,7 @@ RegisterStatusType(primary, false, {value = 0.0},
         local data = GetPlayerBaseStatusTable(plyId, primary)
         if (not data) then return end
 
-        data.values[secondary].value = 0.0
+        data.values[secondary] = nil
 
         return true
     end
