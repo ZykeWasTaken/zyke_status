@@ -4,21 +4,6 @@
 ---@param plyId PlayerId
 local function ensureBaseStatusValues(plyId)
     Cache.statuses[plyId] = {}
-
-    for status, statusSettings in pairs(Cache.existingStatuses) do
-        local values = {}
-
-        -- If it isn't a multi, just set the base value
-        if (statusSettings.multi ~= true) then
-            values = {
-                [status] = {value = 0.0}
-            }
-        end
-
-        Cache.statuses[plyId][status] = {
-            values = values
-        }
-    end
 end
 
 ---@param plyId PlayerId
