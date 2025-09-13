@@ -34,6 +34,15 @@ Config.Status.high = {
             }
         }
     },
+    ["thc"] = {
+        value = {drain = 0.05},
+        effect = {
+            {threshold = 10.0, screenEffect = "BeastLaunch02"},
+            {threshold = 30.0, walkingStyle = "move_m@buzzed"},
+            {threshold = 60.0, walkingStyle = "move_m@drunk@slightlydrunk"},
+            {threshold = 80.0, walkingStyle = "move_m@drunk@a"},
+        }
+    },
     -- ex. whippets, nitrous oxide, usually quick highs by limiting oxygen to the brain
     -- We have quick highs & dizzy effects, if we reach closer to 100% high we will have very dangerous effects since the brain is completely deprived of oxygen
     ["n2o"] = {
