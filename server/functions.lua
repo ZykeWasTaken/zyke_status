@@ -140,13 +140,13 @@ function SyncPlayerStatus(plyId, primary)
                     if (not ply) then return end
 
                     if (UsingQbox) then
-                        exports.qbx_core:SetMetadata(plyId, "hunger", compatStatus.hunger)
-                        exports.qbx_core:SetMetadata(plyId, "thirst", compatStatus.thirst)
-                        exports.qbx_core:SetMetadata(plyId, "stress", compatStatus.stress)
+                        exports.qbx_core:SetMetadata(plyId, "hunger", compatStatus?.hunger or 0.0)
+                        exports.qbx_core:SetMetadata(plyId, "thirst", compatStatus?.thirst or 0.0)
+                        exports.qbx_core:SetMetadata(plyId, "stress", compatStatus?.stress or 0.0)
                     else
-                        ply.Functions.SetMetaData("hunger", compatStatus.hunger)
-                        ply.Functions.SetMetaData("thirst", compatStatus.thirst)
-                        ply.Functions.SetMetaData("stress", compatStatus.stress)
+                        ply.Functions.SetMetaData("hunger", compatStatus?.hunger or 0.0)
+                        ply.Functions.SetMetaData("thirst", compatStatus?.thirst or 0.0)
+                        ply.Functions.SetMetaData("stress", compatStatus?.stress or 0.0)
                     end
                 end
 
