@@ -58,5 +58,15 @@ Config.Status.high = {
             {threshold = 70.0, screenEffect = "DaxTrip03", walkingStyle = "move_m@drunk@verydrunk", stumble = 1.5, damage = 1.0},
             {threshold = 90.0, damage = 3.0},
         }
+    },
+    ["fentanyl"] = {
+        value = {drain = 0.05},
+        effect = {
+            {threshold = 5.0, screenEffect = "BeastLaunch02", walkingStyle = "move_m@buzzed", damage = 1.0},
+            {threshold = 10.0, screenEffect = "DaxTrip03", walkingStyle = "move_m@drunk@verydrunk", stumble = 1.5, damage = 2.0},
+            {threshold = 20.0, damage = 3.0},
+            {threshold = 30.0, damage = 3.0},
+            {threshold = 40.0, damage = 3.0},
+        }
     }
 }
