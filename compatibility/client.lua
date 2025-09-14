@@ -44,7 +44,7 @@ local function convertStatus(name)
     if (Framework == "ESX") then
         if (not data[name]) then return defaultReturn end
 
-        local val = data[name].values?[name]?.value
+        local val = data?[name]?.values?[name]?.value
 
         return val ~= nil and {name = name, val = math.floor(val * 10000), percent = val, getPercent = function() return val end} or defaultReturn
     elseif (Framework == "QB") then
