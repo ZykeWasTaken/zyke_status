@@ -52,9 +52,15 @@ function EnsurePlayerSubStatus(plyId, statusNames)
     local primary = statusNames[1]
     local secondary = statusNames[2] or statusNames[1]
 
-    if (status and not status[primary].values[secondary]) then
-        ---@diagnostic disable-next-line: missing-fields
-        Cache.statuses[plyId][primary].values[secondary] = {}
+    if (status) then
+        if (not status[primary]) then
+            Cache.statuses[plyId][primary] = {values = {}}
+        end
+
+        if (not status[primary].values[secondary]) then
+            ---@diagnostic disable-next-line: missing-fields
+            Cache.statuses[plyId][primary].values[secondary] = {}
+        end
 
         for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do
             Cache.statuses[plyId][primary].values[secondary][key] = baseValue
