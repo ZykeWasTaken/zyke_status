@@ -114,7 +114,10 @@ CreateThread(function()
         local shouldInclude = false
 
         for i = 1, #toUpdate do
-            local val = plyStatuses[plyId][primary]?.values?[toUpdate[i]]?.value
+            local plyStatus = plyStatuses[plyId]
+            local _toUpdate = toUpdate[i] -- We have to pre-define this, because nullish checks will otherwise throw errors
+            local val = plyStatus?[primary]?.values?[_toUpdate]?.value
+
             local hasValue = val ~= nil
 
             -- Skip if we don't have the status, or if it is at 0
