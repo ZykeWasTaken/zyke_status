@@ -12,6 +12,8 @@ function GetRawStatus(statusNames)
 
     if (not Cache.statuses) then return {value = 0.0}, false end
     if (not Cache.statuses[primary]) then return {value = 0.0}, false end
+    if (not Cache.statuses[primary].values) then return {value = 0.0}, false end
+    if (not Cache.statuses[primary].values[secondary]) then return {value = 0.0}, false end
 
     return Cache.statuses[primary].values[secondary], true
 end
