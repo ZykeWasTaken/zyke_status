@@ -41,7 +41,8 @@ Config.Settings = {
             ["ts_hud"] = 1,
             ["vms_hud"] = 1,
             ["mHud"] = 1,
-            ["ZSX_UIV2"] = 1
+            ["ZSX_UIV2"] = 1,
+            ["envi-hud"] = 1
         }
     },
     stressEvents = {
