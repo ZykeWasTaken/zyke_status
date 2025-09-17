@@ -6,7 +6,7 @@ local baseValues = {}
 
 ---@param plyId PlayerId
 local function ensureBaseStatusValues(plyId)
-    Cache.statuses[plyId] = baseValues
+    Cache.statuses[plyId] = Z.table.copy(baseValues)
 end
 
 ---@param plyId PlayerId
