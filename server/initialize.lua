@@ -1,9 +1,12 @@
 -- Initializes all values that need to exist, such as players
 -- All caches, functions etc have to be defined before
 
+-- Hoisting this, gets populated once the base values have been registered
+local baseValues = {}
+
 ---@param plyId PlayerId
 local function ensureBaseStatusValues(plyId)
-    Cache.statuses[plyId] = {}
+    Cache.statuses[plyId] = baseValues
 end
 
 ---@param plyId PlayerId
@@ -72,11 +75,6 @@ end
 
 while (not QueriesExecuted) do Wait(10) end
 
-local players = Z.getPlayers()
-for i = 1, #players do
-    initializePlayer(players[i])
-end
-
 ---@param plyId PlayerId
 AddEventHandler("zyke_lib:OnCharacterSelect", function(plyId)
     initializePlayer(plyId)
@@ -88,5 +86,43 @@ AddEventHandler("zyke_lib:OnCharacterLogout", function(plyId)
     Cache.statuses[plyId] = nil
     Cache.directEffects[plyId] = nil
 end)
+
+Wait(1000)
+
+local reversedStatuses = GetReversedStatuses()
+for status, values in pairs(Cache.existingStatuses) do
+    baseValues[status] = {}
+
+    -- Iterate the defined statuses where baseValues is defined to be above 0
+
+    -- Always skip addiction, since that should not be part of the default stats
+    baseValues[status].values = {}
+    if (status ~= "addiction") then
+        for key, baseValue in pairs(values.baseValues) do
+            if (
+                reversedStatuses[status] == true and baseValue > 0.0
+            ) then
+                for secName, statusSett in pairs(Config.Status[status]) do
+                    local _secName = values.multi == false and status or secName
+
+                    if (baseValues[status].values[_secName] == nil) then
+                        baseValues[status].values[_secName] = {}
+                    end
+
+                    baseValues[status].values[_secName][key] = baseValue
+                end
+            end
+        end
+    end
+
+    if (Z.table.count(baseValues[status].values) == 0) then
+        baseValues[status] = nil
+    end
+end
+
+local players = Z.getPlayers()
+for i = 1, #players do
+    initializePlayer(players[i])
+end
 
 TriggerClientEvent("zyke_status:HasInitialized", -1)

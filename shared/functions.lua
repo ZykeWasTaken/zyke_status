@@ -30,6 +30,11 @@ local reversed = {
     ["thirst"] = true,
 }
 
+---@return {[string]: boolean}
+function GetReversedStatuses()
+    return reversed
+end
+
 -- Checks the threshold and if you should run the effect
 -- Some effects may be reversed, so we define it in here
 ---@param name StatusName

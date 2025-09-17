@@ -188,6 +188,8 @@ exports("GetStatus", GetStatus)
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function RemoveFromStatus(plyId, statusNames, amount, skipEnsuring)
+    if (Cache.statuses[plyId] == nil) then return end
+
     local isValid = IsValidStatus(statusNames)
     if (not isValid) then print(("Invalid status has attempted to be removed: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
@@ -211,6 +213,8 @@ local qbActions = Framework == "QB" and {["stress"] = true, ["hunger"] = true, [
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function SetStatusValue(plyId, statusNames, amount, skipEnsuring)
+    if (Cache.statuses[plyId] == nil) then return end
+
     local isValid = IsValidStatus(statusNames)
     if (not isValid) then print(("Invalid status has attempted to be set: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
@@ -264,6 +268,8 @@ end
 ---@param amount number
 ---@param skipEnsuring? boolean @Only use if you have a pool with ensured players
 function AddToStatus(plyId, statusNames, amount, skipEnsuring)
+    if (Cache.statuses[plyId] == nil) then return end
+
     local isValid = IsValidStatus(statusNames)
     if (not isValid) then print(("Invalid status has attempted to be added: %s %s, invoker: %s"):format(tostring(statusNames[1]), tostring(statusNames[2] or statusNames[1]), GetInvokingResource())) return end
 
