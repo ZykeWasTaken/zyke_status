@@ -150,8 +150,8 @@ function SyncPlayerStatus(plyId, primary)
                     end
                 end
 
-                TriggerClientEvent("hud:client:UpdateNeeds", plyId, compatStatus.hunger, compatStatus.thirst, statuses)
-                TriggerClientEvent("hud:client:UpdateStress", plyId, compatStatus.stress)
+                TriggerClientEvent("hud:client:UpdateNeeds", plyId, compatStatus?.hunger or 0, compatStatus?.thirst or 0, statuses)
+                TriggerClientEvent("hud:client:UpdateStress", plyId, compatStatus?.stress or 0)
             end
         else
             TriggerClientEvent("zyke_status:SyncStatus", plyId, statuses)
