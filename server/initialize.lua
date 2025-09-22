@@ -66,7 +66,9 @@ function EnsurePlayerSubStatus(plyId, statusNames)
         end
 
         for key, baseValue in pairs(Cache.existingStatuses[primary].baseValues) do
-            Cache.statuses[plyId][primary].values[secondary][key] = baseValue
+            if (Cache.statuses[plyId][primary].values[secondary][key] == nil) then
+                Cache.statuses[plyId][primary].values[secondary][key] = baseValue
+            end
         end
     end
 
