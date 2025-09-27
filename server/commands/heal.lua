@@ -20,20 +20,50 @@ if (#cmdArray > 1) then
 	---@param plyId PlayerId -- Invoker
 	---@param args string[]
 	Z.registerCommand(cmdArray, function(plyId, args)
+		local isServer = plyId == 0
+
 		local targetId
-		if (args[1] == nil or #args[1] == 0) then
+		if (
+			(args[1] == nil or #args[1] == 0)
+			and not isServer
+		) then
 			targetId = plyId
-		elseif (args[1] == "me" or args[1] == "self") then
+		elseif (
+			(args[1] == "me" or args[1] == "self")
+			and not isServer
+		) then
 			targetId = plyId
 		else
 			targetId = tonumber(args[1])
 		end
 
 		if (not targetId) then
-			Z.notify(plyId, "invalidTargetId")
+			if (isServer) then
+				print("You can not heal the server.")
+			else
+				Z.notify(plyId, "invalidTargetId")
+			end
+
 			return
 		end
 
+		if (not Z.isPlayerIdValid(targetId)) then
+			if (isServer) then
+				print("Invalid target id.")
+			else
+				Z.notify(plyId, "invalidTargetId")
+			end
+
+			return
+		end
+
+		if (isServer) then
+			print("Player has been healed.")
+		else
+			Z.notify(plyId, "playerHealed")
+		end
+
+		---@diagnostic disable-next-line: param-type-mismatch @Has to be a valid id at this point, can not be a number
 		HealPlayer(targetId)
 	end, "Heal a target, and restore their statuses", {
 		{"target", "Target id, me or empty for self"},
