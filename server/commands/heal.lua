@@ -34,7 +34,7 @@ if (#cmdArray > 1) then
 			return
 		end
 
-		HealPlayer(plyId)
+		HealPlayer(targetId)
 	end, "Heal a target, and restore their statuses", {
 		{"target", "Target id, me or empty for self"},
 	}, {
