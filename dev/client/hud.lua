@@ -35,6 +35,12 @@ local function devHud()
             local sleep = Cache.statuses and 1 or 3000
 
             if (Cache.statuses) then
+                local armor = GetPedArmour(PlayerPedId())
+                local health = GetEntityHealth(PlayerPedId())
+
+                drawing:addToQueue("armor: " .. armor)
+                drawing:addToQueue("health: " .. health)
+
                 for baseStatus, statusData in pairs(Cache.statuses) do
                     for status, subData in pairs(statusData.values) do
                         for valueKey, value in pairs(subData) do
