@@ -16,6 +16,7 @@ local stats = {
 ---@param max? number @The max value you can reach
 function AddToStat(stat, amount, max)
 	if (not stats[stat]) then return end -- Make sure we can even process this stat
+	if (max) then max = math.floor(max) end -- If we don't floor, it will just set the value to the Gta max when using the natives with a decimal
 
 	local isPositive = amount > 0.0
 	local newVal = stats[stat] + amount
