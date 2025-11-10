@@ -75,7 +75,12 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
     return {}
 end
 
+---@param name StatusName
+---@param cb function
 RegisterNetEvent("esx_status:getStatus", function(name, cb)
+    -- Mimick what the default esx_status event does, it doesn't cb anything unless you have cached values
+    if (not Cache.statuses or not Cache.statuses[name]) then return end
+
     cb(convertStatus(name))
 end)
 
