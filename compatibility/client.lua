@@ -44,10 +44,17 @@ local function convertStatus(name)
     if (Framework == "ESX") then
         if (not data[name]) then return defaultReturn end
 
-        local val = data?[name]?.values?[name]?.value
+        -- Grab the status from our cache, but also check if it was initialized
+        -- If the status was not initialized, we mimick the default esx_status behaviour of not callbacking anything
+        -- If you enable `dummyReturn`, you will always get a value back, so this behaviour would depend on each server's needs
+        local rawStatus, wasInitialized = GetRawStatus({name, name})
+        if (not wasInitialized) then return defaultReturn end
+
+        local val = rawStatus?.value
 
         return val ~= nil and {name = name, val = math.floor(val * 10000), percent = val, getPercent = function() return val end} or defaultReturn
     elseif (Framework == "QB") then
+        -- Unused for now
     end
 end
 
@@ -78,10 +85,12 @@ end
 ---@param name StatusName
 ---@param cb function
 RegisterNetEvent("esx_status:getStatus", function(name, cb)
-    -- Mimick what the default esx_status event does, it doesn't cb anything unless you have cached values
-    if (not Cache.statuses or not Cache.statuses[name]) then return end
+    local status = convertStatus(name)
 
-    cb(convertStatus(name))
+    -- Mimick what the default esx_status event does, it doesn't cb anything unless you have cached values
+    if (not status) then return end
+
+    cb(status)
 end)
 
 -- We catch this to heal the player and reset our statuses properly
