@@ -69,7 +69,8 @@ end)
 ---@return table | number | nil
 ---@diagnostic disable-next-line: duplicate-set-field
 local function convertStatus(plyId, name)
-    local defaultESX, defaultQB = {name = name, val = 1000000, percent = 100}, 100
+    local dummyReturnVal = GetReversedStatuses()[name] == true and 100.0 or 0.0
+    local defaultESX, defaultQB = {name = name, val = dummyReturnVal * 10000, percent = dummyReturnVal, getPercent = function() return dummyReturnVal end}, dummyReturnVal
     local defaultReturn = Config.Settings.backwardsCompatibility.dummyReturn and (Framework == "ESX" and defaultESX or defaultQB) or nil
 
     local data = Cache.statuses[plyId]
