@@ -79,6 +79,7 @@ local function convertStatus(plyId, name)
     if (Framework == "ESX") then
         if (not data[name]) then return defaultReturn end
 
+        -- Same as in compatibility/client.lua
         local val = data?[name]?.values?[name]?.value
 
         return val ~= nil and  {name = name, val = math.floor(val * 10000), percent = val} or defaultReturn
@@ -117,7 +118,12 @@ function CompatibilityFuncs.CreateBasePlayerStatus(plyId)
 end
 
 RegisterNetEvent("esx_status:getStatus", function(target, name, cb)
-    cb(convertStatus(target, name))
+    local status = convertStatus(target, name)
+
+    -- Mimick what the default esx_status event does, it doesn't cb anything unless you have cached values
+    if (not status) then return end
+
+    cb(status)
 end)
 
 if (Config.Settings.backwardsCompatibility.addThirstEvent) then
