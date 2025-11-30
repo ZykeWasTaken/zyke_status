@@ -20,14 +20,14 @@ function ParseCommandTarget(invokerId, args)
 		targetId = defaultTarget
 	end
 
-	local isTargetServer = targetId == 0
-	if (isTargetServer) then
-		return 0, nil
-	end
-
 	targetId = math.tointeger(targetId or targetArg)
 	if (targetId == nil) then
 		return nil, "invalidTargetId"
+	end
+
+	local isTargetServer = targetId == 0
+	if (isTargetServer) then
+		return 0, nil
 	end
 
 	if (not Z.isPlayerIdValid(targetId)) then
