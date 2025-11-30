@@ -21,6 +21,7 @@ shared_script "@zyke_lib/imports.lua"
 
 loader {
     "server:@oxmysql/lib/MySQL.lua",
+    "server:@zyke_lib/versionchecker.lua",
 
     -- Shared files
     "shared/config.lua",
