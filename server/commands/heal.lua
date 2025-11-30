@@ -16,7 +16,7 @@ if (not overwrite) then
 	end
 end
 
-if (#cmdArray > 1) then
+if (#cmdArray > 0) then
 	---@param plyId PlayerId -- Invoker
 	---@param args string[]
 	Z.registerCommand(cmdArray, function(plyId, args)
