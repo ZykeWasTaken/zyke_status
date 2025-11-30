@@ -33,3 +33,7 @@ RegisterNetEvent("zyke_lib:OnLoaderFinished", function()
 
     init()
 end)
+
+AddEventHandler("zyke_status:OnPlayerStatusUnfrozen", function()
+    init()
+end)

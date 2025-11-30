@@ -154,3 +154,7 @@ end)
 AddEventHandler("zyke_lib:OnCharacterLogout", function()
     inLoop = false
 end)
+
+AddEventHandler("zyke_status:OnPlayerStatusFrozen", function()
+    inLoop = false
+end)

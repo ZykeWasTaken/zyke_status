@@ -40,6 +40,10 @@ RegisterNetEvent("zyke_lib:OnCharacterLogout", function()
     Cache.statuses = nil
 end)
 
+AddEventHandler("zyke_status:OnPlayerStatusFrozen", function()
+    ClearEffectQueue()
+end)
+
 RegisterNetEvent("zyke_status:OnHealPlayer", function()
     SetEntityHealth(PlayerPedId(), GetPedMaxHealth(PlayerPedId()))
     TriggerServerEvent("zyke_status:OnHealPlayer")

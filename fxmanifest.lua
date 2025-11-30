@@ -56,6 +56,7 @@ loader {
     "server/functions.lua",
 
     "server/events.lua",
+    "server/freeze_status.lua",
 
     "server/direct_effects/functions.lua",
     "server/direct_effects/events.lua",
@@ -66,6 +67,7 @@ loader {
 
     "server/utils/command_utils.lua",
     "server/commands/heal.lua",
+    "server/commands/freeze_status.lua",
 
     "server/initialize.lua",
 

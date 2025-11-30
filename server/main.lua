@@ -188,16 +188,25 @@ CreateThread(function()
 
             ---@type {[1]: PlayerId, [2]: PlyStatusesToUpdate[]}[]
             local plysToUpdate = {}
+            local frozenPlys = GetFrozenPlayers()
 
             -- If high priority, only iterate those players
             if (isHighPriority) then
                 for plyId in pairs(priorityPlayers) do
+                    if (frozenPlys[plyId]) then goto continue end
+
                     addPlayerToUpdate(primary, toUpdate, plyId, plysToUpdate, multipliers)
+
+                    ::continue::
                 end
             else
                 -- If enough time has gone by and this is a slow interval hitting, we iterate all players
                 for plyId in pairs(cachedPlys) do
+                    if (frozenPlys[plyId]) then goto continue end
+
                     addPlayerToUpdate(primary, toUpdate, plyId, plysToUpdate, multipliers)
+
+                    ::continue::
                 end
             end
 

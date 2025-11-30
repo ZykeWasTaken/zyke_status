@@ -3,11 +3,14 @@ local hudState = GetResourceKvpInt("zyke_status:dev_hud_enabled") or 0
 local Drawing = {}
 Drawing.__index = Drawing
 
+local currDrawing = nil
+
 function Drawing:new()
     local self = setmetatable({}, Drawing)
 
     self.queue = {}
     self.offset = 0.025
+    self.frozenStatus = false
 
     return self
 end
@@ -27,12 +30,22 @@ function Drawing:reset()
     self.queue = {}
 end
 
+---@param status boolean
+function Drawing:setFrozenStatus(status)
+    self.frozenStatus = status
+end
+
 local function devHud()
     CreateThread(function()
         local drawing = Drawing:new()
+        currDrawing = drawing
 
         while (hudState == 1) do
             local sleep = Cache.statuses and 1 or 3000
+
+            if (drawing.frozenStatus == true) then
+                drawing:addToQueue("STATUSES FROZEN")
+            end
 
             if (Cache.statuses) then
                 local armor = GetPedArmour(PlayerPedId())
@@ -70,5 +83,17 @@ RegisterCommand("status:dev_hud", function()
 
     devHud()
 end, false)
+
+RegisterNetEvent("zyke_status:OnPlayerStatusFrozen", function()
+    if (not currDrawing) then return end
+
+    currDrawing:setFrozenStatus(true)
+end)
+
+RegisterNetEvent("zyke_status:OnPlayerStatusUnfrozen", function()
+    if (not currDrawing) then return end
+
+    currDrawing:setFrozenStatus(false)
+end)
 
 devHud()
