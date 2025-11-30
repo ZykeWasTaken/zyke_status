@@ -37,7 +37,7 @@ function UnfreezeStatus(plyId)
 	Z.debug("Unfroze status for", plyId)
 end
 
----@return FrozenPlayer[]
+---@return table<PlayerId, FrozenPlayer>
 function GetFrozenPlayers()
 	return frozenPlayers
 end
