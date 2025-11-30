@@ -64,6 +64,7 @@ loader {
     "shortcuts/server.lua",
     "compatibility/server.lua",
 
+    "server/utils/command_utils.lua",
     "server/commands/heal.lua",
 
     "server/initialize.lua",
