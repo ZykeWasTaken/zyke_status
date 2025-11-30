@@ -4,6 +4,7 @@ return {
     ["noTargetIdentifier"] = {msg = "Could not find character identifier.", type = "error"},
     ["invalidTargetId"] = {msg = "Your target id was invalid.", type = "error"},
     ["playerHealed"] = {msg = "Player has been healed.", type = "success"},
+    ["noServerHeal"] = {msg = "You can not heal the server.", type = "error"},
 
     -- Dev command stuff
     ["invalidAmount"] = {msg = "Invalid amount.", type = "error"},
