@@ -353,8 +353,9 @@ function SoftResetStatuses(plyId)
             end
         end
     end
-
 end
+
+exports("SoftResetStatuses", SoftResetStatuses)
 
 local playerHealAuth = {}
 
