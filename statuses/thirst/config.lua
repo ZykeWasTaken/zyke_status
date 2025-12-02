@@ -5,9 +5,32 @@ Config.Status.thirst = {
             drain = 0.01,
         },
         effect = {
-            {threshold = 20.0, screenEffect = "BeastLaunch02"},
-            {threshold = 10.0, blockSprinting = true, blockJumping = true, walkingStyle = "move_m@sad@a"},
-            {threshold = 0.0, damage = 0.25}
+            {
+                -- Minor shaking & screen effect
+                threshold = 20.0,
+                screenEffect = {value = "BeastLaunch02", intensity = 0.25},
+                cameraShaking = {value = "DRUNK_SHAKE", intensity = 0.2}
+            },
+            {
+                -- Noticeable shaking & screen effect
+                -- Due to dehydration, block sprinting & jumping
+                -- Walking style is more sluggish
+                threshold = 10.0,
+                screenEffect = {value = "BeastLaunch02", intensity = 0.5},
+                cameraShaking = {value = "DRUNK_SHAKE", intensity = 0.35},
+                blockSprinting = true,
+                blockJumping = true,
+                walkingStyle = "move_m@sad@a"
+            },
+            {
+                -- Complete dehydration
+                -- Very noticeable shaking & screen effect, impaired vision
+                -- Taking slow damage
+                threshold = 0.0,
+                screenEffect = {value = "BeastLaunch02", intensity = 1.0},
+                cameraShaking = {value = "DRUNK_SHAKE", intensity = 0.75},
+                damage = 0.25
+            },
         }
     }
 }

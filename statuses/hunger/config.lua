@@ -5,9 +5,32 @@ Config.Status.hunger = {
             drain = 0.005,
         },
         effect = {
-            {threshold = 20.0, screenEffect = "WeaponUpgrade"}, -- A screen effect to simulate that you are being affected by hunger
-            {threshold = 10.0, walkingStyle = "move_m@sad@a", blockSprinting = true, blockJumping = true}, -- Walking more sluggish, block high-energy actions like sprinting and jumping
-            {threshold = 0.0, damage = 0.25}, -- Start taking some damage
+            {
+                -- Start being hungry, slight screen effect
+                threshold = 20.0,
+                screenEffect = {value = "WeaponUpgrade", intensity = 0.6},
+            },
+            {
+                -- Start being very hungry, noticeable screen effect
+                -- Very slight camera shaking
+                threshold = 10.0,
+                screenEffect = {value = "WeaponUpgrade", intensity = 0.7},
+                cameraShaking = {value = "DRUNK_SHAKE", intensity = 0.2},
+                walkingStyle = "move_m@sad@a",
+            },
+            {
+                -- Complete starvation
+                -- Very noticeable screen effect, impaired vision
+                -- Taking slow damage
+                -- Noticeable camera shaking, feeling dizzy
+                -- Restricted movement due to low energy levels
+                threshold = 0.0,
+                screenEffect = {value = "WeaponUpgrade", intensity = 0.8},
+                cameraShaking = {value = "DRUNK_SHAKE", intensity = 0.8},
+                blockSprinting = true,
+                blockJumping = true,
+                damage = 0.25
+            },
         }
     }
 }
