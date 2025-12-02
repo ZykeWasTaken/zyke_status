@@ -2,6 +2,9 @@
 -- When walking it's very rare, but when running it will frequently happen
 -- The effect value will multiply the chance at the very end, so 2.0 value will double your chance of stumbling
 
+---@class StumbleValue
+---@field value number
+
 local baseChance = 1 -- 1% chance to stumble, every second, should be low if we're just standing still
 local walkingAddition = 3 -- 3% EXTRA chance to stumble, added on top of baseChance
 local runningAddition = 10 -- 10% EXTRA chance to stumble, added on top of baseChance, walkingAddition is not added if runningAddition is being added
@@ -10,9 +13,25 @@ local runningAddition = 10 -- 10% EXTRA chance to stumble, added on top of baseC
 local value = 0.0
 
 RegisterQueueKey("stumble", {
+    ---@param val StumbleValue | number
+    ---@return StumbleValue
+    normalize = function(val)
+        return {
+            value = val.value or 0.0
+        }
+    end,
+    ---@param val1 StumbleValue
+    ---@param val2 StumbleValue
+    ---@return integer
+    compare = function(val1, val2)
+        -- Numeric comparison - HIGHEST stumble chance wins (most severe)
+        if (val1.value > val2.value) then return -1
+        elseif (val1.value < val2.value) then return 1
+        else return 0 end
+    end,
+	---@param val StumbleValue
     onStart = function(val)
-		if (type(val) ~= "number") then return end
-        value = val
+        value = val.value
 
         CreateThread(function()
             while (value ~= 0.0) do
@@ -40,10 +59,9 @@ RegisterQueueKey("stumble", {
             end
         end)
     end,
+	---@param val StumbleValue
 	onTick = function(val)
-		if (type(val) ~= "number") then return end
-
-		value = val
+		value = val.value
 	end,
 	onStop = function()
 		value = 0.0

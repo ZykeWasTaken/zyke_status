@@ -1,8 +1,28 @@
 -- Fades a blurry overlay every now and then
 
+---@class BlurryVisionValue
+---@field value boolean
+
 local active = false
 
 RegisterQueueKey("blurryVision", {
+    ---@param val BlurryVisionValue | true
+    ---@return BlurryVisionValue
+    normalize = function(val)
+        return {
+            value = val.value or true
+        }
+    end,
+    ---@param thresholdIdx1 integer
+    ---@param thresholdIdx2 integer
+    ---@return integer
+    compare = function(_, _, thresholdIdx1, thresholdIdx2)
+        -- Could support intensity metadata in future
+        -- For now, use threshold
+        if (thresholdIdx1 > thresholdIdx2) then return -1
+        elseif (thresholdIdx1 < thresholdIdx2) then return 1
+        else return 0 end
+    end,
     onStart = function()
         active = true
 

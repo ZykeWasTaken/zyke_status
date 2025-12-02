@@ -5,10 +5,30 @@
 -- Please note that reducing the speed too much may look incredibly weird and act somewhat weird
 -- We recommend not going lower than 0.8, paired with some modified running perhaps
 
+---@class MovementSpeedValue
+---@field value number
+
 RegisterQueueKey("movementSpeed", {
+    ---@param val MovementSpeedValue | number
+    ---@return MovementSpeedValue
+    normalize = function(val)
+        return {
+            value = val.value or 1.0
+        }
+    end,
+    ---@param val1 MovementSpeedValue
+    ---@param val2 MovementSpeedValue
+    ---@return integer
+    compare = function(val1, val2)
+        -- Numeric comparison - HIGHEST speed wins (least restrictive)
+        if (val1.value > val2.value) then return -1
+        elseif (val1.value < val2.value) then return 1
+        else return 0 end
+    end,
+    ---@param val MovementSpeedValue
     onTick = function(val)
-        SetRunSprintMultiplierForPlayer(PlayerId(), val)
-        SetEntityMaxSpeed(PlayerPedId(), val * 7.06)
+        SetRunSprintMultiplierForPlayer(PlayerId(), val.value)
+        SetEntityMaxSpeed(PlayerPedId(), val.value * 7.06)
     end,
     onResourceStop = function()
         SetRunSprintMultiplierForPlayer(PlayerId(), 1.0)
