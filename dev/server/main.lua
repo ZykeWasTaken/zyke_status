@@ -31,6 +31,15 @@ end, "Reset Player Status", {
     {"Player Id", "Player Id, or empty to use yourself"}
 })
 
+-- Forcefully save the status of yourself
+-- Mainly used for my own development when restarting & I want to save some initial state to resume from for each script restart
+Z.registerCommand({"status_save"}, function(plyId, args)
+    if (not isAllowed(plyId)) then Z.notify(plyId, "noPermission") return end
+
+    SavePlayerToDatabase(plyId)
+    Z.notify(plyId, "statusSaved")
+end)
+
 -- QB eating testing
 -- RegisterCommand("hunger_test", function(source, args)
 --     -- local ply = Z.getPlayerData(source)
