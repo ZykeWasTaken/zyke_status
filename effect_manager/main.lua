@@ -15,7 +15,9 @@ function RegisterEffectFunctions(name)
     if (not statusSettings) then return end
 
     EffectFunctions[name] = {
-        onStart = function(val, thresholdIdx)
+        onStart = function(val, thresholdIdx, _, highestThresholdIdx)
+            -- print("onStart", name, thresholdIdx, highestThresholdIdx)
+
             -- Loops all of the existing queue keys, so that we can run all of the effects and queue them
             -- So for the thresholdIdxs, simply send in what thresholdIdx to run, and it will add all of them to the queue
             local keys = GetExistingQueueKeys()
@@ -24,8 +26,34 @@ function RegisterEffectFunctions(name)
                     AddToQueue(keys[i], name, thresholdIdx)
                 end
             end
+
+            -- Notifications
+            -- These are not reliant on the queue system & will play once a threshold has been reached
+
+            local notif = statusSettings.effect[thresholdIdx].notification
+            if (notif) then
+                -- Avoid a spam of notifications if you surpass multiple trehsholds at once
+                -- This ensures only the highest threshold notification is played
+                -- You can use the `force` option to force the notification to play regardless of the last threshold hit
+                --- ex. You fly past 5 different threholds, only the last threshold will actually play a notification,
+                --- but if you add the `force` option, it will play the last notification along with each notification that has the force option that you surpass
+                if (highestThresholdIdx == thresholdIdx or notif?.force) then
+                    if (notif.play == "start") then
+                        -- We check to see if a translations exists, and if so, use it
+                        -- We also allow direct notification messages without any translations for easy of configuration
+                        local translation = Translations[notif.value]
+                        if (not translation) then
+                            Z.notify(notif.value, nil, nil, true, notif.type)
+                        else
+                            Z.notify(notif.value, notif.type)
+                        end
+                    end
+                end
+            end
         end,
-        onTick = function(val, thresholdIdx)
+        onTick = function(val, thresholdIdx, _, highestThresholdIdx)
+            -- print("onTick", name, thresholdIdx, highestThresholdIdx)
+
             if (statusSettings.effect[thresholdIdx].damage) then
                 local amount = statusSettings.effect[thresholdIdx].damage
                 AddToStat("health", -amount)
@@ -61,7 +89,8 @@ end
 ---@param fnType "onStart" | "onTick" | "onStop"
 ---@param val number
 ---@param thresholdIdx integer
-function ExecuteStatusEffect(name, fnType, val, thresholdIdx)
+---@param highestThresholdIdx integer
+function ExecuteStatusEffect(name, fnType, val, thresholdIdx, highestThresholdIdx)
     local _, _, full = SeparateStatusName(name)
 
     -- Temp to ensure the effects exist
@@ -69,7 +98,7 @@ function ExecuteStatusEffect(name, fnType, val, thresholdIdx)
         RegisterEffectFunctions(name)
     end
 
-    EffectFunctions[full][fnType](val, thresholdIdx, prevThresholdIdxs[full])
+    EffectFunctions[full][fnType](val, thresholdIdx, prevThresholdIdxs[full], highestThresholdIdx)
     prevThresholdIdxs[full] = thresholdIdx
 end
 
@@ -115,14 +144,14 @@ AddEventHandler("zyke_status:OnStatusFetched", function()
                 -- If the effect is not registered at all, run onStop for all of the existing thresholds that were previously ran
                 if (availableEffects[statusName] == nil) then
                     for i = values.thresholdIdx, 1, -1 do
-                        ExecuteStatusEffect(statusName, "onStop", values.value, i)
+                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx)
                     end
 
                     prevThresholdIdxs[statusName] = nil
                 elseif (availableEffects[statusName].thresholdIdx < values.thresholdIdx) then
                     -- If the threshold is less than previously, run the onStop for all of the thresholds that stopped running
                     for i = values.thresholdIdx, availableEffects[statusName].thresholdIdx + 1, -1 do
-                        ExecuteStatusEffect(statusName, "onStop", values.value, i)
+                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx)
                     end
                 end
             end
@@ -132,15 +161,16 @@ AddEventHandler("zyke_status:OnStatusFetched", function()
                 -- Offsetting either starts from the cached value + 1, or from 1 if there is nothing cached
                 -- This concise approach allows us to have one loop for running onStart from nothing, and from a specific offset already
                 -- Note that we have to add 1 to the previous threshold, to avoid triggering onStart for the current max
+
                 for i = (prevEffects[statusName]?.thresholdIdx or 0) + 1, values.thresholdIdx do
-                    ExecuteStatusEffect(statusName, "onStart", values.value, i)
+                    ExecuteStatusEffect(statusName, "onStart", values.value, i, values.thresholdIdx)
                 end
 
                 -- We loop from the start, up to the end, to run onTick for those effects
                 -- However, we have to skip the effects that were recently ran onStart for, so we have to set the max as the previous thresholdIdx, or 0
                 -- This means that if there was no previous threshold set, it won't run an onTick for them, and ensures we are not triggering an onTick instantly after an onStart
                 for i = 1, (prevEffects[statusName]?.thresholdIdx or 0) do
-                    ExecuteStatusEffect(statusName, "onTick", values.value, i)
+                    ExecuteStatusEffect(statusName, "onTick", values.value, i, values.thresholdIdx)
                 end
             end
 

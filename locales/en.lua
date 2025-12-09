@@ -9,6 +9,12 @@ return {
     ["playerStatusUnfrozen"] = {msg = "Player's status has been unfrozen.", type = "success"},
     ["noServerFreeze"] = {msg = "You can not freeze the server.", type = "error"},
 
+    ["stress1"] = {msg = "You are feeling a bit stressed.", type = "info"},
+    ["stress2"] = {msg = "You are feeling quite stressed.", type = "error"},
+    ["stress3"] = {msg = "You are feeling very stressed.", type = "error"},
+    ["stress4"] = {msg = "You are feeling extremely stressed.", type = "error"},
+    ["stress5"] = {msg = "You are feeling critically stressed.", type = "error"},
+
     -- Dev command stuff
     ["invalidAmount"] = {msg = "Invalid amount.", type = "error"},
     ["incorrectAction"] = {msg = "Incorrect action input", type = "error"},
