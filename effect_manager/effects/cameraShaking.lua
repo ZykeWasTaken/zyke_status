@@ -47,12 +47,14 @@ RegisterQueueKey("cameraShaking", {
     end,
     ---@param val CameraShakingValue
     onTick = function(val)
-        -- Re-apply if intensity changed
-        if (currShakeType ~= val.value or currShakeIntensity ~= val.intensity) then
+        if (currShakeType == val.value and currShakeIntensity ~= val.intensity) then
+            SetGameplayCamShakeAmplitude(val.intensity)
+        elseif (currShakeType ~= val.value) then
             ShakeGameplayCam(val.value, val.intensity)
-            currShakeType = val.value
-            currShakeIntensity = val.intensity
         end
+
+        currShakeType = val.value
+        currShakeIntensity = val.intensity
     end,
     reset = function()
         StopGameplayCamShaking(false)
