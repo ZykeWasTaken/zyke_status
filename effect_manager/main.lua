@@ -17,7 +17,7 @@ function RegisterEffectFunctions(name)
     local queueIdPrefix = name
 
     local function getQueueId(thresholdIdx)
-        return queueIdPrefix .. ":" .. thresholdIdx
+        return queueIdPrefix .. ";" .. thresholdIdx
     end
 
     EffectFunctions[name] = {
