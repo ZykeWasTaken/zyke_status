@@ -14,6 +14,12 @@ function RegisterEffectFunctions(name)
     local statusSettings = GetStatusSettings(primary, secondary)
     if (not statusSettings) then return end
 
+    local queueIdPrefix = name
+
+    local function getQueueId(thresholdIdx)
+        return queueIdPrefix .. ":" .. thresholdIdx
+    end
+
     EffectFunctions[name] = {
         onStart = function(val, thresholdIdx, _, highestThresholdIdx)
             -- print("onStart", name, thresholdIdx, highestThresholdIdx)
@@ -23,7 +29,7 @@ function RegisterEffectFunctions(name)
             local keys = GetExistingQueueKeys()
             for i = 1, #keys do
                 if (statusSettings.effect[thresholdIdx][keys[i]]) then
-                    AddToQueue(keys[i], name, thresholdIdx)
+                    AddToQueue(keys[i], getQueueId(thresholdIdx), thresholdIdx)
                 end
             end
 
@@ -66,7 +72,7 @@ function RegisterEffectFunctions(name)
                 local value = statusSettings.effect[thresholdIdx][keys[i]]
 
                 if (value) then
-                    RemoveFromQueue(keys[i], name, value)
+                    RemoveFromQueue(keys[i], getQueueId(thresholdIdx), value)
                 end
             end
         end
