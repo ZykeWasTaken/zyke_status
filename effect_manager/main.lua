@@ -59,11 +59,14 @@ function RegisterEffectFunctions(name)
                 AddToStat("health", -amount)
             end
         end,
-        onStop = function(val, thresholdIdx)
+        onStop = function(_, thresholdIdx)
             local keys = GetExistingQueueKeys()
+
             for i = 1, #keys do
-                if (statusSettings.effect[thresholdIdx][keys[i]]) then
-                    RemoveFromQueue(keys[i], name, statusSettings.effect[thresholdIdx][keys[i]])
+                local value = statusSettings.effect[thresholdIdx][keys[i]]
+
+                if (value) then
+                    RemoveFromQueue(keys[i], name, value)
                 end
             end
         end
