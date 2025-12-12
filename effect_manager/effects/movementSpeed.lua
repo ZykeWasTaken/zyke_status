@@ -12,9 +12,14 @@ RegisterQueueKey("movementSpeed", {
     ---@param val MovementSpeedValue | number
     ---@return MovementSpeedValue
     normalize = function(val)
-        return {
-            value = val.value or 1.0
-        }
+        local _type = type(val)
+
+        if (_type == "number") then
+            return {value = val}
+        elseif (_type == "table") then
+            return {value = val.value or 1.0}
+            ---@diagnostic disable-next-line: missing-return @ table or number, always returns something
+        end
     end,
     ---@param val1 MovementSpeedValue
     ---@param val2 MovementSpeedValue

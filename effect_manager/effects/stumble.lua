@@ -16,9 +16,14 @@ RegisterQueueKey("stumble", {
     ---@param val StumbleValue | number
     ---@return StumbleValue
     normalize = function(val)
-        return {
-            value = val.value or 0.0
-        }
+        local _type = type(val)
+
+        if (_type == "number") then
+            return {value = val}
+        elseif (_type == "table") then
+            return {value = val.value or 0.0}
+            ---@diagnostic disable-next-line: missing-return @ table or number, always returns something
+        end
     end,
     ---@param val1 StumbleValue
     ---@param val2 StumbleValue

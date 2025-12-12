@@ -6,12 +6,17 @@
 local active = false
 
 RegisterQueueKey("blurryVision", {
-    ---@param val BlurryVisionValue | true
+    ---@param val BlurryVisionValue | boolean
     ---@return BlurryVisionValue
     normalize = function(val)
-        return {
-            value = val.value or true
-        }
+        local _type = type(val)
+
+        if (_type == "boolean") then
+            return {value = val}
+        elseif (_type == "table") then
+            return {value = val.value}
+            ---@diagnostic disable-next-line: missing-return @ table or boolean, always returns something
+        end
     end,
     ---@param thresholdIdx1 integer
     ---@param thresholdIdx2 integer

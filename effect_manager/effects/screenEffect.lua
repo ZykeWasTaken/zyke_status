@@ -98,10 +98,14 @@ RegisterQueueKey("screenEffect", {
     ---@param val ScreenEffectValue | string
     ---@return ScreenEffectValue
     normalize = function(val)
-        return {
-            value = val.value,
-            intensity = val.intensity or 1.0
-        }
+        local _type = type(val)
+
+        if (_type == "string") then
+            return {value = val, intensity = 1.0}
+        elseif (_type == "table") then
+            return {value = val.value, intensity = val.intensity or 1.0}
+            ---@diagnostic disable-next-line: missing-return @ table or string, always returns something
+        end
     end,
     ---@param val1 ScreenEffectValue
     ---@param val2 ScreenEffectValue

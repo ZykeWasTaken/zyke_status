@@ -62,21 +62,6 @@ local prevEffects = {}
 ---@type table<QueueKey, EffectFunctions>
 local funcs = {}
 
--- Converts primitive values to rich effect objects
----@param value EffectValueInput
----@return RichEffectValue
-local function toRichValue(value)
-    if (type(value) == "table") then
-        if (value.value == nil) then
-            return {value = value}
-        end
-
-        return value
-    end
-
-    return {value = value}
-end
-
 -- Deep comparison for rich effect values
 -- Returns true if both represent the same effect with same metadata
 ---@param val1 RichEffectValue
@@ -181,12 +166,8 @@ function AddToQueue(queueKey, key, thresholdIdx, value, newThresholdToActivate)
 
     if (not value) then Z.debug("No value found...") return false end
 
-    -- Make sure our value is a rich effect object
-    ---@diagnostic disable-next-line: cast-local-type
-    value = toRichValue(value)
-
     -- Normalize
-    ---@diagnostic disable-next-line: cast-local-type
+    ---@diagnostic disable-next-line: cast-local-type, param-type-mismatch
     value = funcs[queueKey].normalize(value)
 
     local queue = queues[queueKey]
@@ -258,12 +239,9 @@ function RemoveFromQueue(queueKey, key, value)
 
     -- Convert value to rich format if provided
     if (value ~= nil) then
-        ---@diagnostic disable-next-line: cast-local-type
-        value = toRichValue(value)
-
-        -- NORMALIZATION: Must normalize to match what's in the queue
-        if (funcs[queueKey] and funcs[queueKey].normalize) then
-            ---@diagnostic disable-next-line: cast-local-type
+        -- Must normalize to match what's in the queue
+        if (funcs[queueKey]) then
+            ---@diagnostic disable-next-line: cast-local-type, param-type-mismatch
             value = funcs[queueKey].normalize(value)
         end
     end
@@ -337,9 +315,8 @@ local function getHighestThresholdForValue(queueData, queueKey)
             -- Find which threshold has this effect
             for thresholdIdx, effects in ipairs(statusSettings.effect) do
                 if (effects[queueKey]) then
-                    -- Convert to rich for comparison
-                    ---@diagnostic disable-next-line: cast-local-type
-                    local configValue = toRichValue(effects[queueKey])
+                    -- Normalize for comparison
+                    local configValue = funcs[queueKey].normalize(effects[queueKey])
                     if (richValuesEqual(configValue, queueData.value)) then
                         if (thresholdIdx > highest) then
                             highest = thresholdIdx

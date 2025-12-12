@@ -42,9 +42,14 @@ RegisterQueueKey("walkingStyle", {
     ---@param val WalkingStyleValue | string
     ---@return WalkingStyleValue
     normalize = function(val)
-        return {
-            value = val.value
-        }
+        local _type = type(val)
+
+        if (_type == "string") then
+            return {value = val}
+        elseif (_type == "table") then
+            return {value = val.value}
+            ---@diagnostic disable-next-line: missing-return @ table or string, always returns something
+        end
     end,
     ---@param thresholdIdx1 integer
     ---@param thresholdIdx2 integer

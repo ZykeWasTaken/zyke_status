@@ -15,10 +15,18 @@ RegisterQueueKey("cameraShaking", {
     ---@param val CameraShakingValue | string
     ---@return CameraShakingValue
     normalize = function(val)
-        return {
-            value = val.value or "DRUNK_SHAKE",
-            intensity = val.intensity or 1.0
-        }
+        local _type = type(val)
+        local defaultShakeType = "DRUNK_SHAKE"
+
+        if (_type == "string") then
+            return {value = val or defaultShakeType, intensity = 1.0}
+        elseif (_type == "table") then
+            return {
+                value = val.value or defaultShakeType,
+                intensity = val.intensity or 1.0
+            }
+            ---@diagnostic disable-next-line: missing-return @ table or string, always returns something
+        end
     end,
     ---@param val1 CameraShakingValue
     ---@param val2 CameraShakingValue
