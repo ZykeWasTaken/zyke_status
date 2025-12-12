@@ -126,6 +126,11 @@ function AddToQueue(queueKey, queueId, thresholdIdx, value, newThresholdToActiva
         }, {indent = true}))
     end
 
+    if (queues[queueKey] and queues[queueKey][queueId]) then
+        error(("Queue already exists for queueKey: '%s' and queueId: '%s'"):format(queueKey, queueId))
+        return false
+    end
+
     -- This threshold part is a little messy and will probably be refactored in the future, but the concept is working
 
     -- Keep the previous threshold
