@@ -8,6 +8,8 @@ local function syncStatus(statuses)
             Cache.statuses[name] = status
         end
     end
+
+    TriggerEvent("zyke_status:OnStatusFetched")
 end
 
 -- Wonder why we do this? It's explained in the `SyncPlayerStatus` server function
