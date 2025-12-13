@@ -54,10 +54,10 @@ local prevEffects = {}
 ---@field compare CompareFunction Comparison function to determine dominant value
 ---@field normalize NormalizeFunction Normalization/validation function to add defaults and validate
 ---@field onResourceStop fun()?
----@field onTick fun(value: RichEffectValue, queueId: string)?
+---@field onTick fun(value: RichEffectValue, queueId: string, effectMultiplier: number)?
 ---@field reset fun()?
----@field onStart fun(value: RichEffectValue, queueId: string)?
----@field onStop fun(value: RichEffectValue, queueId: string)?
+---@field onStart fun(value: RichEffectValue, queueId: string, effectMultiplier: number)?
+---@field onStop fun(value: RichEffectValue, queueId: string, effectMultiplier: number)?
 
 ---@type table<QueueKey, EffectFunctions>
 local funcs = {}
@@ -316,7 +316,8 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
 
     queueActive = true
     while (queueActive) do
-        local sleep = 1000
+        local sleep = 250
+        local effectMultiplier = sleep / 1000
 
         ---@type table<QueueKey, {queueId: string, value: RichEffectValue}>
         newEffects = {}
@@ -345,12 +346,12 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
                     prevEffects[queueKey] == nil
                 ) then
                     if (funcs[queueKey].onStart) then
-                        funcs[queueKey].onStart(queueData[dominantQueueId].value, dominantQueueId)
+                        funcs[queueKey].onStart(queueData[dominantQueueId].value, dominantQueueId, effectMultiplier)
                     end
                 end
 
                 if (funcs[queueKey].onTick) then
-                    funcs[queueKey].onTick(queueData[dominantQueueId].value, dominantQueueId)
+                    funcs[queueKey].onTick(queueData[dominantQueueId].value, dominantQueueId, effectMultiplier)
                 end
 
                 newEffects[queueKey] = {queueId = dominantQueueId, value = queueData[dominantQueueId].value}
@@ -366,7 +367,7 @@ RegisterNetEvent("zyke_status:OnQueueUpdated", function()
 
             if (not richValuesEqual(prevEffects[queueKey], newEffects[queueKey])) then
                 if (funcs[queueKey].onStop) then
-                    funcs[queueKey].onStop(prevQueueData.value, prevQueueData.queueId)
+                    funcs[queueKey].onStop(prevQueueData.value, prevQueueData.queueId, effectMultiplier)
                 end
             end
         end
