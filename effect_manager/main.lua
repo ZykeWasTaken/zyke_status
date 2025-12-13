@@ -21,7 +21,7 @@ function RegisterEffectFunctions(name)
     end
 
     EffectFunctions[name] = {
-        onStart = function(val, thresholdIdx, _, highestThresholdIdx)
+        onStart = function(val, thresholdIdx, _, highestThresholdIdx, effectMultiplier)
             -- print("onStart", name, thresholdIdx, highestThresholdIdx)
 
             -- Loops all of the existing queue keys, so that we can run all of the effects and queue them
@@ -57,15 +57,15 @@ function RegisterEffectFunctions(name)
                 end
             end
         end,
-        onTick = function(val, thresholdIdx, _, highestThresholdIdx)
+        onTick = function(val, thresholdIdx, _, highestThresholdIdx, effectMultiplier)
             -- print("onTick", name, thresholdIdx, highestThresholdIdx)
 
             if (statusSettings.effect[thresholdIdx].damage) then
-                local amount = statusSettings.effect[thresholdIdx].damage
+                local amount = statusSettings.effect[thresholdIdx].damage * effectMultiplier
                 AddToStat("health", -amount)
             end
         end,
-        onStop = function(_, thresholdIdx)
+        onStop = function(_, thresholdIdx, effectMultiplier)
             local keys = GetExistingQueueKeys()
 
             for i = 1, #keys do
@@ -99,7 +99,8 @@ end
 ---@param val number
 ---@param thresholdIdx integer
 ---@param highestThresholdIdx integer
-function ExecuteStatusEffect(name, fnType, val, thresholdIdx, highestThresholdIdx)
+---@param effectMultiplier number
+function ExecuteStatusEffect(name, fnType, val, thresholdIdx, highestThresholdIdx, effectMultiplier)
     local _, _, full = SeparateStatusName(name)
 
     -- Temp to ensure the effects exist
@@ -107,7 +108,7 @@ function ExecuteStatusEffect(name, fnType, val, thresholdIdx, highestThresholdId
         RegisterEffectFunctions(name)
     end
 
-    EffectFunctions[full][fnType](val, thresholdIdx, prevThresholdIdxs[full], highestThresholdIdx)
+    EffectFunctions[full][fnType](val, thresholdIdx, prevThresholdIdxs[full], highestThresholdIdx, effectMultiplier)
     prevThresholdIdxs[full] = thresholdIdx
 end
 
@@ -125,7 +126,8 @@ AddEventHandler("zyke_status:OnStatusFetched", function()
 
     inLoop = true
     while (inLoop) do
-        local sleep = 1000
+        local sleep = 250
+        local effectMultiplier = sleep / 1000
 
         if (Cache.statuses) then
             ---@type table<StatusName, {value: number, thresholdIdx: integer}>
@@ -153,14 +155,14 @@ AddEventHandler("zyke_status:OnStatusFetched", function()
                 -- If the effect is not registered at all, run onStop for all of the existing thresholds that were previously ran
                 if (availableEffects[statusName] == nil) then
                     for i = values.thresholdIdx, 1, -1 do
-                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx)
+                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx, effectMultiplier)
                     end
 
                     prevThresholdIdxs[statusName] = nil
                 elseif (availableEffects[statusName].thresholdIdx < values.thresholdIdx) then
                     -- If the threshold is less than previously, run the onStop for all of the thresholds that stopped running
                     for i = values.thresholdIdx, availableEffects[statusName].thresholdIdx + 1, -1 do
-                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx)
+                        ExecuteStatusEffect(statusName, "onStop", values.value, i, values.thresholdIdx, effectMultiplier)
                     end
                 end
             end
@@ -172,14 +174,14 @@ AddEventHandler("zyke_status:OnStatusFetched", function()
                 -- Note that we have to add 1 to the previous threshold, to avoid triggering onStart for the current max
 
                 for i = (prevEffects[statusName]?.thresholdIdx or 0) + 1, values.thresholdIdx do
-                    ExecuteStatusEffect(statusName, "onStart", values.value, i, values.thresholdIdx)
+                    ExecuteStatusEffect(statusName, "onStart", values.value, i, values.thresholdIdx, effectMultiplier)
                 end
 
                 -- We loop from the start, up to the end, to run onTick for those effects
                 -- However, we have to skip the effects that were recently ran onStart for, so we have to set the max as the previous thresholdIdx, or 0
                 -- This means that if there was no previous threshold set, it won't run an onTick for them, and ensures we are not triggering an onTick instantly after an onStart
                 for i = 1, (prevEffects[statusName]?.thresholdIdx or 0) do
-                    ExecuteStatusEffect(statusName, "onTick", values.value, i, values.thresholdIdx)
+                    ExecuteStatusEffect(statusName, "onTick", values.value, i, values.thresholdIdx, effectMultiplier)
                 end
             end
 
