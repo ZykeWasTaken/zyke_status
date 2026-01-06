@@ -115,3 +115,14 @@ end)
 RegisterNetEvent("hospital:client:TreatWounds", function()
     TriggerServerEvent("zyke_status:compatibility:SoftResetStatuses")
 end)
+
+-- wasabi_ambulance events that are triggered when you run their reviving / healing
+-- It is triggered from their server command -> client, so we catch these events & dispatch it to our server-event to handle it properly
+-- If you know what you are doing, you can disable these & add in your own custom implementation to never leave the server for this, but that is not possible by default
+RegisterNetEvent("wasabi_ambulance:revive", function()
+    TriggerServerEvent("zyke_status:compatibility:HealPlayer")
+end)
+
+RegisterNetEvent("wasabi_ambulance:heal", function()
+    TriggerServerEvent("zyke_status:compatibility:HealPlayer")
+end)
