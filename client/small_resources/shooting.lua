@@ -35,7 +35,7 @@ CreateThread(function()
 	while (1) do
 		local sleep = 500
 
-		if (GetGameTimer() - checkRequirements < 500) then
+		if (GetGameTimer() - checkRequirements > 500) then
 			hasWeapon = GetCurrentPedWeapon(ped, false)
 			ped = PlayerPedId()
 			checkRequirements = GetGameTimer()
