@@ -126,3 +126,7 @@ end)
 RegisterNetEvent("wasabi_ambulance:heal", function()
     TriggerServerEvent("zyke_status:compatibility:HealPlayer")
 end)
+
+RegisterNetEvent("wasabi_ambulance:resetStatus", function()
+    TriggerServerEvent("zyke_status:compatibility:HealPlayer")
+end)
