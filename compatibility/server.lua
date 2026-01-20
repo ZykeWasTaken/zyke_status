@@ -58,12 +58,6 @@ RegisterNetEvent("zyke_status:compatibility:SoftResetStatuses", function()
     SoftResetStatuses(source)
 end)
 
-AddEventHandler("txAdmin:events:healedPlayer", function(eventData)
-    if (GetInvokingResource() ~= "monitor" or type(eventData) ~= "table" or type(eventData.id) ~= "number") then return end
-
-    TriggerClientEvent("esx_basicneeds:healPlayer", eventData.id)
-end)
-
 ---@param plyId PlayerId
 ---@param name string
 ---@return table | number | nil
