@@ -2,7 +2,7 @@ fx_version "cerulean"
 game "gta5"
 lua54 "yes"
 author "discord.gg/zykeresources"
-version "0.3.13"
+version "0.3.14"
 
 files {
     "locales/*.lua",
