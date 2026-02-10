@@ -6,7 +6,7 @@
 
 This resource is a work-in-progress status system meant to elevate how your character processes hunger, thirst, stress, addictions, highs and much more. It also has a versatile and dynamic effect system to queue and stack effects to prevent interruptions when using different resources requiring different effects.
 
-Full backwards compatibility will be available (and is already partially available) for ESX & QBCore to avoid having to change other resources to fit our needs.
+Full backwards compatibility is available for ESX, QBCore & Qbox to avoid having to change other resources to fit our needs.
 
 The idea of this resource was manifested by our current developments for zyke_consumables. We needed an alternative that could handle all the statuses and effects we would like to have, along with a queue system to not fight what should be active between consumables and our smoking resource.
 
@@ -18,18 +18,12 @@ We have a first iteration of an installation guide available in our documentatio
 
 -   [Discord](https://discord.gg/zykeresources)
 -   [Documentation](https://docs.zykeresources.com/free-resources/status)
--   [Store](https://store.zykeresources.com)
+-   [Store](https://zykeresources.com)
 
 # Planned TODO
 
-## Easier Development
-
--   All sorts of re-structuring and additions of functions/exports will be made to allow for easier development for everyone that is interested in interacting with our resource.
+## Outside Use
+-	Elevate the documentation & exports for outside use of the resource. Currently it's difficult to get started with just the guidance of our documentation for developers wanting to integrate this into their own resources.
 
 ## More Statuses
-
 -   Anxiety, pains and whatnot that is suggested or thought of will be added in the near future.
-
-## Severity For Queues
-
--   Stack all the active for a queued key, and alter the severity based on the total value. If your screen is slightly blurred because of 3 different effects, it should be combining all values for a final effect multiplier. Really only relevant for number values queued.
