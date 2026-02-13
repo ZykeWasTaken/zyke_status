@@ -4,6 +4,21 @@
     If you wish to grab a multi, such as addiction, you have to do GetStatus("addiction", "weed")
 ]]
 
+-- Track external resources that you use, so we can alter our behaviour
+-- For example, wasabi_ambulance already handled the txmadin events
+-- Because of our compatibility approach, we will just let wasabi handle this, and catch Wasabi events
+EXTERNAL_RESOURCES = {
+    ["wasabi_ambulance"] = false
+}
+
+for name in pairs(EXTERNAL_RESOURCES) do
+    local resState = GetResourceState(name)
+
+    if (resState == "started" or resState == "starting") then
+        EXTERNAL_RESOURCES[name] = true
+    end
+end
+
 ---@param name StatusName
 ---@return string, string, string
 function SeparateStatusName(name)

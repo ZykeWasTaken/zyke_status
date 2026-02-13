@@ -24,11 +24,13 @@ if (Config.Settings.stressEvents.relieveStress == true) then
     end)
 end
 
--- txAdmin event for healing a player
----@param eventData {id: integer}
-AddEventHandler("txAdmin:events:healedPlayer", function(eventData)
-    if (GetInvokingResource() ~= "monitor") then return end -- Validate that the request is actually from tx
-    if (type(eventData) ~= "table" or type(eventData.id) ~= "number") then return end
+if (EXTERNAL_RESOURCES["wasabi_ambulance"] == false) then
+    -- txAdmin event for healing a player
+    ---@param eventData {id: integer}
+    AddEventHandler("txAdmin:events:healedPlayer", function(eventData)
+        if (GetInvokingResource() ~= "monitor") then return end -- Validate that the request is actually from tx
+        if (type(eventData) ~= "table" or type(eventData.id) ~= "number") then return end
 
-    HealPlayer(eventData.id)
-end)
+        HealPlayer(eventData.id)
+    end)
+end
